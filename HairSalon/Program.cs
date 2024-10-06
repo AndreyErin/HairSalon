@@ -10,7 +10,7 @@ namespace HairSalon
             builder.Services.AddControllersWithViews();
             builder.Services.AddSpaStaticFiles(config=>config.RootPath = "ClientApp/dist");
 
-            builder.Services.AddScoped<IRepositoryOfServices<Service>, FakeRepoOfService>();
+            builder.Services.AddSingleton<IRepositoryOfServices<Service>, FakeRepoOfService>();
                 
 
             var app = builder.Build();
