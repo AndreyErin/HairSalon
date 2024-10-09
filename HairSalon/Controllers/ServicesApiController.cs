@@ -1,4 +1,4 @@
-﻿using HairSalon.Model;
+﻿using HairSalon.Model.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HairSalon.Controllers

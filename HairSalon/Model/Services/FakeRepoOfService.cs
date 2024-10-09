@@ -1,12 +1,11 @@
-﻿
-namespace HairSalon.Model
+﻿namespace HairSalon.Model.Services
 {
     public class FakeRepoOfService : IRepositoryOfServices<Service>
     {
         List<Service> _services;
-        public FakeRepoOfService() 
+        public FakeRepoOfService()
         {
-            _services = new() { 
+            _services = new() {
                 new Service { Id = 1, Name = "Полубокс", Price = 100, TimeOfService = new TimeSpan(0,20,0), Description = "Под полубоксера" },
                 new Service { Id = 2, Name = "Тенис", Price = 200, TimeOfService = new TimeSpan(0,25,0), Description = "Под тенисиста" },
                 new Service { Id = 3, Name = "Модельная", Price = 300, TimeOfService = new TimeSpan(0,30,0), Description = "Под модель" },
@@ -50,7 +49,7 @@ namespace HairSalon.Model
 
         public int Update(Service entity)
         {
-            Service? result = _services.Find(x=>x.Id == entity.Id);
+            Service? result = _services.Find(x => x.Id == entity.Id);
             if (result != null)
             {
                 result = entity;

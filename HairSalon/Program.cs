@@ -1,4 +1,5 @@
-using HairSalon.Model;
+using HairSalon.Model.Configuration;
+using HairSalon.Model.Services;
 
 namespace HairSalon
 {
@@ -10,8 +11,11 @@ namespace HairSalon
             builder.Services.AddControllersWithViews();
             builder.Services.AddSpaStaticFiles(config=>config.RootPath = "ClientApp/dist");
 
+            //репозитоий для услуг
             builder.Services.AddSingleton<IRepositoryOfServices<Service>, FakeRepoOfService>();
-                
+            //репозиторий для настроек(управление сайтом)
+            builder.Services.AddSingleton<IRepositoryOfConfiguration, JsonRepoOfConfiguration>();
+
 
             var app = builder.Build();
 

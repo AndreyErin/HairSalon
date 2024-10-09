@@ -1,4 +1,4 @@
-﻿namespace HairSalon.Model
+﻿namespace HairSalon.Model.Services
 {
     public class Service
     {
@@ -8,6 +8,6 @@
         public string Picture { get; set; }
         public int Price { get; set; }
         public TimeSpan TimeOfService { get; set; }
-     
+
     }
 }
