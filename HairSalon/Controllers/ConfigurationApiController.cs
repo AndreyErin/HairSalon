@@ -5,10 +5,10 @@ namespace HairSalon.Controllers
 {
     [ApiController]
     [Route("api/configuration")]
-    public class ConfigurationController : Controller
+    public class ConfigurationApiController : Controller
     {
         IRepositoryOfConfiguration _config;
-        public ConfigurationController(IRepositoryOfConfiguration configuration) 
+        public ConfigurationApiController(IRepositoryOfConfiguration configuration) 
         {
             _config = configuration;
         }

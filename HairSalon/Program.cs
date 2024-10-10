@@ -1,4 +1,5 @@
 using HairSalon.Model.Configuration;
+using HairSalon.Model.Records;
 using HairSalon.Model.Services;
 
 namespace HairSalon
@@ -15,6 +16,8 @@ namespace HairSalon
             builder.Services.AddSingleton<IRepositoryOfServices<Service>, FakeRepoOfService>();
             //репозиторий для настроек(управление сайтом)
             builder.Services.AddSingleton<IRepositoryOfConfiguration, JsonRepoOfConfiguration>();
+            //репозиторий для записей клиентов
+            builder.Services.AddSingleton<IRepositoryOfRecords, FakeRepoOfRecords>();
 
 
             var app = builder.Build();
