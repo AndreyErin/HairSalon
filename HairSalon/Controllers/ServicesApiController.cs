@@ -1,4 +1,5 @@
-﻿using HairSalon.Model.Services;
+﻿using HairSalon.Model;
+using HairSalon.Model.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HairSalon.Controllers
@@ -16,33 +17,75 @@ namespace HairSalon.Controllers
         [HttpGet]
         public JsonResult GetAll()
         {
-            return Json(_services.GetAll());
+            PackageMessage packageMessage = new(true, _services.GetAll());
+            return Json(packageMessage);
         }
 
         [HttpPost]
-        public int Add(Service service)
+        public JsonResult Add(Service service)
         {
-            return _services.Add(service);
+            PackageMessage packageMessage;
+            int result = _services.Add(service);
+
+            if (result == 1)
+            {
+                packageMessage = new(true);
+                return Json(packageMessage);
+            }
+
+            packageMessage = new(false, errorText: "Ошибка. Услуга не была добавлена.");
+            return Json(packageMessage);
+
         }
 
         [HttpPatch]
-        public int Update(Service service)
+        public JsonResult Update(Service service)
         {
-            return _services.Update(service);
+            PackageMessage packageMessage;
+            int result = _services.Update(service);
+
+            if (result == 1)
+            {
+                packageMessage = new(true);
+                return Json(packageMessage);
+            }
+
+            packageMessage = new(false, errorText: "Ошибка. Услуга не была изменена.");
+            return Json(packageMessage);
         }
 
         [HttpGet]
         [Route("{id}")]
         public JsonResult Get(int id)
         {
-            return Json(_services.Get(id));
+            PackageMessage packageMessage;
+            Service? result = _services.Get(id);
+
+            if (result != null)
+            {
+                packageMessage = new(true, result);
+                return Json(packageMessage);
+            }
+
+            packageMessage = new(false, errorText: "Ошибка. Услуга, с таким ID, не найдена.");
+            return Json(packageMessage);
         }
 
         [HttpDelete]
         [Route("{id}")]
-        public int Delete(int id) 
+        public JsonResult Delete(int id) 
         {
-            return _services.Delete(id); 
-        }
+            PackageMessage packageMessage;
+            int result = _services.Delete(id);
+
+            if (result == 1)
+            {
+                packageMessage = new(true);
+                return Json(packageMessage);
+            }
+
+            packageMessage = new(false, errorText: "Ошибка. Услуга не была удалена. (Услуга, с таким ID, не найдена.)");
+            return Json(packageMessage);
+        } 
     }
 }

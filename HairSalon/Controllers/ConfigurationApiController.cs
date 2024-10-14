@@ -1,4 +1,5 @@
-﻿using HairSalon.Model.Configuration;
+﻿using HairSalon.Model;
+using HairSalon.Model.Configuration;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HairSalon.Controllers
@@ -16,13 +17,14 @@ namespace HairSalon.Controllers
         [HttpGet]
         public JsonResult Get()
         {
-            return Json(_config.GetConfig());
+            return Json( new PackageMessage(true, _config.GetConfig()));
         }
 
         [HttpPost]
-        public void Set(Config config) 
+        public JsonResult Set(Config config) 
         {
             _config.SetConfig(config);
+            return Json(new PackageMessage(true));
         }
     }
 }

@@ -1,5 +1,7 @@
-﻿using HairSalon.Model.Records;
+﻿using HairSalon.Model;
+using HairSalon.Model.Records;
 using Microsoft.AspNetCore.Mvc;
+using System.Xml.Linq;
 
 namespace HairSalon.Controllers
 {
@@ -16,34 +18,74 @@ namespace HairSalon.Controllers
         [HttpGet]
         public JsonResult GetAll()
         {
-            return Json(_records.GetAll());
+            return Json(new PackageMessage(true, _records.GetAll()));
         }
 
         [HttpGet]
         [Route("{id}")]
         public JsonResult Get(int id) 
         {
-            return Json(_records.Get(id));
+            PackageMessage packageMessage;
+
+            Record? result = _records.Get(id);
+            if (result != null)
+            {
+                packageMessage = new(true, data: result);
+                return Json(packageMessage);
+            }
+
+            packageMessage = new(false, errorText: "Ошибка. Запись, с таким ID, не найдена.");
+            return Json(packageMessage);
         }
 
         [HttpGet]
         [Route("forname")]           
         public JsonResult Get(string name)
         {
-            return Json(_records.Get(name));
+            PackageMessage packageMessage;
+
+            Record? result = _records.Get(name);
+            if (result != null)
+            {
+                packageMessage = new(true, data: result);
+                return Json(packageMessage);
+            }
+
+            packageMessage = new(false, errorText: "Ошибка. Запись, с таким именем, не найдена.");
+            return Json(packageMessage);
         }
 
         [HttpDelete]
         [Route("{id}")]
-        public int Delete(int id)
+        public JsonResult Delete(int id)
         {
-            return _records.Delete(id);
+            PackageMessage packageMessage;
+
+            int result = _records.Delete(id);
+            if (result == 1)
+            {
+                packageMessage = new(true);
+                return Json(packageMessage);
+            }
+
+            packageMessage = new(false, errorText: "Ошибка. Запись не была удалена.");
+            return Json(packageMessage);
         }
 
         [HttpPost]
-        public int Add(Record record)
+        public JsonResult Add(Record record)
         {
-            return _records.Add(record);
+            PackageMessage packageMessage;
+
+            int result = _records.Add(record);
+            if (result == 1) 
+            {
+                packageMessage = new(true);
+                return Json(packageMessage);
+            }
+
+            packageMessage = new(false, errorText: "Ошибка. Выбранное время уже занято.");
+            return Json(packageMessage);
         }
     }
 }
