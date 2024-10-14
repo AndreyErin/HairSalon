@@ -3,7 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HairSalon", "HairSalon\HairSalon.csproj", "{427B3581-5FA4-45B6-98D7-4AE64777CDA2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HairSalon", "HairSalon\HairSalon.csproj", "{427B3581-5FA4-45B6-98D7-4AE64777CDA2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HairSalon.Tests", "HairSalon.Tests\HairSalon.Tests.csproj", "{9EEB6AEF-C6D0-4716-A135-B48CF8596C26}"
+	ProjectSection(ProjectDependencies) = postProject
+		{427B3581-5FA4-45B6-98D7-4AE64777CDA2} = {427B3581-5FA4-45B6-98D7-4AE64777CDA2}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +20,10 @@ Global
 		{427B3581-5FA4-45B6-98D7-4AE64777CDA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{427B3581-5FA4-45B6-98D7-4AE64777CDA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{427B3581-5FA4-45B6-98D7-4AE64777CDA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9EEB6AEF-C6D0-4716-A135-B48CF8596C26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EEB6AEF-C6D0-4716-A135-B48CF8596C26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EEB6AEF-C6D0-4716-A135-B48CF8596C26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EEB6AEF-C6D0-4716-A135-B48CF8596C26}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
