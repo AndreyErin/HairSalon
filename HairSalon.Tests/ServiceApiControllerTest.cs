@@ -43,17 +43,15 @@ namespace HairSalon.Tests
         {
             //Arrange
             int id = 1, id2 = 20;    
-            var mock1 = new Mock<IRepositoryOfServices<Service>>();
-            mock1.Setup(repo => repo.Get(id)).Returns(GetAllService().FirstOrDefault(s=>s.Id == id));
-            ServicesApiController servicesApiController1 = new(mock1.Object);
-            var mock2 = new Mock<IRepositoryOfServices<Service>>();
+            var mock = new Mock<IRepositoryOfServices<Service>>();
+            mock.Setup(repo => repo.Get(id)).Returns(GetAllService().FirstOrDefault(s=>s.Id == id));
             //id2 - недостижимый индекс
-            mock2.Setup(repo => repo.Get(id2)).Returns(GetAllService().FirstOrDefault(s => s.Id == id2));
-            ServicesApiController servicesApiController2 = new(mock2.Object);
+            mock.Setup(repo => repo.Get(id2)).Returns(GetAllService().FirstOrDefault(s => s.Id == id2));
+            ServicesApiController servicesApiController = new(mock.Object);
 
             //Act
-            JsonResult jsonResult1 = servicesApiController1.Get(id);
-            JsonResult jsonResult2 = servicesApiController1.Get(id2);
+            JsonResult jsonResult1 = servicesApiController.Get(id);
+            JsonResult jsonResult2 = servicesApiController.Get(id2);
             var result1 = (jsonResult1.Value as PackageMessage)?.Succeed;
             var result2 = (jsonResult2.Value as PackageMessage)?.Succeed;
 
@@ -67,7 +65,7 @@ namespace HairSalon.Tests
         public void AddResult()
         {
             //Arrange
-            Service service = new()
+            Service service1 = new()
             {
                 Id = 55,
                 Picture = "",
@@ -76,18 +74,25 @@ namespace HairSalon.Tests
                 Price = 555,
                 TimeOfService = new(0, 20, 0)
             };
+            Service service2 = new()
+            {
+                Id = 33,
+                Picture = "",
+                Name = "Пикси",
+                Description = "Под Пикси)",
+                Price = 333,
+                TimeOfService = new(0, 25, 0)
+            };
             //успех
-            var mock1 = new Mock<IRepositoryOfServices<Service>>();
-            mock1.Setup(repo => repo.Add(service)).Returns(1);
-            ServicesApiController servicesApiController1 = new(mock1.Object);
+            var mock = new Mock<IRepositoryOfServices<Service>>();
+            mock.Setup(repo => repo.Add(service1)).Returns(1);          
             //неудача
-            var mock2 = new Mock<IRepositoryOfServices<Service>>();
-            mock2.Setup(repo => repo.Add(service)).Returns(0);
-            ServicesApiController servicesApiController2 = new(mock2.Object);
+            mock.Setup(repo => repo.Add(service2)).Returns(0);
+            ServicesApiController servicesApiController = new(mock.Object);
 
             //Act
-            JsonResult jsonResult1 = servicesApiController1.Add(service);
-            JsonResult jsonResult2 = servicesApiController2.Add(service);
+            JsonResult jsonResult1 = servicesApiController.Add(service1);
+            JsonResult jsonResult2 = servicesApiController.Add(service2);
             var result = (jsonResult1.Value as PackageMessage)?.Succeed;
             var result2 = (jsonResult2.Value as PackageMessage)?.Succeed;
 
@@ -101,17 +106,15 @@ namespace HairSalon.Tests
         {
             //Arrange
             int id = 1, id2 = 20;
-            var mock1 = new Mock<IRepositoryOfServices<Service>>();
-            mock1.Setup(repo => repo.Delete(id)).Returns(1);
-            ServicesApiController servicesApiController1 = new(mock1.Object);
-            var mock2 = new Mock<IRepositoryOfServices<Service>>();
+            var mock = new Mock<IRepositoryOfServices<Service>>();
+            mock.Setup(repo => repo.Delete(id)).Returns(1);
             //id2 - недостижимый индекс
-            mock2.Setup(repo => repo.Delete(id2)).Returns(0);
-            ServicesApiController servicesApiController2 = new(mock2.Object);
+            mock.Setup(repo => repo.Delete(id2)).Returns(0);
+            ServicesApiController servicesApiController = new(mock.Object);
 
             //Act
-            JsonResult jsonResult1 = servicesApiController1.Delete(id);
-            JsonResult jsonResult2 = servicesApiController2.Delete(id2);
+            JsonResult jsonResult1 = servicesApiController.Delete(id);
+            JsonResult jsonResult2 = servicesApiController.Delete(id2);
             var result1 = (jsonResult1.Value as PackageMessage)?.Succeed;
             var result2 = (jsonResult2.Value as PackageMessage)?.Succeed;
 
@@ -124,7 +127,7 @@ namespace HairSalon.Tests
         public void UpdateResult()
         {
             //Arrange
-            Service service = new()
+            Service service1 = new()
             {
                 Id = 55,
                 Picture = "",
@@ -133,17 +136,24 @@ namespace HairSalon.Tests
                 Price = 555,
                 TimeOfService = new(0, 20, 0)
             };
-            var mock1 = new Mock<IRepositoryOfServices<Service>>();
-            mock1.Setup(repo => repo.Update(service)).Returns(1);
-            ServicesApiController servicesApiController1 = new(mock1.Object);
-            var mock2 = new Mock<IRepositoryOfServices<Service>>();
+            Service service2 = new()
+            {
+                Id = 33,
+                Picture = "",
+                Name = "Пикси",
+                Description = "Под Пикси)",
+                Price = 333,
+                TimeOfService = new(0, 25, 0)
+            };
+            var mock = new Mock<IRepositoryOfServices<Service>>();
+            mock.Setup(repo => repo.Update(service1)).Returns(1);
             //id2 - недостижимый индекс
-            mock2.Setup(repo => repo.Update(service)).Returns(0);
-            ServicesApiController servicesApiController2 = new(mock2.Object);
+            mock.Setup(repo => repo.Update(service2)).Returns(0);
+            ServicesApiController servicesApiController = new(mock.Object);
 
             //Act
-            JsonResult jsonResult1 = servicesApiController1.Update(service);
-            JsonResult jsonResult2 = servicesApiController2.Update(service);
+            JsonResult jsonResult1 = servicesApiController.Update(service1);
+            JsonResult jsonResult2 = servicesApiController.Update(service2);
             var result1 = (jsonResult1.Value as PackageMessage)?.Succeed;
             var result2 = (jsonResult2.Value as PackageMessage)?.Succeed;
 

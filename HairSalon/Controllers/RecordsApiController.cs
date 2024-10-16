@@ -1,7 +1,6 @@
 ﻿using HairSalon.Model;
 using HairSalon.Model.Records;
 using Microsoft.AspNetCore.Mvc;
-using System.Xml.Linq;
 
 namespace HairSalon.Controllers
 {

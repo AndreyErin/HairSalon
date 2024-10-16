@@ -22,7 +22,6 @@ namespace HairSalon.Tests
             PackageMessage? packageMessage = result?.Value as PackageMessage;
 
             //Assert
-            Assert.NotNull(result);
             Assert.Equal(true, (packageMessage?.Data as Config)?.MobileAppEnabled);
         }
 
@@ -31,26 +30,20 @@ namespace HairSalon.Tests
         {
             //Arrange
             var mock = new Mock<IRepositoryOfConfiguration>();
-            mock.Setup(repo => repo.GetConfig()).Returns(GetTestConfig());
             ConfigurationApiController controller = new(mock.Object);
+            Config config = new Config() { MobileAppEnabled = false, PromotionEnabled = false };
 
             //Act
-            JsonResult result = controller.Set(SetTestConfig());
+            JsonResult result = controller.Set(config);
             PackageMessage? packageMessage = result?.Value as PackageMessage;
 
             //Assert
-            Assert.NotNull(result);
             Assert.Equal(true, packageMessage?.Succeed);
         }
 
         private Config GetTestConfig() 
         {
             return new Config() { MobileAppEnabled = true, PromotionEnabled = true };
-        }
-
-        private Config SetTestConfig()
-        {
-            return new Config() { MobileAppEnabled = false, PromotionEnabled = false };
         }
     }
 }
