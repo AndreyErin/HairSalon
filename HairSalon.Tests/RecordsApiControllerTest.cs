@@ -73,7 +73,7 @@ namespace HairSalon.Tests
             string name1 = "Николай", name2 = "Тимофей";
             var mock = new Mock<IRepositoryOfRecords>();
             mock.Setup(repo => repo.Get(name1)).Returns(GetAllRecords().FirstOrDefault(r => r.Name == name1));
-            //недостижимый id2
+            //недостижимое имя name2
             mock.Setup(repo => repo.Get(name2)).Returns(GetAllRecords().FirstOrDefault(r => r.Name == name2));
             RecordsApiController recordsApiController = new(mock.Object);
 
@@ -92,7 +92,64 @@ namespace HairSalon.Tests
 
             Assert.DoesNotContain("Ошибка", packageMessage1?.ErrorText);
             Assert.Contains("Ошибка", packageMessage2?.ErrorText);
+        }
 
+        [Fact]
+        public void DeleteResult()
+        {
+            //Arrange
+            int id = 1, id2 = 20;
+            var mock = new Mock<IRepositoryOfRecords>();
+            mock.Setup(repo => repo.Delete(id)).Returns(1);
+            //недостижимый id2
+            mock.Setup(repo => repo.Delete(id2)).Returns(0);
+            RecordsApiController recordsApiController = new(mock.Object);
+
+            //Act
+            PackageMessage? packageMessage1 = recordsApiController.Delete(id).Value as PackageMessage;
+            PackageMessage? packageMessage2 = recordsApiController.Delete(id2).Value as PackageMessage;
+            Model.Records.Record? result1 = packageMessage1?.Data as Model.Records.Record;
+            Model.Records.Record? result2 = packageMessage2?.Data as Model.Records.Record;
+
+            //Assert
+            Assert.True(packageMessage1?.Succeed);
+            Assert.False(packageMessage2?.Succeed);
+
+            Assert.True(packageMessage1?.Succeed);
+            Assert.False(packageMessage2?.Succeed);
+
+            Assert.DoesNotContain("Ошибка", packageMessage1?.ErrorText);
+            Assert.Contains("Ошибка", packageMessage2?.ErrorText);
+        }
+
+        [Fact]
+        public void AddResult()
+        {
+            //Arrange
+            Model.Records.Record record1 = new() { Id = 11, Name = "Лейла", SeviceName = "Каре", DateTimeOfRecord = new DateTime(2025, 02, 15, 10, 0, 0) };
+            Model.Records.Record record2 = new() { Id = 12, Name = "Мария", SeviceName = "Модельная", DateTimeOfRecord = new DateTime(2025, 01, 15, 10, 0, 0) };
+
+            var mock = new Mock<IRepositoryOfRecords>();
+            mock.Setup(repo => repo.Add(record1)).Returns(1);
+            //отрицательный результат
+            mock.Setup(repo => repo.Add(record2)).Returns(0);
+            RecordsApiController recordsApiController = new(mock.Object);
+
+            //Act
+            PackageMessage? packageMessage1 = recordsApiController.Add(record1).Value as PackageMessage;
+            PackageMessage? packageMessage2 = recordsApiController.Add(record2).Value as PackageMessage;
+            Model.Records.Record? result1 = packageMessage1?.Data as Model.Records.Record;
+            Model.Records.Record? result2 = packageMessage2?.Data as Model.Records.Record;
+
+            //Assert
+            Assert.True(packageMessage1?.Succeed);
+            Assert.False(packageMessage2?.Succeed);
+
+            Assert.True(packageMessage1?.Succeed);
+            Assert.False(packageMessage2?.Succeed);
+
+            Assert.DoesNotContain("Ошибка", packageMessage1?.ErrorText);
+            Assert.Contains("Ошибка", packageMessage2?.ErrorText);
         }
     }
 }

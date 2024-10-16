@@ -23,8 +23,10 @@ namespace HairSalon.Tests
             var resultCount = services?.Count;
 
             //Assert
+            Assert.True(packageMessage?.Succeed);
             Assert.Equal(5, resultCount);
-            Assert.Equal("Котовский", services?.FirstOrDefault(s=>s.Id == 4)?.Name);          
+            Assert.Equal("Котовский", services?.FirstOrDefault(s=>s.Id == 4)?.Name);
+            Assert.Null(packageMessage?.ErrorText);
         }
 
         private List<Service> GetAllService()
@@ -52,12 +54,18 @@ namespace HairSalon.Tests
             //Act
             JsonResult jsonResult1 = servicesApiController.Get(id);
             JsonResult jsonResult2 = servicesApiController.Get(id2);
-            var result1 = (jsonResult1.Value as PackageMessage)?.Succeed;
-            var result2 = (jsonResult2.Value as PackageMessage)?.Succeed;
+            PackageMessage? packageMessage1 = jsonResult1.Value as PackageMessage;
+            PackageMessage? packageMessage2 = jsonResult2.Value as PackageMessage;
 
             //Assert
-            Assert.True(result1);
-            Assert.False(result2);
+            Assert.True(packageMessage1?.Succeed);
+            Assert.False(packageMessage2?.Succeed);
+
+            Assert.NotNull(packageMessage1?.Data as Service);
+            Assert.Null(packageMessage2?.Data as Service);
+
+            Assert.DoesNotContain("Ошибка", packageMessage1?.ErrorText);
+            Assert.Contains("Ошибка", packageMessage2?.ErrorText);
         }
 
 
@@ -93,12 +101,18 @@ namespace HairSalon.Tests
             //Act
             JsonResult jsonResult1 = servicesApiController.Add(service1);
             JsonResult jsonResult2 = servicesApiController.Add(service2);
-            var result = (jsonResult1.Value as PackageMessage)?.Succeed;
-            var result2 = (jsonResult2.Value as PackageMessage)?.Succeed;
+            PackageMessage? packageMessage1 = jsonResult1.Value as PackageMessage;
+            PackageMessage? packageMessage2 = jsonResult2.Value as PackageMessage;
 
-            //Assert           
-            Assert.True(result);
-            Assert.False(result2);
+            //Assert
+            Assert.True(packageMessage1?.Succeed);
+            Assert.False(packageMessage2?.Succeed);
+
+            Assert.Null(packageMessage1?.Data as Service);
+            Assert.Null(packageMessage2?.Data as Service);
+
+            Assert.DoesNotContain("Ошибка", packageMessage1?.ErrorText);
+            Assert.Contains("Ошибка", packageMessage2?.ErrorText);
         }
 
         [Fact]
@@ -115,12 +129,18 @@ namespace HairSalon.Tests
             //Act
             JsonResult jsonResult1 = servicesApiController.Delete(id);
             JsonResult jsonResult2 = servicesApiController.Delete(id2);
-            var result1 = (jsonResult1.Value as PackageMessage)?.Succeed;
-            var result2 = (jsonResult2.Value as PackageMessage)?.Succeed;
+            PackageMessage? packageMessage1 = jsonResult1.Value as PackageMessage;
+            PackageMessage? packageMessage2 = jsonResult2.Value as PackageMessage;
 
             //Assert
-            Assert.True(result1);
-            Assert.False(result2);
+            Assert.True(packageMessage1?.Succeed);
+            Assert.False(packageMessage2?.Succeed);
+
+            Assert.Null(packageMessage1?.Data as Service);
+            Assert.Null(packageMessage2?.Data as Service);
+
+            Assert.DoesNotContain("Ошибка", packageMessage1?.ErrorText);
+            Assert.Contains("Ошибка", packageMessage2?.ErrorText);
         }
 
         [Fact]
@@ -154,12 +174,18 @@ namespace HairSalon.Tests
             //Act
             JsonResult jsonResult1 = servicesApiController.Update(service1);
             JsonResult jsonResult2 = servicesApiController.Update(service2);
-            var result1 = (jsonResult1.Value as PackageMessage)?.Succeed;
-            var result2 = (jsonResult2.Value as PackageMessage)?.Succeed;
+            PackageMessage? packageMessage1 = jsonResult1.Value as PackageMessage;
+            PackageMessage? packageMessage2 = jsonResult2.Value as PackageMessage;
 
             //Assert
-            Assert.True(result1);
-            Assert.False(result2);
+            Assert.True(packageMessage1?.Succeed);
+            Assert.False(packageMessage2?.Succeed);
+
+            Assert.Null(packageMessage1?.Data as Service);
+            Assert.Null(packageMessage2?.Data as Service);
+
+            Assert.DoesNotContain("Ошибка", packageMessage1?.ErrorText);
+            Assert.Contains("Ошибка", packageMessage2?.ErrorText);
         }
     }
 }

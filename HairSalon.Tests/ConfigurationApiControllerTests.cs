@@ -18,8 +18,8 @@ namespace HairSalon.Tests
             ConfigurationApiController controller = new(mock.Object);
 
             //Act
-            JsonResult result = controller.Get();
-            PackageMessage? packageMessage = result?.Value as PackageMessage;
+            JsonResult jsonResult = controller.Get();
+            PackageMessage? packageMessage = jsonResult?.Value as PackageMessage;
 
             //Assert
             Assert.True((packageMessage?.Data as Config)?.MobileAppEnabled);
@@ -34,8 +34,8 @@ namespace HairSalon.Tests
             Config config = new Config() { MobileAppEnabled = false, PromotionEnabled = false };
 
             //Act
-            JsonResult result = controller.Set(config);
-            PackageMessage? packageMessage = result?.Value as PackageMessage;
+            JsonResult jsonResult = controller.Set(config);
+            PackageMessage? packageMessage = jsonResult?.Value as PackageMessage;
 
             //Assert
             Assert.True(packageMessage?.Succeed);
