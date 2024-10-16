@@ -56,8 +56,8 @@ namespace HairSalon.Tests
             var result2 = (jsonResult2.Value as PackageMessage)?.Succeed;
 
             //Assert
-            Assert.Equal(true, result1);
-            Assert.Equal(false, result2);
+            Assert.True(result1);
+            Assert.False(result2);
         }
 
 
@@ -97,8 +97,8 @@ namespace HairSalon.Tests
             var result2 = (jsonResult2.Value as PackageMessage)?.Succeed;
 
             //Assert           
-            Assert.Equal(true, result);
-            Assert.Equal(false, result2);
+            Assert.True(result);
+            Assert.False(result2);
         }
 
         [Fact]
@@ -119,8 +119,8 @@ namespace HairSalon.Tests
             var result2 = (jsonResult2.Value as PackageMessage)?.Succeed;
 
             //Assert
-            Assert.Equal(true, result1);
-            Assert.Equal(false, result2);
+            Assert.True(result1);
+            Assert.False(result2);
         }
 
         [Fact]
@@ -158,8 +158,8 @@ namespace HairSalon.Tests
             var result2 = (jsonResult2.Value as PackageMessage)?.Succeed;
 
             //Assert
-            Assert.Equal(true, result1);
-            Assert.Equal(false, result2);
+            Assert.True(result1);
+            Assert.False(result2);
         }
     }
 }

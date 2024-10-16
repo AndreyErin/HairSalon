@@ -22,7 +22,7 @@ namespace HairSalon.Tests
             PackageMessage? packageMessage = result?.Value as PackageMessage;
 
             //Assert
-            Assert.Equal(true, (packageMessage?.Data as Config)?.MobileAppEnabled);
+            Assert.True((packageMessage?.Data as Config)?.MobileAppEnabled);
         }
 
         [Fact]
@@ -38,7 +38,7 @@ namespace HairSalon.Tests
             PackageMessage? packageMessage = result?.Value as PackageMessage;
 
             //Assert
-            Assert.Equal(true, packageMessage?.Succeed);
+            Assert.True(packageMessage?.Succeed);
         }
 
         private Config GetTestConfig() 
