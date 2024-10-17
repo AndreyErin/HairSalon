@@ -1,9 +1,9 @@
 ﻿namespace HairSalon.Model.Services
 {
-    public class FakeRepoOfService : IRepositoryOfServices<Service>
+    public class FakeRepoOfServices : IRepositoryOfServices<Service>
     {
         List<Service> _services;
-        public FakeRepoOfService()
+        public FakeRepoOfServices()
         {
             _services = new() {
                 new Service { Id = 1, Name = "Полубокс", Price = 100, TimeOfService = new TimeSpan(0,20,0), Description = "Под полубоксера" },
@@ -52,7 +52,11 @@
             Service? result = _services.Find(x => x.Id == entity.Id);
             if (result != null)
             {
-                result = entity;
+                result.Name = entity.Name;
+                result.Picture = entity.Picture;
+                result.Price = entity.Price;
+                result.TimeOfService = entity.TimeOfService;
+                result.Description = entity.Description;               
                 return 1;
             }
             return -1;
