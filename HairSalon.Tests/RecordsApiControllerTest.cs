@@ -24,16 +24,16 @@ namespace HairSalon.Tests
             //Assert
             Assert.Equal(3, resultCount);
             Assert.True(packageMessage?.Succeed);
-            Assert.Equal("Елена", records?.FirstOrDefault(s => s.Id == 2)?.Name);
+            Assert.Equal("Елена", records?.FirstOrDefault(s => s.Id == 2)?.ClientName);
         }
 
         private List<Model.Records.Record> GetAllRecords() 
         {
             return  new List<Model.Records.Record>
             {
-                new(){Id = 1, Name = "Мария", SeviceName = "Модельная", DateTimeOfRecord = new DateTime(2025, 01, 15, 10, 0, 0)},
-                new(){Id = 2, Name = "Елена", SeviceName = "Каре", DateTimeOfRecord = new DateTime(2025, 01, 15, 10, 30, 0)},
-                new(){Id = 3, Name = "Николай", SeviceName = "Полубокс", DateTimeOfRecord = new DateTime(2025, 01, 15, 11, 0, 0)}
+                new(){Id = 1, ClientName = "Мария", ClientPhone = "9600000000", SeviceName = "Модельная", DurationOfService = 20, DateTimeForVisit = new DateTime(2025, 01, 15, 10, 0, 0), EmployeeId = 1},
+                new(){Id = 2, ClientName = "Елена", ClientPhone = "9600000000", SeviceName = "Каре",  DurationOfService = 20, DateTimeForVisit = new DateTime(2025, 01, 15, 10, 30, 0), EmployeeId = 1},
+                new(){Id = 3, ClientName = "Николай", ClientPhone = "9600000000", SeviceName = "Полубокс",  DurationOfService = 20, DateTimeForVisit = new DateTime(2025, 01, 15, 11, 0, 0), EmployeeId = 1}
             };
         }
 
@@ -72,9 +72,9 @@ namespace HairSalon.Tests
             //Arrange
             string name1 = "Николай", name2 = "Тимофей";
             var mock = new Mock<IRepositoryOfRecords>();
-            mock.Setup(repo => repo.Get(name1)).Returns(GetAllRecords().FirstOrDefault(r => r.Name == name1));
+            mock.Setup(repo => repo.Get(name1)).Returns(GetAllRecords().FirstOrDefault(r => r.ClientName == name1));
             //недостижимое имя name2
-            mock.Setup(repo => repo.Get(name2)).Returns(GetAllRecords().FirstOrDefault(r => r.Name == name2));
+            mock.Setup(repo => repo.Get(name2)).Returns(GetAllRecords().FirstOrDefault(r => r.ClientName == name2));
             RecordsApiController recordsApiController = new(mock.Object);
 
             //Act
@@ -126,8 +126,8 @@ namespace HairSalon.Tests
         public void AddResult()
         {
             //Arrange
-            Model.Records.Record record1 = new() { Id = 11, Name = "Лейла", SeviceName = "Каре", DateTimeOfRecord = new DateTime(2025, 02, 15, 10, 0, 0) };
-            Model.Records.Record record2 = new() { Id = 12, Name = "Мария", SeviceName = "Модельная", DateTimeOfRecord = new DateTime(2025, 01, 15, 10, 0, 0) };
+            Model.Records.Record record1 = new() { Id = 11, ClientName = "Лейла", SeviceName = "Каре", DateTimeForVisit = new DateTime(2025, 02, 15, 10, 0, 0) };
+            Model.Records.Record record2 = new() { Id = 12, ClientName = "Мария", SeviceName = "Модельная", DateTimeForVisit = new DateTime(2025, 01, 15, 10, 0, 0) };
 
             var mock = new Mock<IRepositoryOfRecords>();
             mock.Setup(repo => repo.Add(record1)).Returns(1);
