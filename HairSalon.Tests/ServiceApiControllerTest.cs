@@ -13,7 +13,7 @@ namespace HairSalon.Tests
         public void GetAllResultData()
         {
             //Arrange
-            var mock = new Mock<IRepositoryOfServices<Service>>();
+            var mock = new Mock<IRepositoryOfServices>();
             mock.Setup(repo => repo.GetAll()).Returns(GetAllService); ;
             ServicesApiController servicesApiController = new(mock.Object);
             PackageMessage? packageMessage = servicesApiController.GetAll().Value as PackageMessage;
@@ -45,7 +45,7 @@ namespace HairSalon.Tests
         {
             //Arrange
             int id = 1, id2 = 20;    
-            var mock = new Mock<IRepositoryOfServices<Service>>();
+            var mock = new Mock<IRepositoryOfServices>();
             mock.Setup(repo => repo.Get(id)).Returns(GetAllService().FirstOrDefault(s=>s.Id == id));
             //id2 - недостижимый индекс
             mock.Setup(repo => repo.Get(id2)).Returns(GetAllService().FirstOrDefault(s => s.Id == id2));
@@ -92,7 +92,7 @@ namespace HairSalon.Tests
                 TimeOfService = new(0, 25, 0)
             };
             //успех
-            var mock = new Mock<IRepositoryOfServices<Service>>();
+            var mock = new Mock<IRepositoryOfServices>();
             mock.Setup(repo => repo.Add(service1)).Returns(1);          
             //неудача
             mock.Setup(repo => repo.Add(service2)).Returns(0);
@@ -120,7 +120,7 @@ namespace HairSalon.Tests
         {
             //Arrange
             int id = 1, id2 = 20;
-            var mock = new Mock<IRepositoryOfServices<Service>>();
+            var mock = new Mock<IRepositoryOfServices>();
             mock.Setup(repo => repo.Delete(id)).Returns(1);
             //id2 - недостижимый индекс
             mock.Setup(repo => repo.Delete(id2)).Returns(0);
@@ -165,7 +165,7 @@ namespace HairSalon.Tests
                 Price = 333,
                 TimeOfService = new(0, 25, 0)
             };
-            var mock = new Mock<IRepositoryOfServices<Service>>();
+            var mock = new Mock<IRepositoryOfServices>();
             mock.Setup(repo => repo.Update(service1)).Returns(1);
             //id2 - недостижимый индекс
             mock.Setup(repo => repo.Update(service2)).Returns(0);

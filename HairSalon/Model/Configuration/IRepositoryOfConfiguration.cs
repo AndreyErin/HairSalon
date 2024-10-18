@@ -4,6 +4,5 @@
     {
         Config GetConfig();
         void SetConfig(Config config);
-
     }
 }

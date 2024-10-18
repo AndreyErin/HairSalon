@@ -14,7 +14,7 @@ namespace HairSalon
             builder.Services.AddSpaStaticFiles(config=>config.RootPath = "ClientApp/dist");
 
             //репозитоий для услуг
-            builder.Services.AddSingleton<IRepositoryOfServices<Service>, FakeRepoOfServices>();
+            builder.Services.AddSingleton<IRepositoryOfServices, FakeRepoOfServices>();
             //репозиторий для настроек(управление сайтом)
             builder.Services.AddSingleton<IRepositoryOfConfiguration, JsonRepoOfConfiguration>();
             //репозиторий для записей клиентов

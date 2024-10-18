@@ -1,6 +1,6 @@
 ﻿namespace HairSalon.Model.Services
 {
-    public class FakeRepoOfServices : IRepositoryOfServices<Service>
+    public class FakeRepoOfServices : IRepositoryOfServices
     {
         List<Service> _services;
         public FakeRepoOfServices()

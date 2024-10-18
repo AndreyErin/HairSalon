@@ -1,11 +1,7 @@
 ﻿namespace HairSalon.Model.Records
 {
-    public interface IRepositoryOfRecords
+    public interface IRepositoryOfRecords: IRepository<Record>
     {
-        List<Record> GetAll();
-        Record? Get(int id);
         Record? Get(string name);
-        int Delete(int id);
-        int Add(Record record);
     }
 }

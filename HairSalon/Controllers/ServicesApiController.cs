@@ -8,8 +8,8 @@ namespace HairSalon.Controllers
     [Route("api/service")]
     public class ServicesApiController : Controller
     {
-        private IRepositoryOfServices<Service> _services;
-        public ServicesApiController(IRepositoryOfServices<Service> services) 
+        private IRepositoryOfServices _services;
+        public ServicesApiController(IRepositoryOfServices services) 
         {
             _services = services;
         }
