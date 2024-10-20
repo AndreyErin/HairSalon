@@ -86,5 +86,12 @@ namespace HairSalon.Controllers
             packageMessage = new(false, errorText: "Ошибка. Выбранное время уже занято.");
             return Json(packageMessage);
         }
+
+        [HttpGet]
+        [Route("daysforrecords")]
+        public JsonResult GetDaysForRecords()
+        {
+            return Json(new PackageMessage(true, _records.GetDaysForRecords()));
+        }
     }
 }

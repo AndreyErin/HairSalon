@@ -4,13 +4,22 @@ namespace HairSalon.Model.Records
     public class FakeRepoOfRecords : IRepositoryOfRecords
     {
         List<Record> _records;
+        List<DateOnly> _daysForRecords;
         public FakeRepoOfRecords() 
         {
-            _records = new List<Record>
+            _records = new()
             {
                 new(){Id = 1, ClientName = "Мария", ClientPhone = "9600000000", SeviceName = "Модельная", DurationOfService = 20, DateTimeForVisit = new DateTime(2025, 01, 15, 10, 0, 0), EmployeeId = 1},
                 new(){Id = 2, ClientName = "Елена", ClientPhone = "9600000000", SeviceName = "Каре",  DurationOfService = 20, DateTimeForVisit = new DateTime(2025, 01, 15, 10, 30, 0), EmployeeId = 1},
-                new(){Id = 3, ClientName = "Николай", ClientPhone = "9600000000", SeviceName = "Полубокс",  DurationOfService = 20, DateTimeForVisit = new DateTime(2025, 01, 15, 11, 0, 0), EmployeeId = 1}            };
+                new(){Id = 3, ClientName = "Николай", ClientPhone = "9600000000", SeviceName = "Полубокс",  DurationOfService = 20, DateTimeForVisit = new DateTime(2025, 01, 15, 11, 0, 0), EmployeeId = 1}            
+            };
+
+            _daysForRecords = new()
+            {
+                new(2025, 1 , 15),
+                new(2025, 1 , 16),
+                new(2025, 1 , 17)
+            };
         }
         public int Add(Record record)
         {
@@ -50,6 +59,29 @@ namespace HairSalon.Model.Records
         public List<Record> GetAll()
         {
             return _records;
+        }
+
+
+        public int AddDayForRecords(DateOnly date)
+        {
+            bool result = _daysForRecords.Contains(date);
+            if (!result)
+            {
+                _daysForRecords.Add(date);
+                return 1;
+            }
+            return -1;
+        }
+
+        public List<DateOnly> GetDaysForRecords()
+        {
+            return _daysForRecords;
+        }
+
+        public bool IsDayForRecords(DateOnly date)
+        {
+            //доступна ли дата для записи
+            return _daysForRecords.Contains(date);
         }
     }
 }

@@ -3,6 +3,7 @@ using HairSalon.Model.Records;
 using HairSalon.Model;
 using Moq;
 using Xunit;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HairSalon.Tests
 {
@@ -150,6 +151,32 @@ namespace HairSalon.Tests
 
             Assert.DoesNotContain("Ошибка", packageMessage1?.ErrorText);
             Assert.Contains("Ошибка", packageMessage2?.ErrorText);
+        }
+
+        [Fact]
+        public void GetDaysForRecordsResult()
+        {
+            //Arrange
+            List<DateOnly> days = new() 
+            {
+                new(2025, 1 , 15),
+                new(2025, 1 , 16),
+                new(2025, 1 , 17)
+            };
+            var mock = new Mock<IRepositoryOfRecords>();
+            mock.Setup(d=>d.GetDaysForRecords()).Returns(days);
+            RecordsApiController recordsApiController = new(mock.Object);
+
+            //Act
+            JsonResult jsonResult = recordsApiController.GetDaysForRecords();
+            PackageMessage? packageMessage = jsonResult.Value as PackageMessage;
+
+            //Assert
+            Assert.NotNull(packageMessage);
+            Assert.NotNull(packageMessage.Data);
+            Assert.True(packageMessage.Succeed);
+            Assert.Equal(3, (packageMessage?.Data as List<DateOnly>)?.Count);
+            Assert.Equal(new DateOnly(2025, 1, 17), (packageMessage?.Data as List<DateOnly>)?[2]);
         }
     }
 }
