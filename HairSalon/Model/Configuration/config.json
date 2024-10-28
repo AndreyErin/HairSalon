@@ -1,1 +1,1 @@
-{"PromotionEnabled":false,"MobileAppEnabled":false}
+{"PromotionEnabled":false,"MobileAppEnabled":false,"RecordEnable":false,"StartTimeOfDaty":10,"EndTimeOfDaty":18,"NumberOfDaysForRecords":7,"WorkDaysOfWeek":{"Sanday":false,"Monday":true,"Tuesday":true,"Wednesday":true,"Thursday":true,"Friday":true,"Saturday":false}}
