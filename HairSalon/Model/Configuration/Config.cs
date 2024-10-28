@@ -13,6 +13,5 @@
         public int StartTimeOfDaty { get; set; }//начало рабочего дня
         public int EndTimeOfDaty { get;set; }//конец рабочего дня
         public int NumberOfDaysForRecords { get; set; }//количество доступных дней для записи
-        public WorkDaysOfWeek  WorkDaysOfWeek { get; set; }//рабочие дни недели
     }
 }
