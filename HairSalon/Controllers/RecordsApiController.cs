@@ -1,4 +1,5 @@
 ﻿using HairSalon.Model;
+using HairSalon.Model.Configuration;
 using HairSalon.Model.Records;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,9 +10,11 @@ namespace HairSalon.Controllers
     public class RecordsApiController : Controller
     {
         IRepositoryOfRecords _records;
-        public RecordsApiController(IRepositoryOfRecords records)
+        IRepositoryOfConfiguration _configuration;
+        public RecordsApiController(IRepositoryOfRecords records, IRepositoryOfConfiguration configuration)
         {
             _records = records; 
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -92,6 +95,48 @@ namespace HairSalon.Controllers
         public JsonResult GetDaysForRecords()
         {
             return Json(new PackageMessage(true, _records.GetDaysForRecords()));
+        }
+
+        [HttpGet]
+        [Route("freetimeforrecords")]
+        public JsonResult GetFreeTimeForRecords(int timeOfService)
+        {
+            List<FreeTimeForRecords> freeTimeForRecords = new();
+            //время разбивается на отрезки по пол часа
+            //просматриваем все даты, начиная от сегодняшней + число дней из конфигурации
+            int countDays = _configuration.GetConfig().NumberOfDaysForRecords;
+            DateOnly toDay = new DateOnly(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+            DateOnly lastDay = toDay.AddDays(7);
+            var daysForRecords = _records.GetDaysForRecords().Where(d=>d <= lastDay);
+
+            //начало и конец рабочего дня
+            TimeOnly startWorkTime = _configuration.GetConfig().StartTimeOfDaty;
+            TimeOnly endWorkTime = _configuration.GetConfig().EndTimeOfDaty;
+
+            foreach (var day in daysForRecords) 
+            {
+
+                List<TimeOnly> times = new();
+                while (startWorkTime < endWorkTime) 
+                {
+                    //проверяем есть ли записть на это время и дату, если есть то пропускаем ее
+                    if (_records.GetAll().FirstOrDefault(r=>r.TimeForVisit == startWorkTime && r.DateForVisit == day) == null) 
+                    {
+                        //если такой записи нет, то добаялем время в сисок свободного времени
+                        times.Add(startWorkTime);
+                    }
+                    //добавляем 30 минут и проверяем следующее время
+                    startWorkTime = startWorkTime.AddMinutes(30);
+                }
+
+                freeTimeForRecords.Add(new() { Date = day, Times = times });
+                //обнуляем начальное время
+                startWorkTime = _configuration.GetConfig().StartTimeOfDaty;
+            }
+
+            //формируем ответ
+            PackageMessage  packageMessage = new(true, freeTimeForRecords);
+            return Json(packageMessage);
         }
     }
 }

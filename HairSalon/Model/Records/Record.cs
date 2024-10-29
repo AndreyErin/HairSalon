@@ -7,7 +7,8 @@
         public string ClientPhone { get; set; }
         public string SeviceName { get; set; }
         public int DurationOfService { get; set; }
-        public DateTime DateTimeForVisit { get; set; }        
+        public DateOnly DateForVisit { get; set; }
+        public TimeOnly TimeForVisit { get; set; }
         public int EmployeeId { get; set; }//id парикмахера, к которму записаны
     }
 }

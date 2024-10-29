@@ -6,5 +6,7 @@
         List<DateOnly> GetDaysForRecords();
         int AddDayForRecords(DateOnly date);
         bool IsDayForRecords(DateOnly date);
+
+
     }
 }
