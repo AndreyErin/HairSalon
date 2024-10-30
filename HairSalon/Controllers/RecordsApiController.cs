@@ -159,7 +159,7 @@ namespace HairSalon.Controllers
                                 break;
                             case > 0:
                                 //проверяем свободно ли дополнительное время, необходимое для закписи
-                                if(CheckExtraTime(startWorkTime, day, extraTimeLags, employeeId))
+                                if(CheckExtraTime(startWorkTime, endWorkTime, day, extraTimeLags, employeeId))
                                     times.Add(startWorkTime);
                                 break;
                         }
@@ -189,11 +189,16 @@ namespace HairSalon.Controllers
 
         }
 
-        private bool CheckExtraTime(TimeOnly startTime, DateOnly day, int extraTimeCount, int employeeId)
+        public bool CheckExtraTime(TimeOnly startTime, TimeOnly endTime, DateOnly day, int extraTimeCount, int employeeId)
         {
             for (int i = 0; i < extraTimeCount; i++)
             {
                 startTime = startTime.AddMinutes(30);
+                if (startTime == endTime)
+                {
+                    return false; //если мы выходим за пределы рабочего времени
+                }
+
 
                 if (_records.GetAll().FirstOrDefault(r =>
                         r.TimeForVisit == startTime &&
