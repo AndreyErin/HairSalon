@@ -16,6 +16,8 @@ namespace HairSalon.Model.Records
 
             _daysForRecords = new()
             {
+                new(2024, 10, 30),
+
                 new(2024, 11 , 1),
                 new(2024, 11 , 3),
                 new(2024, 11 , 5)
@@ -23,8 +25,11 @@ namespace HairSalon.Model.Records
         }
         public int Add(Record record)
         {
-            //проверям не занято ли это время
-            Record? result = _records.FirstOrDefault(r=> r.DateForVisit == record.DateForVisit && r.TimeForVisit == record.TimeForVisit);
+            //проверям не занято ли это время(у конкретного работника)
+            Record? result = _records.FirstOrDefault(r=> 
+                r.DateForVisit == record.DateForVisit &&
+                r.TimeForVisit == record.TimeForVisit &&
+                r.EmployeeId == record.EmployeeId);
             if(result == null)
             {
                 _records.Add(record);
