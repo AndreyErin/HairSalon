@@ -191,11 +191,119 @@ namespace HairSalon.Tests
             Assert.Equal(new DateOnly(2025, 1, 17), (packageMessage?.Data as List<DateOnly>)?[2]);
         }
 
-        //[Fact]
-        //public void GetFreeTimeForRecordsResult() 
-        //{
+        [Fact]
+        public void GetFreeTimeForRecordsResult()
+        {
+            //Arrange
+            var mockRecords = new Mock<IRepositoryOfRecords>();
+            mockRecords.Setup(r => r.GetAll()).Returns(GetAllRecords2);
+            mockRecords.Setup(r => r.GetDaysForRecords()).Returns(GetDaysForRecords());
+            var mockConfig = new Mock<IRepositoryOfConfiguration>();
+            mockConfig.Setup(c=>c.GetConfig()).Returns(GetConfig());
+            RecordsApiController recordsApiController = new(mockRecords.Object, mockConfig.Object);
 
-        //}
+            //Act
+            JsonResult jsonResult1 = recordsApiController.GetFreeTimeForRecords(65, 1);
+            PackageMessage? packageMessage1 = jsonResult1.Value as PackageMessage;
+            List<FreeTimeForRecords>? freeTimeForRecords1 = packageMessage1?.Data as List<FreeTimeForRecords>;
+
+            JsonResult jsonResult2 = recordsApiController.GetFreeTimeForRecords(30, 1);
+            PackageMessage? packageMessage2 = jsonResult2.Value as PackageMessage;
+            List<FreeTimeForRecords>? freeTimeForRecords2 = packageMessage2?.Data as List<FreeTimeForRecords>;
+
+            //Assert
+            Assert.True(packageMessage1?.Succeed);
+            Assert.Equal(5, freeTimeForRecords1?.Count);
+            //для услуги длительностью 65 минут доступны 13 вариантов времени для записи,
+            //при условии, что 10:00 уже заняты услугой на 20 минут
+            Assert.Equal(13, freeTimeForRecords1?[0].Times.Count);
+            //для услуги длительностью 65 минут доступны 14 вариантов времени для записи,
+            //при условии, что весь день свободен для записи
+            Assert.Equal(14, freeTimeForRecords1?[4].Times.Count);
+
+            Assert.True(packageMessage2?.Succeed);
+            Assert.Equal(5, freeTimeForRecords2?.Count);
+            //для услуги длительностью 30 минут доступны 15 вариантов времени для записи
+            //при условии, что 10:00 уже заняты услугой на 20 минут
+            Assert.Equal(15, freeTimeForRecords2?[0].Times.Count);
+            //для услуги длительностью 30 минут доступны 16 вариантов времени для записи,
+            //при условии, что весь день свободен для записи
+            Assert.Equal(16, freeTimeForRecords2?[4].Times.Count);
+
+        }
+
+        private Config GetConfig()
+        {
+            return new() 
+            {
+                MobileAppEnabled = true,
+                RecordEnable = true,
+                PromotionEnabled = true,
+                NumberOfDaysForRecords = 10, 
+                StartTimeOfDaty = new(10,00), 
+                EndTimeOfDaty = new(18, 00)               
+            };
+        }
+
+        private List<DateOnly> GetDaysForRecords()
+        {
+            DateOnly toDay = new(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+            //DateOnly day = toDay.AddDays(1);
+
+            List<DateOnly> result = new();
+            //8 дней подрят начиная с завтрашнего
+            //сегодняшний день проверять нельзя, тк в зависимоти от времени дня
+            //запись то будет, то нет
+            for (int i = 0; i < 5; i++)
+            {
+                toDay = toDay.AddDays(1);
+                result.Add(toDay);
+            }
+
+            return result;
+        }
+
+        private List<Model.Records.Record> GetAllRecords2()
+        {
+            DateOnly toDay = new( DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+
+            return new() 
+            { 
+                new Model.Records.Record 
+                { 
+                    Id = 1,
+                    ClientName = "Маша",
+                    ClientPhone = "00000",
+                    DateForVisit = toDay.AddDays(1),
+                    TimeForVisit = new(10,00),
+                    SeviceName = "Стрижка",
+                    DurationOfService = 20,
+                    EmployeeId = 1
+                } ,
+                new Model.Records.Record
+                {
+                    Id = 2,
+                    ClientName = "Лена",
+                    ClientPhone = "00000",
+                    DateForVisit = toDay.AddDays(2),
+                    TimeForVisit = new(12,00),
+                    SeviceName = "Стрижка",
+                    DurationOfService = 70,
+                    EmployeeId = 1
+                } ,
+                new Model.Records.Record
+                {
+                    Id = 2,
+                    ClientName = "Гена",
+                    ClientPhone = "00000",
+                    DateForVisit = toDay.AddDays(3),
+                    TimeForVisit = new(15,00),
+                    SeviceName = "Стрижка",
+                    DurationOfService = 50,
+                    EmployeeId = 1
+                } ,
+            };
+        }
 
         [Fact]
         public void CheckExtraTimeResult()

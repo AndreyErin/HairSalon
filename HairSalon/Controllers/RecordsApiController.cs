@@ -112,9 +112,9 @@ namespace HairSalon.Controllers
                     break;
                 //если время больше 30 минут
                 case > 30:
-                    extraTimeLags = timeOfService / 30;
-                    if (timeOfService % 30 == 0)
-                        extraTimeLags--;
+                    extraTimeLags = (timeOfService -30) / 30;
+                    if (timeOfService % 30 != 0)
+                        extraTimeLags++;
                     break;
             }
 
@@ -124,11 +124,11 @@ namespace HairSalon.Controllers
             int countDays = _configuration.GetConfig().NumberOfDaysForRecords;
             DateOnly toDay = new DateOnly(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
             DateOnly lastDay = toDay.AddDays(7);
-            var daysForRecords = _records.GetDaysForRecords().Where(d=>d <= lastDay);
+            var daysForRecords = _records.GetDaysForRecords().Where(d=>d >=toDay && d <= lastDay);
 
             //начало и конец рабочего дня
             TimeOnly startWorkTime = _configuration.GetConfig().StartTimeOfDaty;
-            TimeOnly endWorkTime = _configuration.GetConfig().EndTimeOfDaty.AddMinutes(-30 * extraTimeLags);
+            TimeOnly endWorkTime = _configuration.GetConfig().EndTimeOfDaty;
 
             foreach (var day in daysForRecords) 
             {
@@ -170,7 +170,12 @@ namespace HairSalon.Controllers
                     startWorkTime = startWorkTime.AddMinutes(30);
                 }
 
-                freeTimeForRecords.Add(new() { Date = day, Times = times });
+                //если в этот день доступна хотябы одна запись, то добавляем этот день
+                if(times.Count > 0)
+                {
+                    freeTimeForRecords.Add(new() { Date = day, Times = times });
+                }
+                
                 //обнуляем начальное время
                 startWorkTime = _configuration.GetConfig().StartTimeOfDaty;
             }
