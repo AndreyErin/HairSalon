@@ -30,16 +30,6 @@ namespace HairSalon.Tests
             Assert.Equal("Елена", records?.FirstOrDefault(s => s.Id == 2)?.ClientName);
         }
 
-        private List<Model.Records.Record> GetAllRecords() 
-        {
-            return  new List<Model.Records.Record>
-            {
-                new(){Id = 1, ClientName = "Мария", ClientPhone = "9600000000", SeviceName = "Модельная", DurationOfService = 20, DateForVisit = new(2025, 01, 15) , TimeForVisit = new( 10, 0, 0), EmployeeId = 1},
-                new(){Id = 2, ClientName = "Елена", ClientPhone = "9600000000", SeviceName = "Каре",  DurationOfService = 20, DateForVisit = new(2025, 01, 15), TimeForVisit = new(10, 30, 0), EmployeeId = 1},
-                new(){Id = 3, ClientName = "Николай", ClientPhone = "9600000000", SeviceName = "Полубокс",  DurationOfService = 20, DateForVisit = new(2025, 01, 15) , TimeForVisit = new( 11, 0, 0), EmployeeId = 1}
-            };
-        }
-
         [Fact]
         public void GetResultDataInt()
         {
@@ -196,7 +186,7 @@ namespace HairSalon.Tests
         {
             //Arrange
             var mockRecords = new Mock<IRepositoryOfRecords>();
-            mockRecords.Setup(r => r.GetAll()).Returns(GetAllRecords2);
+            mockRecords.Setup(r => r.GetAll()).Returns(GetAllRecords);
             mockRecords.Setup(r => r.GetDaysForRecords()).Returns(GetDaysForRecords());
             var mockConfig = new Mock<IRepositoryOfConfiguration>();
             mockConfig.Setup(c=>c.GetConfig()).Returns(GetConfig());
@@ -214,9 +204,9 @@ namespace HairSalon.Tests
             //Assert
             Assert.True(packageMessage1?.Succeed);
             Assert.Equal(5, freeTimeForRecords1?.Count);
-            //для услуги длительностью 65 минут доступны 13 вариантов времени для записи,
-            //при условии, что 10:00 уже заняты услугой на 20 минут
-            Assert.Equal(13, freeTimeForRecords1?[0].Times.Count);
+            //для услуги длительностью 65 минут доступны 11 вариантов времени для записи,
+            //при условии, что 11:00 уже заняты услугой на 20 минут
+            Assert.Equal(11, freeTimeForRecords1?[0].Times.Count);
             //для услуги длительностью 65 минут доступны 14 вариантов времени для записи,
             //при условии, что весь день свободен для записи
             Assert.Equal(14, freeTimeForRecords1?[4].Times.Count);
@@ -224,12 +214,42 @@ namespace HairSalon.Tests
             Assert.True(packageMessage2?.Succeed);
             Assert.Equal(5, freeTimeForRecords2?.Count);
             //для услуги длительностью 30 минут доступны 15 вариантов времени для записи
-            //при условии, что 10:00 уже заняты услугой на 20 минут
+            //при условии, что 11:00 уже заняты услугой на 20 минут
             Assert.Equal(15, freeTimeForRecords2?[0].Times.Count);
             //для услуги длительностью 30 минут доступны 16 вариантов времени для записи,
             //при условии, что весь день свободен для записи
             Assert.Equal(16, freeTimeForRecords2?[4].Times.Count);
 
+        }
+
+        [Fact]
+        public void CheckExtraTimeResult()
+        {
+            //проверяем наличие дополнительного время для записи
+            //если услуга длится дольше стандартных 30 минут
+
+            //Arrange
+            TimeOnly startTime1 = new(10, 0, 0);
+            TimeOnly startTime2 = new(14, 0, 0);
+            TimeOnly startTime3 = new(17, 30, 0);
+
+            TimeOnly endTime = new(18, 0, 0);
+            DateOnly day = new DateOnly(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).AddDays(1);
+
+            var mockRecords = new Mock<IRepositoryOfRecords>();
+            mockRecords.Setup(r => r.GetAll()).Returns(GetAllRecords());
+            var mockCongig = new Mock<IRepositoryOfConfiguration>();
+            RecordsApiController recordsApiController = new(mockRecords.Object, mockCongig.Object);
+
+            //Act
+            bool result1 = recordsApiController.CheckExtraTime(startTime1, endTime, day, 2, 1);
+            bool result2 = recordsApiController.CheckExtraTime(startTime2, endTime, day, 4, 1);
+            bool result3 = recordsApiController.CheckExtraTime(startTime3, endTime, day, 2, 1);
+
+            //Assert
+            Assert.False(result1);
+            Assert.True(result2);
+            Assert.False(result3);
         }
 
         private Config GetConfig()
@@ -263,7 +283,7 @@ namespace HairSalon.Tests
             return result;
         }
 
-        private List<Model.Records.Record> GetAllRecords2()
+        private List<Model.Records.Record> GetAllRecords()
         {
             DateOnly toDay = new( DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
 
@@ -273,66 +293,38 @@ namespace HairSalon.Tests
                 { 
                     Id = 1,
                     ClientName = "Маша",
-                    ClientPhone = "00000",
+                    ClientPhone = "9600000000",
                     DateForVisit = toDay.AddDays(1),
-                    TimeForVisit = new(10,00),
-                    SeviceName = "Стрижка",
+                    TimeForVisit = new(11,00),
+                    SeviceName = "Модельная",
                     DurationOfService = 20,
                     EmployeeId = 1
                 } ,
                 new Model.Records.Record
                 {
                     Id = 2,
-                    ClientName = "Лена",
-                    ClientPhone = "00000",
+                    ClientName = "Елена",
+                    ClientPhone = "9600000000",
                     DateForVisit = toDay.AddDays(2),
                     TimeForVisit = new(12,00),
-                    SeviceName = "Стрижка",
+                    SeviceName = "Каре",
                     DurationOfService = 70,
                     EmployeeId = 1
                 } ,
                 new Model.Records.Record
                 {
-                    Id = 2,
-                    ClientName = "Гена",
-                    ClientPhone = "00000",
+                    Id = 3,
+                    ClientName = "Николай",
+                    ClientPhone = "9600000000",
                     DateForVisit = toDay.AddDays(3),
                     TimeForVisit = new(15,00),
-                    SeviceName = "Стрижка",
+                    SeviceName = "Полубокс",
                     DurationOfService = 50,
                     EmployeeId = 1
-                } ,
+                } 
             };
         }
 
-        [Fact]
-        public void CheckExtraTimeResult()
-        {
-            //проверяем наличие дополнительного время для записи
-            //если услуга длится дольше стандартных 30 минут
-            
-            //Arrange
-            TimeOnly startTime1 = new(10,0,0);
-            TimeOnly startTime2 = new(15, 0, 0);
-            TimeOnly startTime3 = new(17, 30, 0);
 
-            TimeOnly endTime = new(18, 0, 0);
-            DateOnly day = new(2025, 1, 15);
-
-            var mockRecords = new Mock<IRepositoryOfRecords>();
-            mockRecords.Setup(r=>r.GetAll()).Returns(GetAllRecords());
-            var mockCongig = new Mock<IRepositoryOfConfiguration>();
-            RecordsApiController recordsApiController = new(mockRecords.Object, mockCongig.Object);
-
-            //Act
-            bool result1 = recordsApiController.CheckExtraTime(startTime1, endTime, day, 2, 1);
-            bool result2 = recordsApiController.CheckExtraTime(startTime2, endTime, day, 4, 1);
-            bool result3 = recordsApiController.CheckExtraTime(startTime3, endTime, day, 2, 1);
-
-            //Assert
-            Assert.False(result1);
-            Assert.True(result2);
-            Assert.False(result3);
-        }
     }
 }
