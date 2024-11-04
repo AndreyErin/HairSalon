@@ -1,0 +1,31 @@
+﻿@model Config
+
+<div class="container">
+    <div class="row">
+        <div class="col">Акция</div>
+        <div class="col">@Model.PromotionEnabled</div>
+    </div>
+        <div class="row">
+        <div class="col">Мобильное приложение</div>
+        <div class="col">@Model.MobileAppEnabled</div>
+    </div>
+    <div class="row">
+        <div class="col">возможность записи</div>
+        <div class="col">@Model.RecordEnable</div>
+    </div>
+    <div class="row">
+        <div class="col">Начало рабочего дня</div>
+        <div class="col">@Model.StartTimeOfDaty</div>
+    </div>
+        <div class="row">
+        <div class="col">Конец рабочего дня</div>
+        <div class="col">@Model.EndTimeOfDaty</div>
+    </div>
+    <div class="row">
+        <div class="col">Количество дней для записи</div>
+        <div class="col">@Model.NumberOfDaysForRecords</div>
+    </div>
+    <div class="row">
+        <a asp-controller="Configuration" asp-action="index">Изменить</a>
+    </div>
+</div>
