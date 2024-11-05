@@ -1,32 +1,53 @@
 ﻿@model Config
 
 <div class="container">
-    <div class="row">
-        <h1>Конфигурация</h1>
-    </div>
+    <form asp-action="SetConfiguration" method="post">
+        <div class="row text-center">
+            <h1>Конфигурация</h1>
+        </div>
 
-    <div class="row">
-        <div class="col">Акция</div>
-        <div class="col">@Model.PromotionEnabled</div>
-    </div>
-    <div class="row">
-        <div class="col">Мобильное приложение</div>
-        <div class="col">@Model.MobileAppEnabled</div>
-    </div>
-    <div class="row">
-        <div class="col">возможность записи</div>
-        <div class="col">@Model.RecordEnable</div>
-    </div>
-    <div class="row">
-        <div class="col">Начало рабочего дня</div>
-        <div class="col">@Model.StartTimeOfDaty</div>
-    </div>
-    <div class="row">
-        <div class="col">Конец рабочего дня</div>
-        <div class="col">@Model.EndTimeOfDaty</div>
-    </div>
-    <div class="row">
-        <div class="col">Количество дней для записи</div>
-        <div class="col">@Model.NumberOfDaysForRecords</div>
-    </div>
+        <div class="row">
+            <div class="col col-lg-4">Акция</div>
+            <div class="col col-lg-8 form-check form-switch">
+                <input type="checkbox" asp-for="PromotionEnabled" class="form-check-input ms-1" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-lg-4">Мобильное приложение</div>
+            <div class="col col-lg-8 form-check form-switch">
+                <input type="checkbox" asp-for="MobileAppEnabled" class="form-check-input ms-1" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-lg-4">Возможность записи</div>
+            <div class="col col-lg-8 form-check form-switch">
+                <input type="checkbox" asp-for="RecordEnable" class="form-check-input ms-1" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-lg-4">Начало рабочего дня</div>
+            <div class="col col-lg-8">
+                <input type="time" asp-for="StartTimeOfDaty" class="form-control ms-3 w-auto" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-lg-4">Конец рабочего дня</div>
+            <div class="col col-lg-8">
+                <input type="time" asp-for="EndTimeOfDaty" class="form-control ms-3 w-auto" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-lg-4">Количество дней для записи</div>
+            <div class="col col-lg-8">
+                <input type="number" asp-for="NumberOfDaysForRecords" class="form-control  ms-3 w-auto" />
+            </div>
+        </div>
+
+        <div class="row text-center mt-2">
+            <div class="col">
+                <button type="submit" class="btn btn-success btn-sm">Сохранить</button>
+                <a asp-controller="Admin" class="btn btn-warning btn-sm">Назад</a>
+            </div>           
+        </div>
+    </form>   
 </div>

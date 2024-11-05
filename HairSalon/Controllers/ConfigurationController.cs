@@ -15,5 +15,13 @@ namespace HairSalon.Controllers
         {
             return View(_repositoryOfConfiguration.GetConfig());
         }
+
+        public RedirectToActionResult SetConfiguration(Config config) 
+        {
+            _repositoryOfConfiguration.SetConfig(config);
+
+            return RedirectToAction("Index");
+        }
+
     }
 }
