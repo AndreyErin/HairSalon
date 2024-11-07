@@ -7,20 +7,21 @@ namespace HairSalon.Model.Records
         List<DateOnly> _daysForRecords;
         public FakeRepoOfRecords() 
         {
+            var dt = DateTime.Now;
+
             _records = new()
             {
-                new(){Id = 1, ClientName = "Мария", ClientPhone = "9600000000", SeviceName = "Модельная", DurationOfService = 20, DateForVisit = new(2024, 11 , 1), TimeForVisit = new ( 10, 0, 0), EmployeeId = 1},
-                new(){Id = 2, ClientName = "Елена", ClientPhone = "9600000000", SeviceName = "Каре",  DurationOfService = 20, DateForVisit = new(2024, 11 , 1), TimeForVisit = new TimeOnly( 10, 30, 0), EmployeeId = 1},
-                new(){Id = 3, ClientName = "Николай", ClientPhone = "9600000000", SeviceName = "Полубокс",  DurationOfService = 20, DateForVisit = new(2024, 11 , 3), TimeForVisit = new(11, 0, 0), EmployeeId = 1}            
+                new(){Id = 1, ClientName = "Мария", ClientPhone = "9600000000", SeviceName = "Модельная", DurationOfService = 20, DateForVisit = new(dt.Year, dt.Month, dt.Day + 1), TimeForVisit = new ( 10, 0, 0), EmployeeId = 1},
+                new(){Id = 2, ClientName = "Елена", ClientPhone = "9600000000", SeviceName = "Каре",  DurationOfService = 20, DateForVisit = new(dt.Year, dt.Month, dt.Day + 1), TimeForVisit = new TimeOnly( 10, 30, 0), EmployeeId = 1},
+                new(){Id = 3, ClientName = "Николай", ClientPhone = "9600000000", SeviceName = "Полубокс",  DurationOfService = 20, DateForVisit = new(dt.Year, dt.Month, dt.Day + 3), TimeForVisit = new(11, 0, 0), EmployeeId = 1}            
             };
 
             _daysForRecords = new()
             {
-                new(2024, 10, 30),
-
-                new(2024, 11 , 1),
-                new(2024, 11 , 3),
-                new(2024, 11 , 5)
+                new(dt.Year, dt.Month, dt.Day),                   
+                new(dt.Year, dt.Month, dt.Day + 1),
+                new(dt.Year, dt.Month, dt.Day + 3),
+                new(dt.Year, dt.Month, dt.Day + 4)
             };
         }
         public int Add(Record record)
