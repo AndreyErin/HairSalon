@@ -101,9 +101,10 @@ namespace HairSalon.Controllers
         [Route("freetimeforrecords")]
         public JsonResult GetFreeTimeForRecords(int timeOfService, int employeeId)
         {
+            //создаем сервис, который будет расчитывать свободное время для записи
             FreeTimeForRecordService freeTimeService = new(_records, _configuration);
 
-            List<FreeTimeForRecords> freeTime = freeTimeService.GetFreeTime(timeOfService, employeeId);
+            List<FreeTimeForRecords> freeTime = freeTimeService.GetFreeTimes(timeOfService, employeeId);
 
             //формируем ответ
             if (freeTime.Count > 0)//время для записи есть

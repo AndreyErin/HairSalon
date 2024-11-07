@@ -12,7 +12,7 @@ namespace HairSalon.Model.Records
             _configuration = repositoryOfConfiguration;
         }
 
-        public List<FreeTimeForRecords> GetFreeTime(int timeOfService, int employeeId)
+        public List<FreeTimeForRecords> GetFreeTimes(int timeOfService, int employeeId)
         {
             //время разбивается на отрезки по пол часа
             int extraTimeLags = CountExtraTime(timeOfService);//количество дополнительных отрезков по  30 минут

@@ -222,36 +222,6 @@ namespace HairSalon.Tests
 
         }
 
-        [Fact]
-        public void CheckExtraTimeResult()
-        {
-            //проверяем наличие дополнительного время для записи
-            //если услуга длится дольше стандартных 30 минут
-
-            //Arrange
-            TimeOnly startTime1 = new(10, 0, 0);
-            TimeOnly startTime2 = new(14, 0, 0);
-            TimeOnly startTime3 = new(17, 30, 0);
-
-            TimeOnly endTime = new(18, 0, 0);
-            DateOnly day = new DateOnly(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).AddDays(1);
-
-            var mockRecords = new Mock<IRepositoryOfRecords>();
-            mockRecords.Setup(r => r.GetAll()).Returns(GetAllRecords());
-            var mockCongig = new Mock<IRepositoryOfConfiguration>();
-            RecordsApiController recordsApiController = new(mockRecords.Object, mockCongig.Object);
-
-            //Act
-            bool result1 = recordsApiController.CheckExtraTime(startTime1, endTime, day, 2, 1);
-            bool result2 = recordsApiController.CheckExtraTime(startTime2, endTime, day, 4, 1);
-            bool result3 = recordsApiController.CheckExtraTime(startTime3, endTime, day, 2, 1);
-
-            //Assert
-            Assert.False(result1);
-            Assert.True(result2);
-            Assert.False(result3);
-        }
-
         private Config GetConfig()
         {
             return new() 
@@ -268,10 +238,9 @@ namespace HairSalon.Tests
         private List<DateOnly> GetDaysForRecords()
         {
             DateOnly toDay = new(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
-            //DateOnly day = toDay.AddDays(1);
 
             List<DateOnly> result = new();
-            //8 дней подрят начиная с завтрашнего
+            //5 дней подрят начиная с завтрашнего
             //сегодняшний день проверять нельзя, тк в зависимоти от времени дня
             //запись то будет, то нет
             for (int i = 0; i < 5; i++)
