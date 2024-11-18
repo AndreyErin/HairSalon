@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace HairSalon.Controllers
+namespace HairSalon.Controllers.Admin
 {
     public class AdminController : Controller
     {

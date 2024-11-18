@@ -2,14 +2,14 @@
 using HairSalon.Model.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HairSalon.Controllers
+namespace HairSalon.Controllers.Api
 {
     [ApiController]
     [Route("api/service")]
     public class ServicesApiController : Controller
     {
         private IRepositoryOfServices _services;
-        public ServicesApiController(IRepositoryOfServices services) 
+        public ServicesApiController(IRepositoryOfServices services)
         {
             _services = services;
         }
@@ -73,7 +73,7 @@ namespace HairSalon.Controllers
 
         [HttpDelete]
         [Route("{id}")]
-        public JsonResult Delete(int id) 
+        public JsonResult Delete(int id)
         {
             PackageMessage packageMessage;
             int result = _services.Delete(id);
@@ -86,6 +86,6 @@ namespace HairSalon.Controllers
 
             packageMessage = new(false, errorText: "Ошибка. Услуга не была удалена. (Услуга, с таким ID, не найдена.)");
             return Json(packageMessage);
-        } 
+        }
     }
 }

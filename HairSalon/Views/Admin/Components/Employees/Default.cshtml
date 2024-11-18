@@ -1,0 +1,39 @@
+﻿@model IEnumerable<Employee>
+
+<div class="container">
+    <div class="row text-center mt-2 mb-2">
+        <h2>Сотрудники</h2>
+    </div>
+    <div class="row bg-secondary-subtle">
+        <div class="col text-start">
+            Имя
+        </div>
+        <div class="col text-center">
+            Должность
+        </div>
+        <div class="col text-end">
+            Табельный номер
+        </div>
+    </div>
+
+    @foreach (Employee item in Model)
+    {
+        <div class="row text-center">
+            <div class="col text-start">
+                @item.Name
+            </div>
+            <div class="col text-center">
+                @item.Post
+            </div>
+            <div class="col text-end">
+                @item.Id
+            </div>
+        </div>
+    }
+
+    <div class="row text-center mt-2 mb-2">
+        <div class="col">
+            <a class="btn btn-primary btn-sm" asp-action="index" asp-controller="Employees">Изменить</a>
+        </div>
+    </div>
+</div>

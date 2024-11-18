@@ -2,14 +2,14 @@
 using HairSalon.Model.Employees;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HairSalon.Controllers
+namespace HairSalon.Controllers.Api
 {
     [ApiController]
     [Route("api/employee")]
     public class EmployeesApiController : Controller
     {
         private IRepositoryOfEmployees _employees;
-        public EmployeesApiController(IRepositoryOfEmployees employees) 
+        public EmployeesApiController(IRepositoryOfEmployees employees)
         {
             _employees = employees;
         }
@@ -71,7 +71,7 @@ namespace HairSalon.Controllers
             return Json(packageMessage);
         }
 
-        
+
         [HttpGet]
         [Route("forname")]
         public JsonResult Get(string name)
@@ -91,7 +91,7 @@ namespace HairSalon.Controllers
 
         [HttpDelete]
         [Route("{id}")]
-        public JsonResult Delete(int id) 
+        public JsonResult Delete(int id)
         {
             PackageMessage packageMessage;
             int result = _employees.Delete(id);
@@ -104,6 +104,6 @@ namespace HairSalon.Controllers
 
             packageMessage = new(false, errorText: "Ошибка. Сотрудник не был удален. (Сотрудник, с таким ID, не найден.)");
             return Json(packageMessage);
-        } 
+        }
     }
 }

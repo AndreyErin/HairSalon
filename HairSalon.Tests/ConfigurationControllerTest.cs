@@ -1,4 +1,4 @@
-﻿using HairSalon.Controllers;
+﻿using HairSalon.Controllers.Admin;
 using HairSalon.Model.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using Moq;

@@ -2,14 +2,14 @@
 using HairSalon.Model.Configuration;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HairSalon.Controllers
+namespace HairSalon.Controllers.Api
 {
     [ApiController]
     [Route("api/configuration")]
     public class ConfigurationApiController : Controller
     {
         IRepositoryOfConfiguration _config;
-        public ConfigurationApiController(IRepositoryOfConfiguration configuration) 
+        public ConfigurationApiController(IRepositoryOfConfiguration configuration)
         {
             _config = configuration;
         }
@@ -17,11 +17,11 @@ namespace HairSalon.Controllers
         [HttpGet]
         public JsonResult Get()
         {
-            return Json( new PackageMessage(true, _config.GetConfig()));
+            return Json(new PackageMessage(true, _config.GetConfig()));
         }
 
         [HttpPost]
-        public JsonResult Set(Config config) 
+        public JsonResult Set(Config config)
         {
             _config.SetConfig(config);
             return Json(new PackageMessage(true));

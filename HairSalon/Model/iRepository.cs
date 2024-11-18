@@ -1,6 +1,4 @@
-﻿using HairSalon.Model.Employees;
-
-namespace HairSalon.Model
+﻿namespace HairSalon.Model
 {
     public interface IRepository<T> where T : class
     {

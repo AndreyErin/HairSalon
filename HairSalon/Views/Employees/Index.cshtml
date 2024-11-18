@@ -1,0 +1,54 @@
+﻿@model IEnumerable<Employee>
+
+<div class="container">
+    <div class="row text-center mt-2 mb-2">
+        <h1>Сотрудники</h1>
+    </div>
+@*     <div class="row bg-secondary-subtle">
+        <div class="col text-start">
+            Имя
+        </div>
+        <div class="col text-center">
+            Должность
+        </div>
+        <div class="col text-end">
+            Табельный номер
+        </div>
+    </div> *@
+
+    @foreach (Employee item in Model)
+    {
+        <div class="row text-center">
+            <div class="col text-start">
+                @item.Name
+            </div>
+            <div class="col text-center">
+                @item.Post
+            </div>
+            <div class="col text-end">
+                @item.Id
+            </div>
+            <div class="col-auto">
+                <form method="post" asp-action="Edit">
+                    <input hidden name="id" value="@item.Id" />
+                    <button class="btn btn-success btn-sm" type="submit">Изменить</button>
+                </form>
+            </div>
+            <div class="col-auto">
+                <form method="post" asp-action="Delete">
+                    <input hidden name="id" value="@item.Id" />
+                    <button class="btn btn-danger btn-sm" type="submit">Удалить</button>
+                </form>
+            </div>
+        </div>
+    }
+
+    <div class="row text-center mt-2 mb-2">
+        <div class="col text-end">
+            <a class="btn btn-primary btn-sm" asp-action="AddOrEdit">Добавить</a>
+        </div>
+        <div class="col text-start">
+            <a class="btn btn-warning btn-sm" asp-action="index" asp-controller="Admin">Отмена</a>
+        </div>
+    </div>
+</div>

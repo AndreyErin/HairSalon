@@ -1,6 +1,9 @@
 ﻿@model Config
 
 <div class="container">
+    <div class="row text-center  mt-2 mb-2 ">
+        <h2>Конфигурация</h2>
+    </div>
     <div class="row">
         <div class="col">Акция</div>
         <div class="col">@Model.PromotionEnabled</div>
@@ -25,7 +28,9 @@
         <div class="col">Количество дней для записи</div>
         <div class="col">@Model.NumberOfDaysForRecords</div>
     </div>
-    <div class="row">
-        <a asp-controller="Configuration" asp-action="index">Изменить</a>
+    <div class="row text-center mt-2 mb-2">
+        <div class="col">
+            <a class="btn btn-primary btn-sm" asp-controller="Configuration" asp-action="index">Изменить</a>
+        </div>
     </div>
 </div>

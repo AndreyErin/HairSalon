@@ -1,10 +1,10 @@
-﻿using HairSalon.Controllers;
-using HairSalon.Model.Records;
+﻿using HairSalon.Model.Records;
 using HairSalon.Model;
 using Moq;
 using Xunit;
 using Microsoft.AspNetCore.Mvc;
 using HairSalon.Model.Configuration;
+using HairSalon.Controllers.Api;
 
 namespace HairSalon.Tests
 {

@@ -3,7 +3,7 @@ using HairSalon.Model.Configuration;
 using HairSalon.Model.Records;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HairSalon.Controllers
+namespace HairSalon.Controllers.Api
 {
     [ApiController]
     [Route("api/records")]
@@ -13,7 +13,7 @@ namespace HairSalon.Controllers
         IRepositoryOfConfiguration _configuration;
         public RecordsApiController(IRepositoryOfRecords records, IRepositoryOfConfiguration configuration)
         {
-            _records = records; 
+            _records = records;
             _configuration = configuration;
         }
 
@@ -25,7 +25,7 @@ namespace HairSalon.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public JsonResult Get(int id) 
+        public JsonResult Get(int id)
         {
             PackageMessage packageMessage;
 
@@ -41,7 +41,7 @@ namespace HairSalon.Controllers
         }
 
         [HttpGet]
-        [Route("forname")]           
+        [Route("forname")]
         public JsonResult Get(string name)
         {
             PackageMessage packageMessage;
@@ -80,7 +80,7 @@ namespace HairSalon.Controllers
             PackageMessage packageMessage;
 
             int result = _records.Add(record);
-            if (result == 1) 
+            if (result == 1)
             {
                 packageMessage = new(true);
                 return Json(packageMessage);
@@ -112,7 +112,7 @@ namespace HairSalon.Controllers
                 PackageMessage packageMessage = new(true, freeTime);
                 return Json(packageMessage);
             }
-            else 
+            else
             {
                 PackageMessage packageMessage = new(false, null, "Нет свободного времени для записи");
                 return Json(packageMessage);

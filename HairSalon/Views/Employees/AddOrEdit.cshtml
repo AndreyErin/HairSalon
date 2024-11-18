@@ -1,0 +1,26 @@
+﻿@model Employee
+
+<div class="container">
+    <div class="row">
+        <h1>@ViewBag.Tite</h1>
+    </div>
+    <form method="post" asp-action="Save">
+        <label asp-for="Id" class="form-control"></label>
+        <input asp-for="Id" class="form-control" />
+
+        <label asp-for="Name" class="form-control"></label>
+        <input asp-for="Name" class="form-control" />
+
+        <label asp-for="Post" class="form-control"></label>
+        <input asp-for="Post" class="form-control" />
+
+        <div class="row">
+            <div class="col text-end">
+                <button type="submit">Сохранить</button>
+            </div>
+            <div class="col text-start">
+                <a asp-action="index">Отмена</a>
+            </div>
+        </div>       
+    </form>
+</div>
