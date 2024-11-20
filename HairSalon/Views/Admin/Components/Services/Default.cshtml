@@ -1,0 +1,46 @@
+﻿@model IEnumerable<Service>
+
+<div class="container">
+    <div class="row text-center  mt-2 mb-2">
+        <h2>Услуги</h2>
+    </div>
+
+    <div class="row bg-secondary-subtle">
+        <div class="col text-start">
+            Изображение
+        </div>
+        <div class="col text-center">
+            Название
+        </div>
+        <div class="col text-center">
+            Вермя
+        </div>
+        <div class="col text-end">
+            Цена
+        </div>
+    </div>
+
+    @foreach (Service item in Model)
+    {
+        <div class="row bg-white">
+            <div class="col text-start">
+                @item.Picture
+            </div>
+            <div class="col text-center">
+                @item.Name
+            </div>
+            <div class="col text-center">
+                @item.TimeOfService.TotalMinutes мин
+            </div>
+            <div class="col text-end">
+                @item.Price руб
+            </div>
+        </div>
+    }
+
+    <div class="row text-center mt-2 mb-2">
+        <div class="col">
+            <a class="btn btn-sm btn-primary" asp-controller="Services">Изменить</a>
+        </div>     
+    </div>
+</div>

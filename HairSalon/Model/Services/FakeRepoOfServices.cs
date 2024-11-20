@@ -6,7 +6,7 @@
         public FakeRepoOfServices()
         {
             _services = new() {
-                new Service { Id = 1, Name = "Полубокс", Price = 100, TimeOfService = new TimeSpan(0,20,0), Description = "Под полубоксера" },
+                new Service { Id = 1, Name = "Полубокс", Price = 100, TimeOfService = new TimeSpan(1,20,0), Description = "Под полубоксера" },
                 new Service { Id = 2, Name = "Тенис", Price = 200, TimeOfService = new TimeSpan(0,25,0), Description = "Под тенисиста" },
                 new Service { Id = 3, Name = "Модельная", Price = 300, TimeOfService = new TimeSpan(0,30,0), Description = "Под модель" },
                 new Service { Id = 4, Name = "Котовский", Price = 400, TimeOfService = new TimeSpan(0,15,0), Description = "Под Котовского" },
