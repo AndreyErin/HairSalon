@@ -5,20 +5,20 @@ namespace HairSalon.Controllers.Admin
 {
     public class ConfigurationController : Controller
     {
-        IRepositoryOfConfiguration _repositoryOfConfiguration;
+        private IRepositoryOfConfiguration _configuration;
         public ConfigurationController(IRepositoryOfConfiguration repositoryOfConfiguration)
         {
-            _repositoryOfConfiguration = repositoryOfConfiguration;
+            _configuration = repositoryOfConfiguration;
         }
 
         public ViewResult Index()
         {
-            return View(_repositoryOfConfiguration.GetConfig());
+            return View(_configuration.GetConfig());
         }
 
         public RedirectToActionResult SetConfiguration(Config config)
         {
-            _repositoryOfConfiguration.SetConfig(config);
+            _configuration.SetConfig(config);
 
             return RedirectToAction("Index");
         }

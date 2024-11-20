@@ -5,14 +5,14 @@ namespace HairSalon.Controllers.Admin
 {
     public class EmployeesController : Controller
     {
-        private IRepositoryOfEmployees _repositoryOfEmployees;
-        public EmployeesController(IRepositoryOfEmployees repository) 
+        private IRepositoryOfEmployees _employees;
+        public EmployeesController(IRepositoryOfEmployees repositoryOfEmployees) 
         {
-            _repositoryOfEmployees = repository;
+            _employees = repositoryOfEmployees;
         }
         public IActionResult Index()
         {
-            return View(_repositoryOfEmployees.GetAll());
+            return View(_employees.GetAll());
         }
 
         [HttpGet]
@@ -25,14 +25,14 @@ namespace HairSalon.Controllers.Admin
         [HttpPost]
         public RedirectToActionResult Add(Employee employee) 
         {
-            _repositoryOfEmployees.Add(employee);
+            _employees.Add(employee);
             return RedirectToAction("Index");
         }
 
         [HttpGet]
         public ViewResult Edit(int id) 
         {
-            Employee employee = _repositoryOfEmployees.Get(id);
+            Employee employee = _employees.Get(id);
             ViewBag.Title = "Изменить";
             return View("AddOrEdit", employee);
         }
@@ -40,7 +40,7 @@ namespace HairSalon.Controllers.Admin
         [HttpPost]
         public RedirectToActionResult Edit(Employee employee)
         {
-            _repositoryOfEmployees.Update(employee);
+            _employees.Update(employee);
 
             return RedirectToAction("Index");
         }
@@ -48,7 +48,7 @@ namespace HairSalon.Controllers.Admin
         [HttpPost]
         public RedirectToActionResult Delete(int id) 
         {
-            _repositoryOfEmployees.Delete(id);
+            _employees.Delete(id);
             return RedirectToAction("Index");
         }
     }

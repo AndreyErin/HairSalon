@@ -22,9 +22,10 @@
 
     @foreach (Service item in Model)
     {
-        <div class="row bg-white">
+        <div class="row bg-white m-1">
             <div class="col text-start">
-                @item.Picture
+                <img src="pictures/@item.Picture"  width="50" height="50"/>
+                
             </div>
             <div class="col text-center">
                 @item.Name

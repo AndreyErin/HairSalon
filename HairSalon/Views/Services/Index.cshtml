@@ -1,1 +1,62 @@
-﻿Услуги
+﻿@model IEnumerable<Service>
+
+<div class="container">
+    <div class="row text-center  mt-2 mb-2">
+        <h2>Услуги</h2>
+    </div>
+
+    <div class="row bg-secondary-subtle">
+        <div class="col text-start">
+            Изображение
+        </div>
+        <div class="col text-center">
+            Название
+        </div>
+        <div class="col text-center">
+            Вермя
+        </div>
+        <div class="col text-end">
+            Цена
+        </div>
+    </div>
+
+    @foreach (Service item in Model)
+    {
+        <div class="row bg-white m-1">
+            <div class="col text-start">
+                <img src="pictures/@item.Picture" width="50" height="50" />
+            </div>
+            <div class="col text-center">
+                @item.Name
+            </div>
+            <div class="col text-center">
+                @item.TimeOfService.TotalMinutes мин
+            </div>
+            <div class="col text-end">
+                @item.Price руб
+            </div>
+
+            <div class="col-auto">
+                <form asp-action="Edit" method="get">
+                    <input hidden name="id" value="@item.Id"/>
+                    <button class="btn btn-sm btn-success" type="submit">Изменить</button>
+                </form>
+            </div>
+            <div class="col-auto">
+                <form asp-action="Delete" method="post">
+                    <input hidden name="id" value="@item.Id" />
+                    <button class="btn btn-sm btn-danger" type="submit">Удалить</button>
+                </form>
+            </div>
+        </div>
+    }
+
+    <div class="row text-center mt-2 mb-2">
+        <div class="col text-end">
+            <a class="btn btn-sm btn-primary" asp-action="Add">Добавить</a>
+        </div>
+        <div class="col text-start">
+            <a class="btn btn-sm btn-warning" asp-controller="Admin">Отмена</a>
+        </div>
+    </div>
+</div>

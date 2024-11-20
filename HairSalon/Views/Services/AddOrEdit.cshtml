@@ -1,0 +1,57 @@
+﻿@model Service
+
+@{
+    string title = ViewBag.Title;
+    string actionName;
+    if (title == "Добавить")
+    {
+        actionName = "Add";
+    }
+    else
+    {
+        actionName = "Edit";
+    }
+};
+
+<div class="container">
+    <div class="row text-center">
+        <h1>@title</h1>
+    </div>
+    <form method="post" asp-action="@actionName">
+
+        
+        @if (actionName == "Add")
+        {
+            <input asp-for="Id" class="form-control mb-2" hidden />
+        }
+        else
+        {
+            <label asp-for="Id"></label>
+            <input asp-for="Id" class="form-control mb-2" readonly />
+        }
+
+        <label asp-for="Picture"></label>
+        <input asp-for="Picture" class="form-control mb-2" />
+
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control mb-2" />
+
+        <label asp-for="TimeOfService"></label>
+        <input asp-for="TimeOfService" class="form-control mb-2" />
+
+        <label asp-for="Price"></label>
+        <input asp-for="Price" class="form-control mb-2" />
+
+        <label asp-for="Description"></label>
+        <input asp-for="Description" class="form-control mb-2" />
+
+        <div class="row">
+            <div class="col text-end">
+                <button type="submit" class="btn btn-sm btn-success">Сохранить</button>
+            </div>
+            <div class="col text-start">
+                <a asp-action="index" class="btn btn-sm btn-warning">Отмена</a>
+            </div>
+        </div>       
+    </form>
+</div>
