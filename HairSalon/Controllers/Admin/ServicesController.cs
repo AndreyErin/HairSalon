@@ -55,5 +55,27 @@ namespace HairSalon.Controllers.Admin
             _services.Delete(id);
             return RedirectToAction("Index");
         }
+
+        [HttpGet]
+        public ViewResult AddPicture() 
+        {
+            return View(Pictures.GetPictures());
+        }
+
+        [HttpPost]
+        public async Task<RedirectToActionResult> AddFilePicture(IEnumerable<IFormFile> files) 
+        {
+            foreach (IFormFile item in files)
+            {
+                string fileFullPath = Directory.GetCurrentDirectory() + "/wwwroot/pictures/" + item.FileName;
+
+                using (var fileStream = new FileStream(fileFullPath, FileMode.Create))
+                {
+                    await item.CopyToAsync(fileStream);
+                }
+            }
+
+            return RedirectToAction("AddPicture");
+        }
     }
 }

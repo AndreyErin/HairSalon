@@ -6,11 +6,11 @@
         public FakeRepoOfServices()
         {
             _services = new() {
-                new Service { Id = 1, Name = "Полубокс", Price = 100, TimeOfService = new TimeSpan(1,20,0), Description = "Под полубоксера" , Picture = "1.jpg"},
-                new Service { Id = 2, Name = "Тенис", Price = 200, TimeOfService = new TimeSpan(0,25,0), Description = "Под тенисиста" , Picture = "2.jpg"},
-                new Service { Id = 3, Name = "Модельная", Price = 300, TimeOfService = new TimeSpan(0,30,0), Description = "Под модель" , Picture = "3.jpg"},
-                new Service { Id = 4, Name = "Котовский", Price = 400, TimeOfService = new TimeSpan(0,15,0), Description = "Под Котовского" , Picture = "4.jpg"},
-                new Service { Id = 5, Name = "Гаршок", Price = 500, TimeOfService = new TimeSpan(0,10,0), Description = "Под горшок" , Picture = "5.jpg"},
+                new Service { Id = 1, Name = "Полубокс", Price = 100, TimeOfService = new TimeSpan(1,20,0), Description = "Под полубоксера" , Picture = "pictures/1.jpg"},
+                new Service { Id = 2, Name = "Тенис", Price = 200, TimeOfService = new TimeSpan(0,25,0), Description = "Под тенисиста" , Picture = "pictures/2.jpg"},
+                new Service { Id = 3, Name = "Модельная", Price = 300, TimeOfService = new TimeSpan(0,30,0), Description = "Под модель" , Picture = "pictures/3.jpg"},
+                new Service { Id = 4, Name = "Котовский", Price = 400, TimeOfService = new TimeSpan(0,15,0), Description = "Под Котовского" , Picture = "pictures/4.jpg"},
+                new Service { Id = 5, Name = "Гаршок", Price = 500, TimeOfService = new TimeSpan(0,10,0), Description = "Под горшок" , Picture = "pictures/5.jpg"},
             };
         }
         public int Add(Service entity)

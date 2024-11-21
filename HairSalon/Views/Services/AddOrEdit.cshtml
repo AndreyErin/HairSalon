@@ -37,7 +37,7 @@
         @foreach (string item in ViewBag.Pictures)
         {
         <label>
-            <img src="/pictures/@item" height="50"/>
+            <img src="@item" height="50" width="50" class="m-1"/>
             @if (item == Model.Picture)
             {
                     <input checked type="radio" asp-for="Picture" value="@item" style="position:relative; top: -15px; left: -20px" />

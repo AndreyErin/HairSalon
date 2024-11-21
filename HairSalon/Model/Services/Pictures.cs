@@ -6,7 +6,7 @@
         {
             var pictures = Directory.GetFiles(Directory.GetCurrentDirectory() + "/wwwroot/pictures");
 
-            var result = pictures.Select(x=> Path.GetFileName(x)).ToList();
+            var result = pictures.Select(x=> @"/pictures/" + Path.GetFileName(x)).ToList();
 
             return new(result.ToList());
         }

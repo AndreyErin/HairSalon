@@ -5,6 +5,12 @@
         <h2>Услуги</h2>
     </div>
 
+    <div class="row text-center mt-2 mb-2">
+        <div class="col text-start">
+            <a class="btn btn-sm btn-info" asp-action="AddPicture">Загрузить изображение</a>
+        </div>
+    </div>
+
     <div class="row bg-secondary-subtle">
         <div class="col text-start">
             Изображение
@@ -24,7 +30,7 @@
     {
         <div class="row bg-white m-1">
             <div class="col text-start">
-                <img src="pictures/@item.Picture" width="50" height="50" />
+                <img src="@item.Picture" width="50" height="50" />
             </div>
             <div class="col text-center">
                 @item.Name
