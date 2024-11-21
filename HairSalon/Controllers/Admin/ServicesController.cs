@@ -19,8 +19,9 @@ namespace HairSalon.Controllers.Admin
         [HttpGet]
         public ViewResult Add()
         {
+            ViewBag.Pictures = Pictures.GetPictures();
             ViewBag.Title = "Добавить";
-            return View("AddOrEdit");
+            return View("AddOrEdit", new Service());
         }
 
         [HttpPost]
@@ -34,6 +35,7 @@ namespace HairSalon.Controllers.Admin
         [HttpGet]
         public ViewResult Edit(int id) 
         {
+            ViewBag.Pictures = Pictures.GetPictures();
             ViewBag.Title = "Изменить";
             Service service = _services.Get(id);
             return View("AddOrEdit" ,service);

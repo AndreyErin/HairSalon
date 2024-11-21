@@ -30,8 +30,25 @@
             <input asp-for="Id" class="form-control mb-2" readonly />
         }
 
+
         <label asp-for="Picture"></label>
-        <input asp-for="Picture" class="form-control mb-2" />
+        <br />
+
+        @foreach (string item in ViewBag.Pictures)
+        {
+        <label>
+            <img src="/pictures/@item" height="50"/>
+            @if (item == Model.Picture)
+            {
+                    <input checked type="radio" asp-for="Picture" value="@item" style="position:relative; top: -15px; left: -20px" />
+            }
+            else
+            {
+                    <input type="radio" asp-for="Picture" value="@item" style="position:relative; top: -15px; left: -20px" />
+            }
+        </label>
+        }
+        <br />
 
         <label asp-for="Name"></label>
         <input asp-for="Name" class="form-control mb-2" />
