@@ -1,6 +1,6 @@
 ﻿using HairSalon.Model.Configuration;
 
-namespace HairSalon.Model.Records
+namespace HairSalon.Model.Records.Api
 {
     public class FreeTimeForRecordService
     {
@@ -102,7 +102,7 @@ namespace HairSalon.Model.Records
             return true; //если все дополнительные временные отрезки по 30 минут свободны
         }
 
-        private int CountExtraTime(int timeOfService) 
+        private int CountExtraTime(int timeOfService)
         {
             int count = 0;
             switch (timeOfService)

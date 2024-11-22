@@ -1,5 +1,6 @@
 ﻿using HairSalon.Model.Configuration;
 using HairSalon.Model.Records;
+using HairSalon.Model.Records.Api;
 using Moq;
 using Xunit;
 

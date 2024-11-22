@@ -1,0 +1,57 @@
+﻿@model IEnumerable<RecordsForEmployee>
+
+<div class="container">
+    <div class="row text-center  mt-4 mb-4">
+        <h1>Запись</h1>
+    </div>
+
+    @foreach (var recordsForEmployee in Model)
+    {
+        <br/>
+        <br />
+        <div>@recordsForEmployee.EmployeeName</div>
+
+        @foreach (var day in recordsForEmployee.RecordsOfDays)
+        {
+            <div class="bg-secondary-subtle text-center">@day.Day</div>
+
+            @foreach (var item in day.Records)
+            {
+                <div class="row">
+                    <div class="col">
+                        @item.DateForVisit
+                    </div>
+                    <div class="col">
+                        @item.TimeForVisit
+                    </div>
+                    <div class="col">
+                        @item.ClientName
+                    </div>
+                    <div class="col">
+                        @item.ClientPhone
+                    </div>
+                    <div class="col">
+                        @item.SeviceName
+                    </div>
+                    <div class="col">
+                        @item.DurationOfService
+                    </div>
+                    <div class="col">
+                        @item.EmployeeId
+                    </div>
+                </div>
+            }
+
+
+        }
+
+
+    }
+
+    <div class="row  mt-4">
+        <div class="col text-center">
+            <a class="btn btn-sm btn-primary" asp-controller="Records">Подробнее</a>
+        </div>
+    </div>
+    <br />
+</div>

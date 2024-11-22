@@ -6,15 +6,15 @@ namespace HairSalon.Components
 {
     public class ServicesViewComponent: ViewComponent
     {
-        private IRepositoryOfServices _repositoryOfServices;
-        public ServicesViewComponent(IRepositoryOfServices services)
+        private IRepositoryOfServices _services;
+        public ServicesViewComponent(IRepositoryOfServices repositoryOfServices)
         {
-            _repositoryOfServices = services;
+            _services = repositoryOfServices;
         }
 
         public ViewViewComponentResult Invoke()
         {
-            return View(_repositoryOfServices.GetAll());
+            return View(_services.GetAll());
         }
     }
 }

@@ -5,6 +5,7 @@ using Xunit;
 using Microsoft.AspNetCore.Mvc;
 using HairSalon.Model.Configuration;
 using HairSalon.Controllers.Api;
+using HairSalon.Model.Records.Api;
 
 namespace HairSalon.Tests
 {

@@ -7,13 +7,17 @@
 </section>
 
 <section class="bg-success-subtle">
+    @await Component.InvokeAsync("Records")
+</section>
+
+<section>
+    @await Component.InvokeAsync("Services")
+</section>
+
+<section class="bg-success-subtle">
     @await Component.InvokeAsync("Configuration")
 </section>
 
 <section>
     @await Component.InvokeAsync("Employees")
-</section>
-
-<section class="bg-success-subtle">
-    @await Component.InvokeAsync("Services")
 </section>
