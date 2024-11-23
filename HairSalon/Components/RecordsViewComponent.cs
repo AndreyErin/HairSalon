@@ -18,7 +18,7 @@ namespace HairSalon.Components
 
         public ViewViewComponentResult Invoke()
         {
-            RecordsForEmployeeService recordsService = new(_records.GetAll(), _employees.GetAll());
+            RecordsForEmployeeService recordsService = new(_records, _employees);
 
             return View(recordsService.GetRecords());
         }

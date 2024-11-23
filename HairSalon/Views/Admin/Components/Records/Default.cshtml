@@ -13,34 +13,48 @@
 
         @foreach (var day in recordsForEmployee.RecordsOfDays)
         {
-            <div class="bg-secondary-subtle text-center">@day.Day</div>
 
-            @foreach (var item in day.Records)
-            {
-                <div class="row">
-                    <div class="col">
-                        @item.DateForVisit
-                    </div>
-                    <div class="col">
-                        @item.TimeForVisit
-                    </div>
-                    <div class="col">
-                        @item.ClientName
-                    </div>
-                    <div class="col">
-                        @item.ClientPhone
-                    </div>
-                    <div class="col">
-                        @item.SeviceName
-                    </div>
-                    <div class="col">
-                        @item.DurationOfService
-                    </div>
-                    <div class="col">
-                        @item.EmployeeId
+            string AccordionId = (recordsForEmployee.GetHashCode() + day.Day.GetHashCode()).ToString();
+            string AccordionHeaderId = AccordionId + "header";
+
+            <div class="accordion" id="@AccordionId">
+                <div class="accordion-item">
+                    <h2 class="accordion-header card">
+                        <button class="card-header bg-primary text-white" type="button" data-bs-toggle="collapse" data-bs-target="#@AccordionHeaderId" aria-expanded="true" aria-controls="@AccordionHeaderId">
+                            @day.Day
+                            <div class="badge text-warning">
+                               ( @day.Records.Count )
+                            </div>                   
+                        </button>
+                    </h2>
+                    <div id="@AccordionHeaderId" class="accordion-collapse collapse" data-bs-parent="#@AccordionId">
+                        <div class="accordion-body">
+                            @foreach (var item in day.Records)
+                            {
+                                <div class="row">
+                                    <div class="col">
+                                        @item.TimeForVisit
+                                    </div>
+                                    <div class="col">
+                                        @item.ClientName
+                                    </div>
+                                    <div class="col">
+                                        @item.ClientPhone
+                                    </div>
+                                    <div class="col">
+                                        @item.SeviceName
+                                    </div>
+                                    <div class="col">
+                                        @item.DurationOfService
+                                    </div>
+                                </div>
+                            }
+                        </div>
                     </div>
                 </div>
-            }
+            </div>
+
+
 
 
         }

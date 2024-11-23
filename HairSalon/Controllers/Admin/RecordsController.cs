@@ -20,7 +20,7 @@ namespace HairSalon.Controllers.Admin
 
         public ViewResult Index()
         {
-            RecordsForEmployeeService recordsService = new(_records.GetAll(), _employees.GetAll());
+            RecordsForEmployeeService recordsService = new(_records, _employees);
 
             return View(recordsService.GetRecords());
         }

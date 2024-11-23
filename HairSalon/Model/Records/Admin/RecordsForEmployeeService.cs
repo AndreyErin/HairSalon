@@ -4,9 +4,9 @@ namespace HairSalon.Model.Records.Admin
 {
     public class RecordsForEmployeeService
     {
-        private List<Record> _records;
-        private List<Employee> _employees;
-        public RecordsForEmployeeService(List<Record> records, List<Employee> employees)
+        private IRepositoryOfRecords _records;
+        private IRepositoryOfEmployees _employees;
+        public RecordsForEmployeeService(IRepositoryOfRecords records, IRepositoryOfEmployees employees)
         {
             _records = records;
             _employees = employees;
@@ -19,10 +19,10 @@ namespace HairSalon.Model.Records.Admin
 
         public IEnumerable<RecordsForEmployee> Sort()
         {
-            foreach (var employee in _employees)
+            foreach (var employee in _employees.GetAll())
             {
                 //выбираем все записи для конкретного сотрудника
-                List<Record> empRecords = _records.Where(x => x.EmployeeId == employee.Id).ToList();
+                List<Record> empRecords = _records.GetAll().Where(x => x.EmployeeId == employee.Id).ToList();
                 //разбиваем эти записи по дням
                 var grups = empRecords.GroupBy(x => x.DateForVisit);
 
