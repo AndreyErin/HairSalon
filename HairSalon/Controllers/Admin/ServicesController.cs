@@ -6,9 +6,11 @@ namespace HairSalon.Controllers.Admin
     public class ServicesController : Controller
     {
         private IRepositoryOfServices _services;
+        private PicturesManager _pictures;
         public ServicesController(IRepositoryOfServices repositoryOfServices)
         {
             _services = repositoryOfServices;
+            _pictures = new PicturesManager();
         }
 
         public ViewResult Index()
@@ -19,7 +21,7 @@ namespace HairSalon.Controllers.Admin
         [HttpGet]
         public ViewResult Add()
         {
-            ViewBag.Pictures = Pictures.GetPictures();
+            ViewBag.Pictures = _pictures.GetPictures();
             ViewBag.Title = "Добавить";
             return View("AddOrEdit", new Service());
         }
@@ -35,7 +37,7 @@ namespace HairSalon.Controllers.Admin
         [HttpGet]
         public ViewResult Edit(int id) 
         {
-            ViewBag.Pictures = Pictures.GetPictures();
+            ViewBag.Pictures = _pictures.GetPictures();
             ViewBag.Title = "Изменить";
             Service service = _services.Get(id);
             return View("AddOrEdit" ,service);
@@ -57,25 +59,25 @@ namespace HairSalon.Controllers.Admin
         }
 
         [HttpGet]
-        public ViewResult AddPicture() 
+        public ViewResult Pictures() 
         {
-            return View(Pictures.GetPictures());
+            return View(_pictures.GetPictures());
         }
 
         [HttpPost]
-        public async Task<RedirectToActionResult> AddFilePicture(IEnumerable<IFormFile> files) 
+        public async Task<RedirectToActionResult> AddPicturesAsync(IEnumerable<IFormFile> files) 
         {
-            foreach (IFormFile item in files)
-            {
-                string fileFullPath = Directory.GetCurrentDirectory() + "/wwwroot/pictures/" + item.FileName;
+            await _pictures.UploadPicturesAsync(files);
 
-                using (var fileStream = new FileStream(fileFullPath, FileMode.Create))
-                {
-                    await item.CopyToAsync(fileStream);
-                }
-            }
+            return RedirectToAction("Pictures");
+        }
 
-            return RedirectToAction("AddPicture");
+        [HttpPost]
+        public RedirectToActionResult DeletePicture(string fileShortPath)
+        {
+            _pictures.DeletePicture(fileShortPath);
+
+            return RedirectToAction("Pictures");
         }
     }
 }

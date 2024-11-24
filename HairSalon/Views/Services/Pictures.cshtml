@@ -12,13 +12,19 @@
     @foreach (string item in Model)
     {
         <img class="m-1" src="@item" height="50" width="50" />
+
+        <form method="post" asp-action="DeletePicture">
+
+            <input hidden name="fileShortPath" value="@item" />
+            <button class="badge" type="submit" style="position:relative; top: -5px; left: -10px">X</button>
+        </form>
     }
 
     <div class="row mt-3">
         <h4>Загрузить изображение</h4>
     </div>
 
-    <form enctype="multipart/form-data" method="post" asp-controller="Services" asp-action="AddFilePicture">
+    <form enctype="multipart/form-data" method="post" asp-controller="Services" asp-action="AddPictures">
         <input class="form-control" type="file" name="files" accept="image/jpg,image/jpeg" multiple required/>
         <br />
         <div class="row">
