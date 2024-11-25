@@ -19,7 +19,15 @@ namespace HairSalon.Controllers.Admin
 
         public ViewResult Index()
         {
-            return View(_recordsService.GetDaysForRecords());
+            return View(_recordsService.GetDaysForRecords().ToArray());
+        }
+
+        [HttpPost]
+        public RedirectResult SetDaysForRecords([FromForm] DayForRecordsModel[] recordsModels)
+        {
+            _recordsService.SetDaysForRecords(recordsModels.ToList());
+
+            return Redirect("Index");
         }
     }
 }

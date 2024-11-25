@@ -1,21 +1,37 @@
-﻿@model IEnumerable<DayForRecordsModel>
+﻿@model DayForRecordsModel[]
 
 <div class="container">
     <div class="row text-center">
         <h1>Дни для записи</h1>
     </div>
 
-    @foreach (var item in Model)
-    {
-        <div class="row">
-            <div class="col">
-                <input asp-for="@item.Day"/>
-            </div>
-            <div class="col">
-                <input asp-for="@item.IsEnable" type="checkbox"/>
-            </div>
 
+    <form asp-action="SetDaysForRecords" asp-controller="Records" method="post">
+
+        @for (int i = 0; i < Model.Length; i++)
+        {
+            <div class="row">
+                <div class="col">
+                    <input asp-for="@Model[i].Day" />
+                </div>
+                <div class="col">
+                    <input asp-for="@Model[i].IsEnable" type="checkbox" />
+                </div>
+            </div>
+        }
+
+        <div class="row mb-2 mt-2"> 
+            <div class="col text-end">
+                <button class="btn btn-sm btn-success" type="submit">Сохранить</button>
+            </div>
+            <div class="col text-start">
+                <a asp-controller="Admin" class="btn btn-sm btn-warning">Отмена</a>
+            </div>
         </div>
-    }
+
+
+    </form>
+
+
 
 </div>

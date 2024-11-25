@@ -1,4 +1,5 @@
-﻿using HairSalon.Model.Employees;
+﻿using HairSalon.Model.Configuration;
+using HairSalon.Model.Employees;
 using HairSalon.Model.Records;
 using HairSalon.Model.Records.Admin;
 using Microsoft.AspNetCore.Mvc;
@@ -8,19 +9,19 @@ namespace HairSalon.Components
 {
     public class RecordsViewComponent: ViewComponent
     {
-        private IRepositoryOfRecords _records;
-        private IRepositoryOfEmployees _employees;
-        public RecordsViewComponent(IRepositoryOfRecords repositoryOfRecords, IRepositoryOfEmployees repositoryOfEmployees)
+        private RecordsModelService recordsModelService;
+        public RecordsViewComponent(IRepositoryOfRecords records, 
+            IRepositoryOfEmployees employees,
+            IRepositoryOfConfiguration configuration)
         {
-            _records = repositoryOfRecords;
-            _employees = repositoryOfEmployees;
+            recordsModelService = new(records, employees, configuration);
         }
 
         public ViewViewComponentResult Invoke()
         {
-            RecordsForEmployeeService recordsService = new(_records, _employees);
+            var model = recordsModelService.GetRecordsForEmployees();
 
-            return View(recordsService.GetRecords());
+            return View(model);
         }
     }
 }

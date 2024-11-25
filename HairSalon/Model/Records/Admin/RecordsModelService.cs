@@ -25,25 +25,63 @@ namespace HairSalon.Model.Records.Admin
             for (int i = 0; i < 31; i++)
             {
                 bool enable = _records.GetDaysForRecords().Contains(startDate);
-                model.Add(new(startDate, enable));
+                model.Add(new() { Day =  startDate, IsEnable = enable });
                 startDate = startDate.AddDays(1);
             }
 
             return model; 
         }
 
-        public int SetDaysForRecords(List<DateOnly> dates) 
+        public int SetDaysForRecords(List<DayForRecordsModel> dates) 
         {
-            //foreach (var day in dates)
-            //{
-            //    int result = _records.AddDayForRecords(day);
-            //    if(result == -1)
-            //    {
-            //        return -1;
-            //    }
-            //}       
+            var datesOn = dates.Where(x => x.IsEnable == true);
+            var datesOff = dates.Where(x => x.IsEnable == false);
+
+            //включаем дни для записи
+            foreach (var date in datesOn)
+            {
+                _records.AddDayForRecords(date.Day);
+            }
+
+            //выключаем дни для записи
+            foreach (var date in datesOff)
+            {
+                _records.DeleteDayForRecords(date.Day);
+            }
+
             return 1; 
         }
 
+        public List<RecordsForEmployee> GetRecordsForEmployees()
+        {
+            return Sort().ToList();
+        }
+
+        //Сортировка имеющихся записей по:
+        //сотруднику-дате-времени
+        public IEnumerable<RecordsForEmployee> Sort()
+        {
+            foreach (var employee in _employees.GetAll())
+            {
+                //выбираем все записи для конкретного сотрудника
+                List<Record> empRecords = _records.GetAll().Where(x => x.EmployeeId == employee.Id).ToList();
+                //разбиваем эти записи по дням
+                var grups = empRecords.GroupBy(x => x.DateForVisit);
+
+                List<RecordsOfDay> recordsOfDays = new();
+
+                foreach (var item in grups)
+                {
+                    recordsOfDays.Add(new(item.Key, item.OrderBy(x => x.TimeForVisit).ToList()));
+                }
+
+
+                if (recordsOfDays.Count > 0)
+                {
+                    yield return new RecordsForEmployee(employee.Name, recordsOfDays);
+                }
+
+            }
+        }
     }
 }

@@ -91,5 +91,16 @@ namespace HairSalon.Model.Records
             //доступна ли дата для записи
             return _daysForRecords.Contains(date);
         }
+
+        public int DeleteDayForRecords(DateOnly date)
+        {
+            bool result = _daysForRecords.Contains(date);
+            if (result)
+            {
+                _daysForRecords.Remove(date);
+                return 1;
+            }
+            return -1;
+        }
     }
 }
