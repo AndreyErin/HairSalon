@@ -8,21 +8,18 @@ namespace HairSalon.Controllers.Admin
 {
     public class RecordsController : Controller
     {
-        private IRepositoryOfRecords _records;
-        private IRepositoryOfEmployees _employees;
+        private RecordsModelService _recordsService;
 
-        public RecordsController(IRepositoryOfRecords repositoryOfRecords,
-            IRepositoryOfEmployees repositoryOfEmployees)
+        public RecordsController(IRepositoryOfRecords records,
+            IRepositoryOfEmployees employees,
+            IRepositoryOfConfiguration configuration)
         {
-            _records = repositoryOfRecords;
-            _employees = repositoryOfEmployees;
+            _recordsService = new(records, employees, configuration);
         }
 
         public ViewResult Index()
         {
-            RecordsForEmployeeService recordsService = new(_records, _employees);
-
-            return View(recordsService.GetRecords());
+            return View(_recordsService.GetDaysForRecords());
         }
     }
 }

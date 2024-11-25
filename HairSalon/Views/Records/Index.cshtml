@@ -1,50 +1,21 @@
-﻿@model IEnumerable<RecordsForEmployee>
+﻿@model IEnumerable<DayForRecordsModel>
 
 <div class="container">
     <div class="row text-center">
-        <h1>Запись</h1>
+        <h1>Дни для записи</h1>
     </div>
 
-    @foreach (var recordsForEmployee in Model)
+    @foreach (var item in Model)
     {
-        <br />
-        <br />
-        <div>@recordsForEmployee.EmployeeName</div>
+        <div class="row">
+            <div class="col">
+                <input asp-for="@item.Day"/>
+            </div>
+            <div class="col">
+                <input asp-for="@item.IsEnable" type="checkbox"/>
+            </div>
 
-        @foreach (var day in recordsForEmployee.RecordsOfDays)
-        {
-            <div class="bg-secondary-subtle text-center">@day.Day</div>
-
-            @foreach (var item in day.Records)
-            {
-                <div class="row">
-                    <div class="col">
-                        @item.DateForVisit
-                    </div>
-                    <div class="col">
-                        @item.TimeForVisit
-                    </div>
-                    <div class="col">
-                        @item.ClientName
-                    </div>
-                    <div class="col">
-                        @item.ClientPhone
-                    </div>
-                    <div class="col">
-                        @item.SeviceName
-                    </div>
-                    <div class="col">
-                        @item.DurationOfService
-                    </div>
-                    <div class="col">
-                        @item.EmployeeId
-                    </div>
-                </div>
-            }
-
-
-        }
-
-
+        </div>
     }
+
 </div>

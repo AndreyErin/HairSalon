@@ -9,23 +9,29 @@
         <h4>Доступные изображения</h4>
     </div>
 
-    @foreach (string item in Model)
-    {
-        <img class="m-1" src="@item" height="50" width="50" />
+    <div class="row">
 
-        <form method="post" asp-action="DeletePicture">
+        @foreach (string item in Model)
+        {
+            <div class="col-auto">
+                <img class="m-1" src="@item" height="50" width="50" />
 
-            <input hidden name="fileShortPath" value="@item" />
-            <button class="badge" type="submit" style="position:relative; top: -5px; left: -10px">X</button>
-        </form>
-    }
+                <form method="post" asp-action="DeletePicture">
+
+                    <input hidden name="fileShortPath" value="@item" />
+                    <button class="badge bg-danger text-black"  type="submit" style="position:relative; top: -65px; left: 40px">X</button>
+                </form>
+            </div>
+        }
+    </div>
+
 
     <div class="row mt-3">
         <h4>Загрузить изображение</h4>
     </div>
 
     <form enctype="multipart/form-data" method="post" asp-controller="Services" asp-action="AddPictures">
-        <input class="form-control" type="file" name="files" accept="image/jpg,image/jpeg" multiple required/>
+        <input class="form-control" type="file" name="files" accept="image/jpg,image/jpeg" multiple required />
         <br />
         <div class="row">
             <div class="col text-end">

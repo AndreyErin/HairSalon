@@ -2,6 +2,8 @@
 
 namespace HairSalon.Model.Records.Admin
 {
+    //Класс для сортировки имеющихся записей по:
+    //сотруднику-дате-времени
     public class RecordsForEmployeeService
     {
         private IRepositoryOfRecords _records;
