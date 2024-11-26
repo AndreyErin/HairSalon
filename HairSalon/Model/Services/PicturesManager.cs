@@ -1,4 +1,6 @@
-﻿namespace HairSalon.Model.Services
+﻿using System.Text;
+
+namespace HairSalon.Model.Services
 {
     public  class PicturesManager
     {
@@ -23,7 +25,16 @@
 
             foreach (IFormFile item in files)
             {
-                string fileFullPath = _picturesDirectory + "/" + item.FileName;
+                StringBuilder pref = new();
+
+                while (GetPictures().Select(x=> Path.GetFileName(x).ToLower()).Contains(pref.ToString() + (item.FileName).ToLower()))
+                {
+                    pref.Append("i");
+                }
+
+                string fileFullPath = _picturesDirectory + "/" + pref.ToString() + item.FileName;
+
+
 
                 using (var fileStream = new FileStream(fileFullPath, FileMode.Create))
                 {

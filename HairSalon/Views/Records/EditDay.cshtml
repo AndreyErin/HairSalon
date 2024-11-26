@@ -1,2 +1,42 @@
 ﻿@model IEnumerable<RecordsForEmployeeOfDay>
 
+<div class="container">
+    <div class="row text-center">
+        <h1>@Model.ToArray()[0].RecordsOfDay.Day</h1>
+    </div>
+
+    @foreach (var empData in Model)
+    {
+        <div class="row text-center">
+            <h3>@empData.EmployeeName</h3>
+        </div>
+
+        foreach (var rec in empData.RecordsOfDay.Records)
+        {
+            string mybg = "";
+            if(rec.ClientName != null)
+            {
+                mybg = "bg-warning-subtle";
+            }
+
+
+            <div class="row @mybg">
+                <div class="col">
+                    @rec.TimeForVisit
+                </div>
+                <div class="col">
+                    @rec.ClientName
+                </div>
+                <div class="col">
+                    @rec.ClientPhone
+                </div>
+                <div class="col">
+                    @rec.SeviceName
+                </div>
+            </div>
+        }
+    }
+
+
+
+</div>

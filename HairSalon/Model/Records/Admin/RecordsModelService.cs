@@ -73,7 +73,7 @@ namespace HairSalon.Model.Records.Admin
 
                 foreach (var item in grups)
                 {
-                    recordsOfDays.Add(new(item.Key, item.OrderBy(x => x.TimeForVisit).ToList()));
+                    recordsOfDays.Add(new() { Day = item.Key, Records = item.OrderBy(x => x.TimeForVisit).ToList() });
                 }
 
 
@@ -91,7 +91,32 @@ namespace HairSalon.Model.Records.Admin
 
             foreach (var emp in _employees.GetAll())
             {
-                ///////////////////////////
+                var sub = _records.GetAll().Where(x => x.EmployeeId == emp.Id && x.DateForVisit == day);
+
+                var starTime = _config.GetConfig().StartTimeOfDaty;
+                var endTime = _config.GetConfig().EndTimeOfDaty;                
+                List<Record> recordList = new();
+
+                while (starTime != endTime)
+                {
+                    Record? record = sub.FirstOrDefault(x=>x.TimeForVisit == starTime);
+
+                    if (record != null)
+                    {
+                        recordList.Add(record);
+                    }
+                    else 
+                    {
+                        recordList.Add(new() { TimeForVisit = starTime});
+                    }
+
+                    starTime = starTime.AddMinutes(30);
+                }
+
+                RecordsOfDay recordsOfDay = new() { Day = day, Records = recordList };
+                RecordsForEmployeeOfDay recordsForEmployeeOfDay = new() { EmployeeName = emp.Name, RecordsOfDay = recordsOfDay };
+
+                model.Add(recordsForEmployeeOfDay);
             }
 
             return model;
