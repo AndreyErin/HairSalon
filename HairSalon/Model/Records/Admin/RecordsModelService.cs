@@ -1,5 +1,6 @@
 ﻿using HairSalon.Model.Configuration;
 using HairSalon.Model.Employees;
+using System.Collections.Generic;
 
 namespace HairSalon.Model.Records.Admin
 {
@@ -52,14 +53,14 @@ namespace HairSalon.Model.Records.Admin
             return 1; 
         }
 
-        public List<RecordsForEmployee> GetRecordsForEmployees()
+        public List<RecordsForEmployeeAll> GetRecordsForEmployees()
         {
             return Sort().ToList();
         }
 
         //Сортировка имеющихся записей по:
         //сотруднику-дате-времени
-        public IEnumerable<RecordsForEmployee> Sort()
+        public IEnumerable<RecordsForEmployeeAll> Sort()
         {
             foreach (var employee in _employees.GetAll())
             {
@@ -78,10 +79,22 @@ namespace HairSalon.Model.Records.Admin
 
                 if (recordsOfDays.Count > 0)
                 {
-                    yield return new RecordsForEmployee(employee.Name, recordsOfDays);
+                    yield return new RecordsForEmployeeAll(employee.Name, recordsOfDays);
                 }
 
             }
+        }
+    
+        public List<RecordsForEmployeeOfDay> GetRecordsOfDayForEmpoyees(DateOnly day)
+        {
+            List<RecordsForEmployeeOfDay> model = new();
+
+            foreach (var emp in _employees.GetAll())
+            {
+                ///////////////////////////
+            }
+
+            return model;
         }
     }
 }

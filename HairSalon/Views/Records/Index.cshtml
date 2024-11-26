@@ -12,10 +12,19 @@
         {
             <div class="row">
                 <div class="col">
-                    <input asp-for="@Model[i].Day" />
+                    <input hidden asp-for="@Model[i].Day" />
+                    <label>@Model[i].Day</label>
                 </div>
                 <div class="col">
                     <input asp-for="@Model[i].IsEnable" type="checkbox" />
+                </div>
+                <div class="col">
+                    @{
+                        string url = $"Records/EditDay?year={Model[i].Day.Year}&month={Model[i].Day.Month}&day={Model[i].Day.Day}";
+                    }
+
+                    <a href="@url" class="btn btn-sm btn-success">Настроить</a>
+
                 </div>
             </div>
         }

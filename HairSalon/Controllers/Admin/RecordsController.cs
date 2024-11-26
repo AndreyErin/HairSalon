@@ -29,5 +29,14 @@ namespace HairSalon.Controllers.Admin
 
             return Redirect("Index");
         }
+
+        [HttpGet]
+        public ViewResult EditDay(int year, int month, int day)
+        {
+            DateOnly DateDay = new(year, month, day);
+            List<RecordsForEmployeeOfDay> model = _recordsService.GetRecordsOfDayForEmpoyees(DateDay);
+
+            return View(model);
+        }
     }
 }
