@@ -20,7 +20,8 @@
                 </div>
                 <div class="col">
                     @{
-                        string url = $"Records/EditDay?year={Model[i].Day.Year}&month={Model[i].Day.Month}&day={Model[i].Day.Day}";
+                        string url = $"Records/Day?date={Model[i].Day}";
+
                         bool enabled = @Model[i].IsEnable;
                     }
 

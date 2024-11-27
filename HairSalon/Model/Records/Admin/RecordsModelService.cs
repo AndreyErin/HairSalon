@@ -1,5 +1,6 @@
 ﻿using HairSalon.Model.Configuration;
 using HairSalon.Model.Employees;
+using Microsoft.AspNetCore.SignalR;
 using System.Collections.Generic;
 
 namespace HairSalon.Model.Records.Admin
@@ -114,12 +115,80 @@ namespace HairSalon.Model.Records.Admin
                 }
 
                 RecordsOfDay recordsOfDay = new() { Day = day, Records = recordList };
-                RecordsForEmployeeOfDay recordsForEmployeeOfDay = new() { EmployeeName = emp.Name, RecordsOfDay = recordsOfDay };
+                RecordsForEmployeeOfDay recordsForEmployeeOfDay = new() { Employee = emp, RecordsOfDay = recordsOfDay };
 
                 model.Add(recordsForEmployeeOfDay);
             }
 
             return model;
+        }
+
+        public TimeForRecordModel[] GetTimeOfDayForEmployee(DateOnly dateDay, int employeeId)
+        {
+            Employee? emp = _employees.Get(employeeId);
+
+            var subset = _records.GetAll().Where(x=>x.DateForVisit == dateDay && x.EmployeeId == employeeId );
+          
+            var starTime = _config.GetConfig().StartTimeOfDaty;
+            var endTime = _config.GetConfig().EndTimeOfDaty;
+            List<TimeForRecordModel> result = new();
+
+            while (starTime != endTime)
+            {
+                Record? record = subset.FirstOrDefault(x => x.TimeForVisit == starTime);
+
+                if (record != null)
+                {
+                    if (record?.ClientName != "ВЫКЛ") 
+                    {
+                        result.Add(new() { Time = starTime, Record = record, EmployeeId = emp.Id, Date = dateDay });
+                    }
+                    else
+                    {
+                        result.Add(new() { Time = starTime, Record = record, EmployeeId = emp.Id, Date = dateDay, isEnable = false});
+                    }                   
+                }
+                else
+                {
+                    result.Add(new() { Time = starTime, EmployeeId = emp.Id, Date = dateDay });
+                }
+
+                starTime = starTime.AddMinutes(30);
+            }
+
+            return result.ToArray();
+        }
+
+        public int SetTimeOfDayForEmployee(TimeForRecordModel[] recordModels)
+        {
+            List<TimeForRecordModel> sabset = recordModels.ToList().Where(x=>x.isEnable == false).ToList();
+
+            foreach (var recordModel in sabset) 
+            {
+                var record = _records.GetAll().FirstOrDefault(x=> 
+                x.DateForVisit == recordModel.Date &&
+                x.TimeForVisit == recordModel.Time &&
+                x.EmployeeId == recordModel.EmployeeId
+                );
+
+                if(record != null)
+                {
+                    record.ClientName = "ВЫКЛ";
+                    record.SeviceName = "";
+                    record.ClientPhone = "";
+                    record.DurationOfService = 0;
+                    _records.Update(record);
+                }
+                else
+                {
+                    _records.Add(new() { ClientName = "ВЫКЛ",
+                        DateForVisit = recordModel.Date,
+                    TimeForVisit = recordModel.Time,
+                    EmployeeId = recordModel.EmployeeId});
+                }
+            }
+
+            return 1;
         }
     }
 }

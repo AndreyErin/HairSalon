@@ -74,6 +74,19 @@ namespace HairSalon.Model.Records
             return _records;
         }
 
+        public int Update(Record record)
+        {
+            bool result = _records.Remove(_records.First(x=>x.Id == record.Id));
+            if (result) 
+            {
+                _records.Add(record);
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
 
         public int AddDayForRecords(DateOnly date)
         {
@@ -107,5 +120,7 @@ namespace HairSalon.Model.Records
             }
             return -1;
         }
+
+
     }
 }

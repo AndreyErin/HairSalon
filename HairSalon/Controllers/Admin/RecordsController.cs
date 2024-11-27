@@ -31,12 +31,30 @@ namespace HairSalon.Controllers.Admin
         }
 
         [HttpGet]
-        public ViewResult EditDay(int year, int month, int day)
+        public ViewResult Day(string date)
         {
-            DateOnly DateDay = new(year, month, day);
+            DateOnly DateDay = DateOnly.Parse(date);
             List<RecordsForEmployeeOfDay> model = _recordsService.GetRecordsOfDayForEmpoyees(DateDay);
 
             return View(model);
+        }
+
+        [HttpGet]
+        public ViewResult EditTimeOfDayForEmployee(string date, int employeeId)
+        {
+            DateOnly dateDay = DateOnly.Parse(date);
+
+            TimeForRecordModel[] model = _recordsService.GetTimeOfDayForEmployee(dateDay, employeeId);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public RedirectToActionResult SetTimeOfDayForEmployee([FromForm] TimeForRecordModel[] recordModels)
+        {
+            _recordsService.SetTimeOfDayForEmployee(recordModels);
+
+            return RedirectToAction("Index");
         }
     }
 }

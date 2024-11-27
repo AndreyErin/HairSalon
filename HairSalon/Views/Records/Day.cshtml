@@ -8,7 +8,7 @@
     @foreach (var empData in Model)
     {
         <div class="row text-center">
-            <h3>@empData.EmployeeName</h3>
+            <h3>@empData.Employee.Name</h3>
         </div>
 
         foreach (var rec in empData.RecordsOfDay.Records)
@@ -35,6 +35,15 @@
                 </div>
             </div>
         }
+
+        <div class="row text-center">
+            <form method="get" asp-action="EditTimeOfDayForEmployee">
+                <input hidden name="date" value="@Model.ToArray()[0].RecordsOfDay.Day" />
+                <input hidden name="employeeId" value="@empData.Employee.Id" />
+                <button class="btn btn-sm btn-success" type="submit">Настроить</button>
+            </form>
+        </div>
+
     }
 
 

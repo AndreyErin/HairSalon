@@ -3,6 +3,8 @@
     public interface IRepositoryOfRecords: IRepository<Record>
     {
         Record? Get(string name);
+
+        int Update(Record record);
         List<DateOnly> GetDaysForRecords();
         int AddDayForRecords(DateOnly date);
 
