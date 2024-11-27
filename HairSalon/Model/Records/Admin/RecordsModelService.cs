@@ -53,14 +53,14 @@ namespace HairSalon.Model.Records.Admin
             return 1; 
         }
 
-        public List<RecordsForEmployeeAll> GetRecordsForEmployees()
+        public List<RecordsForEmployeeAll> GetAllRecordsForEmployees()
         {
             return Sort().ToList();
         }
 
         //Сортировка имеющихся записей по:
         //сотруднику-дате-времени
-        public IEnumerable<RecordsForEmployeeAll> Sort()
+        private IEnumerable<RecordsForEmployeeAll> Sort()
         {
             foreach (var employee in _employees.GetAll())
             {

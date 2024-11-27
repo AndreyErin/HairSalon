@@ -16,11 +16,11 @@ namespace HairSalon.Controllers.Admin
             return View(_configuration.GetConfig());
         }
 
-        public RedirectToActionResult SetConfiguration(Config config)
+        public RedirectResult SetConfiguration(Config config)
         {
             _configuration.SetConfig(config);
 
-            return RedirectToAction("Index");
+            return Redirect("~/Admin");
         }
 
     }

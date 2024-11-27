@@ -19,7 +19,7 @@ namespace HairSalon.Components
 
         public ViewViewComponentResult Invoke()
         {
-            var model = recordsModelService.GetRecordsForEmployees();
+            var model = recordsModelService.GetAllRecordsForEmployees();
 
             return View(model);
         }

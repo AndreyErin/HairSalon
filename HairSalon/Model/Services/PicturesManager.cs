@@ -27,6 +27,7 @@ namespace HairSalon.Model.Services
             {
                 StringBuilder pref = new();
 
+                //если файл с таким названием уже есть, то добавляем в начало названия букву i
                 while (GetPictures().Select(x=> Path.GetFileName(x).ToLower()).Contains(pref.ToString() + (item.FileName).ToLower()))
                 {
                     pref.Append("i");

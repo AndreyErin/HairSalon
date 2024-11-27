@@ -7,23 +7,28 @@ namespace HairSalon.Model.Records
         List<DateOnly> _daysForRecords;
         public FakeRepoOfRecords() 
         {
-            var dt = DateTime.Now;
+            var dt1 = DateTime.Now;
+            var dt2 = DateTime.Now.AddDays(1);
+            var dt3 = DateTime.Now.AddDays(3);
+            var dt4 = DateTime.Now.AddDays(4);
+
+
 
             _records = new()
             {
-                new(){Id = 1, ClientName = "Мария", ClientPhone = "9600000000", SeviceName = "Модельная", DurationOfService = 20, DateForVisit = new(dt.Year, dt.Month, dt.Day + 1), TimeForVisit = new ( 10, 0, 0), EmployeeId = 1},
-                new(){Id = 1, ClientName = "Томара", ClientPhone = "9600000000", SeviceName = "Модельная", DurationOfService = 30, DateForVisit = new(dt.Year, dt.Month, dt.Day + 1), TimeForVisit = new ( 15, 0, 0), EmployeeId = 1},
+                new(){Id = 1, ClientName = "Мария", ClientPhone = "9600000000", SeviceName = "Модельная", DurationOfService = 20, DateForVisit = new(dt2.Year, dt2.Month, dt2.Day), TimeForVisit = new ( 10, 0, 0), EmployeeId = 1},
+                new(){Id = 1, ClientName = "Томара", ClientPhone = "9600000000", SeviceName = "Модельная", DurationOfService = 30, DateForVisit = new(dt2.Year, dt2.Month, dt2.Day), TimeForVisit = new ( 15, 0, 0), EmployeeId = 1},
 
-                new(){Id = 2, ClientName = "Елена", ClientPhone = "9600000000", SeviceName = "Каре",  DurationOfService = 20, DateForVisit = new(dt.Year, dt.Month, dt.Day + 1), TimeForVisit = new TimeOnly( 10, 30, 0), EmployeeId = 2},
-                new(){Id = 3, ClientName = "Николай", ClientPhone = "9600000000", SeviceName = "Полубокс",  DurationOfService = 20, DateForVisit = new(dt.Year, dt.Month, dt.Day + 3), TimeForVisit = new(11, 0, 0), EmployeeId = 1}            
+                new(){Id = 2, ClientName = "Елена", ClientPhone = "9600000000", SeviceName = "Каре",  DurationOfService = 20, DateForVisit = new(dt2.Year, dt2.Month, dt2.Day), TimeForVisit = new TimeOnly( 10, 30, 0), EmployeeId = 2},
+                new(){Id = 3, ClientName = "Николай", ClientPhone = "9600000000", SeviceName = "Полубокс",  DurationOfService = 20, DateForVisit = new(dt4.Year, dt4.Month, dt4.Day), TimeForVisit = new(11, 0, 0), EmployeeId = 1}            
             };
 
             _daysForRecords = new()
             {
-                new(dt.Year, dt.Month, dt.Day),                   
-                new(dt.Year, dt.Month, dt.Day + 1),
-                new(dt.Year, dt.Month, dt.Day + 3),
-                new(dt.Year, dt.Month, dt.Day + 4)
+                new(dt1.Year, dt1.Month, dt1.Day),                   
+                new(dt2.Year, dt2.Month, dt2.Day),
+                new(dt3.Year, dt3.Month, dt3.Day),
+                new(dt4.Year, dt4.Month, dt4.Day)
             };
         }
         public int Add(Record record)
