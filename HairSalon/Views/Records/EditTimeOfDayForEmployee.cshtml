@@ -1,7 +1,7 @@
 ﻿@model TimeForRecordModel[]
 
 @{
-    string title = Model[0].Date.ToString() + " " + Model[0].EmployeeId;
+    string title = Model[0].Date.ToString() + " " + ViewBag.EmployeeName;
 }
 
 <div class="container">

@@ -9,11 +9,13 @@ namespace HairSalon.Controllers.Admin
     public class RecordsController : Controller
     {
         private RecordsModelService _recordsService;
+        private IRepositoryOfEmployees _employees;
 
         public RecordsController(IRepositoryOfRecords records,
             IRepositoryOfEmployees employees,
             IRepositoryOfConfiguration configuration)
         {
+            _employees = employees;
             _recordsService = new(records, employees, configuration);
         }
 
@@ -45,6 +47,8 @@ namespace HairSalon.Controllers.Admin
             DateOnly dateDay = DateOnly.Parse(date);
 
             TimeForRecordModel[] model = _recordsService.GetTimeOfDayForEmployee(dateDay, employeeId);
+
+            ViewBag.EmployeeName = _employees.Get(employeeId)?.Name;
 
             return View(model);
         }

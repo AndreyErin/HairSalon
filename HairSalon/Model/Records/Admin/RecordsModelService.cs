@@ -1,7 +1,5 @@
 ﻿using HairSalon.Model.Configuration;
 using HairSalon.Model.Employees;
-using Microsoft.AspNetCore.SignalR;
-using System.Collections.Generic;
 
 namespace HairSalon.Model.Records.Admin
 {
@@ -161,15 +159,16 @@ namespace HairSalon.Model.Records.Admin
 
         public int SetTimeOfDayForEmployee(TimeForRecordModel[] recordModels)
         {
-            List<TimeForRecordModel> sabset = recordModels.ToList().Where(x=>x.isEnable == false).ToList();
+            //выключаем время
+            List<TimeForRecordModel> disabledList = recordModels.ToList().Where(x=>x.isEnable == false).ToList();
 
-            foreach (var recordModel in sabset) 
+            foreach (var recordModel in disabledList) 
             {
                 var record = _records.GetAll().FirstOrDefault(x=> 
-                x.DateForVisit == recordModel.Date &&
-                x.TimeForVisit == recordModel.Time &&
-                x.EmployeeId == recordModel.EmployeeId
-                );
+                    x.DateForVisit == recordModel.Date &&
+                    x.TimeForVisit == recordModel.Time &&
+                    x.EmployeeId == recordModel.EmployeeId
+                    );
 
                 if(record != null)
                 {
@@ -185,6 +184,23 @@ namespace HairSalon.Model.Records.Admin
                         DateForVisit = recordModel.Date,
                     TimeForVisit = recordModel.Time,
                     EmployeeId = recordModel.EmployeeId});
+                }
+            }
+
+            List<TimeForRecordModel>  enabledList = recordModels.ToList().Where(x=>x.isEnable == true).ToList();
+
+            foreach (var recordModel in enabledList) 
+            {
+                var record = _records.GetAll().FirstOrDefault(x =>
+                    x.DateForVisit == recordModel.Date &&
+                    x.TimeForVisit == recordModel.Time &&
+                    x.EmployeeId == recordModel.EmployeeId &&
+                    x.ClientName == "ВЫКЛ"
+                    );
+
+                if (record != null)
+                {
+                    _records.Delete(record.Id);
                 }
             }
 
