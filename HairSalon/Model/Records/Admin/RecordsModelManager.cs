@@ -3,12 +3,12 @@ using HairSalon.Model.Employees;
 
 namespace HairSalon.Model.Records.Admin
 {
-    public class RecordsService
+    public class RecordsModelManager
     {
         private IRepositoryOfRecords _records;
         private IRepositoryOfEmployees _employees;
         private IRepositoryOfConfiguration _config;
-        public RecordsService(IRepositoryOfRecords records,
+        public RecordsModelManager(IRepositoryOfRecords records,
             IRepositoryOfEmployees employees,
             IRepositoryOfConfiguration configuration)
         {

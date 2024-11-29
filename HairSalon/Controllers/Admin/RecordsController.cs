@@ -8,7 +8,7 @@ namespace HairSalon.Controllers.Admin
 {
     public class RecordsController : Controller
     {
-        private RecordsService _recordsService;
+        private RecordsModelManager _recordsModelManager;
         private IRepositoryOfEmployees _employees;
 
         public RecordsController(IRepositoryOfRecords records,
@@ -16,18 +16,18 @@ namespace HairSalon.Controllers.Admin
             IRepositoryOfConfiguration configuration)
         {
             _employees = employees;
-            _recordsService = new(records, employees, configuration);
+            _recordsModelManager = new(records, employees, configuration);
         }
 
         public ViewResult Index()
         {
-            return View(_recordsService.GetWorkDates().ToArray());
+            return View(_recordsModelManager.GetWorkDates().ToArray());
         }
 
         [HttpPost]
         public RedirectResult SetDaysForRecords([FromForm] WorkDatesModel[] recordsModels)
         {
-            _recordsService.SetWorkDates(recordsModels.ToList());
+            _recordsModelManager.SetWorkDates(recordsModels.ToList());
 
             return Redirect("Index");
         }
@@ -36,7 +36,7 @@ namespace HairSalon.Controllers.Admin
         public ViewResult Day(string date)
         {
             DateOnly DateDay = DateOnly.Parse(date);
-            List<RecordsForEmployeeOfDay> model = _recordsService.GetForDate(DateDay);
+            List<RecordsForEmployeeOfDay> model = _recordsModelManager.GetForDate(DateDay);
 
             return View(model);
         }
@@ -46,7 +46,7 @@ namespace HairSalon.Controllers.Admin
         {
             DateOnly dateDay = DateOnly.Parse(date);
 
-            TimeForRecordModel[] model = _recordsService.GetTimeTable(dateDay, employeeId);
+            TimeForRecordModel[] model = _recordsModelManager.GetTimeTable(dateDay, employeeId);
 
             ViewBag.EmployeeName = _employees.Get(employeeId)?.Name;
 
@@ -56,7 +56,7 @@ namespace HairSalon.Controllers.Admin
         [HttpPost]
         public RedirectToActionResult SetTimeOfDayForEmployee([FromForm] TimeForRecordModel[] recordModels)
         {
-            _recordsService.SetTimeTable(recordModels);
+            _recordsModelManager.SetTimeTable(recordModels);
 
             return RedirectToAction("Index");
         }

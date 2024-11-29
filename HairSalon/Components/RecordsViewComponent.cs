@@ -9,17 +9,17 @@ namespace HairSalon.Components
 {
     public class RecordsViewComponent: ViewComponent
     {
-        private RecordsService recordsModelService;
+        private RecordsModelManager recordsModelManager;
         public RecordsViewComponent(IRepositoryOfRecords records, 
             IRepositoryOfEmployees employees,
             IRepositoryOfConfiguration configuration)
         {
-            recordsModelService = new(records, employees, configuration);
+            recordsModelManager = new(records, employees, configuration);
         }
 
         public ViewViewComponentResult Invoke()
         {
-            var model = recordsModelService.GetAll();
+            var model = recordsModelManager.GetAll();
 
             return View(model);
         }
