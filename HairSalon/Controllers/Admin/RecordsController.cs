@@ -8,7 +8,7 @@ namespace HairSalon.Controllers.Admin
 {
     public class RecordsController : Controller
     {
-        private RecordsModelService _recordsService;
+        private RecordsService _recordsService;
         private IRepositoryOfEmployees _employees;
 
         public RecordsController(IRepositoryOfRecords records,
@@ -21,13 +21,13 @@ namespace HairSalon.Controllers.Admin
 
         public ViewResult Index()
         {
-            return View(_recordsService.GetDaysForRecords().ToArray());
+            return View(_recordsService.GetWorkDates().ToArray());
         }
 
         [HttpPost]
-        public RedirectResult SetDaysForRecords([FromForm] DayForRecordsModel[] recordsModels)
+        public RedirectResult SetDaysForRecords([FromForm] WorkDatesModel[] recordsModels)
         {
-            _recordsService.SetDaysForRecords(recordsModels.ToList());
+            _recordsService.SetWorkDates(recordsModels.ToList());
 
             return Redirect("Index");
         }
@@ -36,7 +36,7 @@ namespace HairSalon.Controllers.Admin
         public ViewResult Day(string date)
         {
             DateOnly DateDay = DateOnly.Parse(date);
-            List<RecordsForEmployeeOfDay> model = _recordsService.GetRecordsOfDayForEmpoyees(DateDay);
+            List<RecordsForEmployeeOfDay> model = _recordsService.GetForDate(DateDay);
 
             return View(model);
         }
@@ -46,7 +46,7 @@ namespace HairSalon.Controllers.Admin
         {
             DateOnly dateDay = DateOnly.Parse(date);
 
-            TimeForRecordModel[] model = _recordsService.GetTimeOfDayForEmployee(dateDay, employeeId);
+            TimeForRecordModel[] model = _recordsService.GetTimeTable(dateDay, employeeId);
 
             ViewBag.EmployeeName = _employees.Get(employeeId)?.Name;
 
@@ -56,7 +56,7 @@ namespace HairSalon.Controllers.Admin
         [HttpPost]
         public RedirectToActionResult SetTimeOfDayForEmployee([FromForm] TimeForRecordModel[] recordModels)
         {
-            _recordsService.SetTimeOfDayForEmployee(recordModels);
+            _recordsService.SetTimeTable(recordModels);
 
             return RedirectToAction("Index");
         }

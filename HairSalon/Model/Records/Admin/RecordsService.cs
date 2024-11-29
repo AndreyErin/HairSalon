@@ -3,12 +3,12 @@ using HairSalon.Model.Employees;
 
 namespace HairSalon.Model.Records.Admin
 {
-    public class RecordsModelService
+    public class RecordsService
     {
         private IRepositoryOfRecords _records;
         private IRepositoryOfEmployees _employees;
         private IRepositoryOfConfiguration _config;
-        public RecordsModelService(IRepositoryOfRecords records,
+        public RecordsService(IRepositoryOfRecords records,
             IRepositoryOfEmployees employees,
             IRepositoryOfConfiguration configuration)
         {
@@ -17,10 +17,10 @@ namespace HairSalon.Model.Records.Admin
             _config = configuration;
         }
 
-        public List<DayForRecordsModel> GetDaysForRecords() 
+        public List<WorkDatesModel> GetWorkDates() 
         {
             DateOnly startDate = new(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
-            List<DayForRecordsModel> model = new();
+            List<WorkDatesModel> model = new();
 
             for (int i = 0; i < 31; i++)
             {
@@ -32,7 +32,7 @@ namespace HairSalon.Model.Records.Admin
             return model; 
         }
 
-        public int SetDaysForRecords(List<DayForRecordsModel> dates) 
+        public int SetWorkDates(List<WorkDatesModel> dates) 
         {
             var datesOn = dates.Where(x => x.IsEnable == true);
             var datesOff = dates.Where(x => x.IsEnable == false);
@@ -52,7 +52,7 @@ namespace HairSalon.Model.Records.Admin
             return 1; 
         }
 
-        public List<RecordsForEmployeeAll> GetAllRecordsForEmployees()
+        public List<RecordsForEmployeeAll> GetAll()
         {
             return Sort().ToList();
         }
@@ -64,11 +64,11 @@ namespace HairSalon.Model.Records.Admin
             foreach (var employee in _employees.GetAll())
             {
                 //выбираем все записи для конкретного сотрудника
-                List<Record> empRecords = _records.GetAll().Where(x => x.EmployeeId == employee.Id).ToList();
+                List<Record> empRecords = _records.GetAll().Where(x => x.EmployeeId == employee.Id && x.ClientName != "ВЫКЛ").ToList();
                 //разбиваем эти записи по дням
                 var grups = empRecords.GroupBy(x => x.DateForVisit);
 
-                List<RecordsOfDay> recordsOfDays = new();
+                List<TimeTable> recordsOfDays = new();
 
                 foreach (var item in grups)
                 {
@@ -84,7 +84,7 @@ namespace HairSalon.Model.Records.Admin
             }
         }
     
-        public List<RecordsForEmployeeOfDay> GetRecordsOfDayForEmpoyees(DateOnly day)
+        public List<RecordsForEmployeeOfDay> GetForDate(DateOnly day)
         {
             List<RecordsForEmployeeOfDay> model = new();
 
@@ -112,7 +112,7 @@ namespace HairSalon.Model.Records.Admin
                     starTime = starTime.AddMinutes(30);
                 }
 
-                RecordsOfDay recordsOfDay = new() { Day = day, Records = recordList };
+                TimeTable recordsOfDay = new() { Day = day, Records = recordList };
                 RecordsForEmployeeOfDay recordsForEmployeeOfDay = new() { Employee = emp, RecordsOfDay = recordsOfDay };
 
                 model.Add(recordsForEmployeeOfDay);
@@ -121,7 +121,7 @@ namespace HairSalon.Model.Records.Admin
             return model;
         }
 
-        public TimeForRecordModel[] GetTimeOfDayForEmployee(DateOnly dateDay, int employeeId)
+        public TimeForRecordModel[] GetTimeTable(DateOnly dateDay, int employeeId)
         {
             Employee? emp = _employees.Get(employeeId);
 
@@ -157,7 +157,7 @@ namespace HairSalon.Model.Records.Admin
             return result.ToArray();
         }
 
-        public int SetTimeOfDayForEmployee(TimeForRecordModel[] recordModels)
+        public int SetTimeTable(TimeForRecordModel[] recordModels)
         {
             //выключаем время
             List<TimeForRecordModel> disabledList = recordModels.ToList().Where(x=>x.isEnable == false).ToList();
@@ -172,11 +172,15 @@ namespace HairSalon.Model.Records.Admin
 
                 if(record != null)
                 {
-                    record.ClientName = "ВЫКЛ";
-                    record.SeviceName = "";
-                    record.ClientPhone = "";
-                    record.DurationOfService = 0;
-                    _records.Update(record);
+                    if (record?.ClientName != "ВЫКЛ")
+                    {
+                        record.ClientName = "ВЫКЛ";
+                        record.SeviceName = "";
+                        record.ClientPhone = "";
+                        record.DurationOfService = 0;
+                        _records.Update(record);
+                    }
+
                 }
                 else
                 {

@@ -5,6 +5,6 @@ namespace HairSalon.Model.Records.Admin
     public class RecordsForEmployeeOfDay
     {
         public Employee Employee { get; set; }
-        public RecordsOfDay RecordsOfDay { get; set; }
+        public TimeTable RecordsOfDay { get; set; }
     }
 }
