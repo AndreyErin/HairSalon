@@ -8,7 +8,8 @@ namespace HairSalon.Controllers.Admin
 {
     public class RecordsController : Controller
     {
-        private RecordsModelManager _recordsModelManager;
+        private RecordViewModelFactory _rvmFactory;
+        private RecordViewModelAdapter _rvmAdapter;
         private IRepositoryOfEmployees _employees;
 
         public RecordsController(IRepositoryOfRecords records,
@@ -16,27 +17,28 @@ namespace HairSalon.Controllers.Admin
             IRepositoryOfConfiguration configuration)
         {
             _employees = employees;
-            _recordsModelManager = new(records, employees, configuration);
+            _rvmFactory = new(records, employees, configuration);
+            _rvmAdapter = new(records);
         }
 
         public ViewResult Index()
         {
-            return View(_recordsModelManager.GetWorkDates().ToArray());
+            return View(_rvmFactory.CreateWorkDatesModelArray());
         }
 
         [HttpPost]
-        public RedirectResult SetDaysForRecords([FromForm] WorkDatesModel[] recordsModels)
+        public RedirectToActionResult SetDaysForRecords([FromForm] WorkDatesModel[] recordsModels)
         {
-            _recordsModelManager.SetWorkDates(recordsModels.ToList());
+            _rvmAdapter.SetWorkDates(recordsModels);
 
-            return Redirect("Index");
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
         public ViewResult Day(string date)
         {
             DateOnly DateDay = DateOnly.Parse(date);
-            List<RecordsForEmployeeOfDay> model = _recordsModelManager.GetForDate(DateDay);
+            List<RecordsForEmployeeOfDayModel> model = _rvmFactory.CreateRecordsForEmployeeOfDayModelList(DateDay);
 
             return View(model);
         }
@@ -46,7 +48,7 @@ namespace HairSalon.Controllers.Admin
         {
             DateOnly dateDay = DateOnly.Parse(date);
 
-            TimeForRecordModel[] model = _recordsModelManager.GetTimeTable(dateDay, employeeId);
+            TimeForRecordModel[] model = _rvmFactory.CreateTimeForRecordModelArray(dateDay, employeeId);
 
             ViewBag.EmployeeName = _employees.Get(employeeId)?.Name;
 
@@ -56,7 +58,7 @@ namespace HairSalon.Controllers.Admin
         [HttpPost]
         public RedirectToActionResult SetTimeOfDayForEmployee([FromForm] TimeForRecordModel[] recordModels)
         {
-            _recordsModelManager.SetTimeTable(recordModels);
+            _rvmAdapter.SetTimeTable(recordModels);
 
             return RedirectToAction("Index");
         }

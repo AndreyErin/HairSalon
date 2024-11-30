@@ -43,12 +43,12 @@ namespace HairSalon.Tests
             ConfigurationController configurationController = new(mock.Object);
 
             //Act
-            RedirectToActionResult redirectToActionResult = configurationController.SetConfiguration(new Config());
-            var action = redirectToActionResult.ActionName;
+            RedirectResult redirectResult = configurationController.SetConfiguration(new Config());
+            var action = redirectResult.Url;
 
             //Assert
             Assert.NotNull(action);
-            Assert.Equal("Index", action);
+            Assert.Equal("~/Admin", action);
         }
     }
 }

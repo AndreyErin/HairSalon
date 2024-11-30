@@ -1,11 +1,11 @@
 ﻿namespace HairSalon.Model.Records.Admin
 {
-    public class RecordsForEmployeeAll
+    public class RecordsForEmployeeAllModel
     {
         public string EmployeeName { get; set; }
         public List<TimeTable> RecordsOfDays { get; set; }
 
-        public RecordsForEmployeeAll(string empoyeeName, List<TimeTable> recordsOfDays)
+        public RecordsForEmployeeAllModel(string empoyeeName, List<TimeTable> recordsOfDays)
         {
             EmployeeName = empoyeeName;
             RecordsOfDays = recordsOfDays;

@@ -3,12 +3,13 @@ using HairSalon.Model.Employees;
 
 namespace HairSalon.Model.Records.Admin
 {
-    public class RecordsModelManager
+    //класс создания моделей для представлений
+    public class RecordViewModelFactory
     {
         private IRepositoryOfRecords _records;
         private IRepositoryOfEmployees _employees;
         private IRepositoryOfConfiguration _config;
-        public RecordsModelManager(IRepositoryOfRecords records,
+        public RecordViewModelFactory(IRepositoryOfRecords records,
             IRepositoryOfEmployees employees,
             IRepositoryOfConfiguration configuration)
         {
@@ -17,7 +18,7 @@ namespace HairSalon.Model.Records.Admin
             _config = configuration;
         }
 
-        public List<WorkDatesModel> GetWorkDates() 
+        public WorkDatesModel[] CreateWorkDatesModelArray() 
         {
             DateOnly startDate = new(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
             List<WorkDatesModel> model = new();
@@ -29,37 +30,17 @@ namespace HairSalon.Model.Records.Admin
                 startDate = startDate.AddDays(1);
             }
 
-            return model; 
+            return model.ToArray(); 
         }
 
-        public int SetWorkDates(List<WorkDatesModel> dates) 
-        {
-            var datesOn = dates.Where(x => x.IsEnable == true);
-            var datesOff = dates.Where(x => x.IsEnable == false);
-
-            //включаем дни для записи
-            foreach (var date in datesOn)
-            {
-                _records.AddDayForRecords(date.Day);
-            }
-
-            //выключаем дни для записи
-            foreach (var date in datesOff)
-            {
-                _records.DeleteDayForRecords(date.Day);
-            }
-
-            return 1; 
-        }
-
-        public List<RecordsForEmployeeAll> GetAll()
+        public List<RecordsForEmployeeAllModel> CreateRecordsForEmployeeAllDaysModelList()
         {
             return Sort().ToList();
         }
 
         //Сортировка имеющихся записей по:
         //сотруднику-дате-времени
-        private IEnumerable<RecordsForEmployeeAll> Sort()
+        private IEnumerable<RecordsForEmployeeAllModel> Sort()
         {
             foreach (var employee in _employees.GetAll())
             {
@@ -78,15 +59,15 @@ namespace HairSalon.Model.Records.Admin
 
                 if (recordsOfDays.Count > 0)
                 {
-                    yield return new RecordsForEmployeeAll(employee.Name, recordsOfDays);
+                    yield return new RecordsForEmployeeAllModel(employee.Name, recordsOfDays);
                 }
 
             }
         }
     
-        public List<RecordsForEmployeeOfDay> GetForDate(DateOnly day)
+        public List<RecordsForEmployeeOfDayModel> CreateRecordsForEmployeeOfDayModelList(DateOnly day)
         {
-            List<RecordsForEmployeeOfDay> model = new();
+            List<RecordsForEmployeeOfDayModel> model = new();
 
             foreach (var emp in _employees.GetAll())
             {
@@ -113,7 +94,7 @@ namespace HairSalon.Model.Records.Admin
                 }
 
                 TimeTable recordsOfDay = new() { Day = day, Records = recordList };
-                RecordsForEmployeeOfDay recordsForEmployeeOfDay = new() { Employee = emp, RecordsOfDay = recordsOfDay };
+                RecordsForEmployeeOfDayModel recordsForEmployeeOfDay = new() { Employee = emp, RecordsOfDay = recordsOfDay };
 
                 model.Add(recordsForEmployeeOfDay);
             }
@@ -121,7 +102,7 @@ namespace HairSalon.Model.Records.Admin
             return model;
         }
 
-        public TimeForRecordModel[] GetTimeTable(DateOnly dateDay, int employeeId)
+        public TimeForRecordModel[] CreateTimeForRecordModelArray(DateOnly dateDay, int employeeId)
         {
             Employee? emp = _employees.Get(employeeId);
 
@@ -135,7 +116,7 @@ namespace HairSalon.Model.Records.Admin
             {
                 Record? record = subset.FirstOrDefault(x => x.TimeForVisit == starTime);
 
-                if (record != null)
+                if (record != null && emp != null)
                 {
                     if (record?.ClientName != "ВЫКЛ") 
                     {
@@ -157,58 +138,6 @@ namespace HairSalon.Model.Records.Admin
             return result.ToArray();
         }
 
-        public int SetTimeTable(TimeForRecordModel[] recordModels)
-        {
-            //выключаем время
-            List<TimeForRecordModel> disabledList = recordModels.ToList().Where(x=>x.isEnable == false).ToList();
 
-            foreach (var recordModel in disabledList) 
-            {
-                var record = _records.GetAll().FirstOrDefault(x=> 
-                    x.DateForVisit == recordModel.Date &&
-                    x.TimeForVisit == recordModel.Time &&
-                    x.EmployeeId == recordModel.EmployeeId
-                    );
-
-                if(record != null)
-                {
-                    if (record?.ClientName != "ВЫКЛ")
-                    {
-                        record.ClientName = "ВЫКЛ";
-                        record.SeviceName = "";
-                        record.ClientPhone = "";
-                        record.DurationOfService = 0;
-                        _records.Update(record);
-                    }
-
-                }
-                else
-                {
-                    _records.Add(new() { ClientName = "ВЫКЛ",
-                        DateForVisit = recordModel.Date,
-                    TimeForVisit = recordModel.Time,
-                    EmployeeId = recordModel.EmployeeId});
-                }
-            }
-
-            List<TimeForRecordModel>  enabledList = recordModels.ToList().Where(x=>x.isEnable == true).ToList();
-
-            foreach (var recordModel in enabledList) 
-            {
-                var record = _records.GetAll().FirstOrDefault(x =>
-                    x.DateForVisit == recordModel.Date &&
-                    x.TimeForVisit == recordModel.Time &&
-                    x.EmployeeId == recordModel.EmployeeId &&
-                    x.ClientName == "ВЫКЛ"
-                    );
-
-                if (record != null)
-                {
-                    _records.Delete(record.Id);
-                }
-            }
-
-            return 1;
-        }
     }
 }
