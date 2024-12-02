@@ -7,7 +7,7 @@ using Xunit;
 
 namespace HairSalon.Tests
 {
-    public class ConfigurationApiControllerTests
+    public class ConfigurationApiControllerTest
     {
         [Fact]
         public void Get()

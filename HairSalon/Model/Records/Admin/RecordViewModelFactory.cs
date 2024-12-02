@@ -42,10 +42,13 @@ namespace HairSalon.Model.Records.Admin
         //сотруднику-дате-времени
         private IEnumerable<RecordsForEmployeeAllModel> Sort()
         {
+            DateOnly toDay = new(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+
             foreach (var employee in _employees.GetAll())
             {
+                //выбираем только актуальные записи, т.е. от сегодня и позже
                 //выбираем все записи для конкретного сотрудника
-                List<Record> empRecords = _records.GetAll().Where(x => x.EmployeeId == employee.Id && x.ClientName != "ВЫКЛ").ToList();
+                List<Record> empRecords = _records.GetAll().Where(x => x.EmployeeId == employee.Id && x.ClientName != "ВЫКЛ" && x.DateForVisit >= toDay).ToList();
                 //разбиваем эти записи по дням
                 var grups = empRecords.GroupBy(x => x.DateForVisit);
 
