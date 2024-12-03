@@ -32,19 +32,23 @@
                         record.SeviceName = "";
                         record.ClientPhone = "";
                         record.DurationOfService = 0;
-                        _records.Update(record);
+
+                        int result = _records.Update(record);
+                        if (result == -1) { return result; }
                     }
 
                 }
                 else
                 {
-                    _records.Add(new()
+                    int result = _records.Add(new()
                     {
                         ClientName = "ВЫКЛ",
                         DateForVisit = recordModel.Date,
                         TimeForVisit = recordModel.Time,
                         EmployeeId = recordModel.EmployeeId
                     });
+
+                    if (result == -1) { return result; }
                 }
             }
 
@@ -61,7 +65,8 @@
 
                 if (record != null)
                 {
-                    _records.Delete(record.Id);
+                    int result = _records.Delete(record.Id);
+                    if (result == -1) { return result; }
                 }
             }
 
@@ -76,13 +81,15 @@
             //включаем дни для записи
             foreach (var date in datesOn)
             {
-                _records.AddDayForRecords(date.Day);
+                int result = _records.AddDayForRecords(date.Day);
+                if (result == -1) { return result; }
             }
 
             //выключаем дни для записи
             foreach (var date in datesOff)
             {
-                _records.DeleteDayForRecords(date.Day);
+                int result = _records.DeleteDayForRecords(date.Day);
+                if (result == -1) { return result; }
             }
 
             return 1;
