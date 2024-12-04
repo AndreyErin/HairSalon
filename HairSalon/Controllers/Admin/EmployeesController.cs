@@ -10,7 +10,7 @@ namespace HairSalon.Controllers.Admin
         {
             _employees = repositoryOfEmployees;
         }
-        public IActionResult Index()
+        public ViewResult Index()
         {
             return View(_employees.GetAll());
         }
@@ -32,7 +32,7 @@ namespace HairSalon.Controllers.Admin
         [HttpGet]
         public ViewResult Edit(int id) 
         {
-            Employee employee = _employees.Get(id);
+            Employee employee = _employees.Get(id) ?? new Employee();
             ViewBag.Title = "Изменить";
             return View("AddOrEdit", employee);
         }
