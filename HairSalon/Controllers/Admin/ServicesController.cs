@@ -39,7 +39,7 @@ namespace HairSalon.Controllers.Admin
         {
             ViewBag.Pictures = _pictures.GetPictures();
             ViewBag.Title = "Изменить";
-            Service service = _services.Get(id);
+            Service service = _services.Get(id) ?? new();
             return View("AddOrEdit" ,service);
         }
 

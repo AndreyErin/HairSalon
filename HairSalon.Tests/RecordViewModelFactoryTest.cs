@@ -30,7 +30,6 @@ namespace HairSalon.Tests
             Assert.Equal(new DateOnly(dt.Year, dt.Month, dt.Day).AddDays(3), result?[3].Day);
         }
 
-
         [Fact]
         public void CreateRecordsForEmployeeAllDaysModelListResult()
         {
