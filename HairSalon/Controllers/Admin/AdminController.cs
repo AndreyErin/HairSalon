@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace HairSalon.Controllers.Admin
 {
@@ -6,6 +7,14 @@ namespace HairSalon.Controllers.Admin
     {
         public IActionResult Index()
         {
+            return View();
+        }
+
+        public ViewResult ErrorPage(string errorMessage)
+        {
+            ViewBag.ReturnUrl = Request.Headers["Referer"];
+            ViewBag.ErrorText = Uri.UnescapeDataString(errorMessage);
+
             return View();
         }
     }

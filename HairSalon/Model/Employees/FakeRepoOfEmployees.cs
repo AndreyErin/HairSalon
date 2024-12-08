@@ -14,23 +14,23 @@
         }
         public int Add(Employee employee)
         {
-            if (_employees.Count > 0)
-            {
-                int id = _employees.Select(e => e.Id).Max();
-                employee.Id = id + 1;//присваевам id(к макимальному в базе прибавляем 1)
-            }
-            else 
-            {
-                employee.Id = 1;//если база пустая, то наш сотрудник будет первым
-            }
+            //if (_employees.Count > 0)
+            //{
+            //    int id = _employees.Select(e => e.Id).Max();
+            //    employee.Id = id + 1;//присваевам id(к макимальному в базе прибавляем 1)
+            //}
+            //else
+            //{
+            //    employee.Id = 1;//если база пустая, то наш сотрудник будет первым
+            //}
 
 
-            Employee? result = _employees.FirstOrDefault(e=> e.Name == employee.Name);
-            if (result == null)
-            {
-                _employees.Add(employee);
-                return 1;
-            }
+            //Employee? result = _employees.FirstOrDefault(e => e.Name == employee.Name);
+            //if (result == null)
+            //{
+            //    _employees.Add(employee);
+            //    return 1;
+            //}
             return 0;
         }
 

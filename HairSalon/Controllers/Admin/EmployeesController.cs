@@ -1,5 +1,6 @@
 ﻿using HairSalon.Model.Employees;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace HairSalon.Controllers.Admin
 {
@@ -25,8 +26,16 @@ namespace HairSalon.Controllers.Admin
         [HttpPost]
         public RedirectToActionResult Add(Employee employee) 
         {
-            _employees.Add(employee);
-            return RedirectToAction("Index");
+            int result =  _employees.Add(employee);
+            if (result == 1)
+            {
+                return RedirectToAction("Index","Employees");
+            }
+            else
+            {
+                string errorMessage = Uri.EscapeDataString("Текст ошибки");
+                return RedirectToAction("ErrorPage","Admin", new {errorMessage});
+            }          
         }
 
         [HttpGet]
