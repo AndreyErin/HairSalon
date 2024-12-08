@@ -1,6 +1,5 @@
 ﻿using HairSalon.Model.Employees;
 using Microsoft.AspNetCore.Mvc;
-using System;
 
 namespace HairSalon.Controllers.Admin
 {
@@ -33,7 +32,7 @@ namespace HairSalon.Controllers.Admin
             }
             else
             {
-                string errorMessage = Uri.EscapeDataString("Текст ошибки");
+                string errorMessage = Uri.EscapeDataString("Не удалось добавить сотрудника.");
                 return RedirectToAction("ErrorPage","Admin", new {errorMessage});
             }          
         }
@@ -49,16 +48,33 @@ namespace HairSalon.Controllers.Admin
         [HttpPost]
         public RedirectToActionResult Edit(Employee employee)
         {
-            _employees.Update(employee);
 
-            return RedirectToAction("Index");
+            int result = _employees.Update(employee);
+
+            if (result == 1)
+            {
+                return RedirectToAction("Index", "Employees");
+            }
+            else
+            {
+                string errorMessage = Uri.EscapeDataString("Не удалось изменить информацию о сотруднике.");
+                return RedirectToAction("ErrorPage", "Admin", new { errorMessage });
+            }
         }
 
         [HttpPost]
         public RedirectToActionResult Delete(int id) 
         {
-            _employees.Delete(id);
-            return RedirectToAction("Index");
+            int result = _employees.Delete(id);
+            if (result == 1)
+            {
+                return RedirectToAction("Index", "Employees");
+            }
+            else
+            {
+                string errorMessage = Uri.EscapeDataString("Не удалось удалить сотрудника.");
+                return RedirectToAction("ErrorPage", "Admin", new { errorMessage });
+            }
         }
     }
 }

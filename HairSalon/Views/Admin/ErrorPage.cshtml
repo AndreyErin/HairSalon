@@ -1,13 +1,15 @@
-﻿<div class="container">
-    <div class="row text-center">
+﻿<div class="container text-center">
+    <div class="row m-3">
         <h1>Ошибка</h1>
     </div>
 
-    <div class="row text-center">
+    <div class="row m-3">
         <h3>@ViewBag.ErrorText</h3>
     </div>
 
-    <div class="row text-center">
-        <a href="@ViewBag.ReturnUrl" class="btn btn-sm btn-success">Понять и простить</a>
+    <div class="row m-3">
+        <div class="col">
+            <a href="@ViewBag.ReturnUrl" class="btn btn-sm btn-success">Понять и простить</a>
+        </div>       
     </div>
 </div>
