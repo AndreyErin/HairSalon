@@ -41,18 +41,29 @@ namespace HairSalon.Tests
             };
             var mockConfig = new Mock<IRepositoryOfConfiguration>();
             var mockEmployees = new Mock<IRepositoryOfEmployees>();
-            var mockRecords = new Mock<IRepositoryOfRecords>();
-            mockRecords.Setup(x => x.AddDayForRecords(It.IsAny<DateOnly>())).Returns(1);
-            mockRecords.Setup(x => x.DeleteDayForRecords(It.IsAny<DateOnly>())).Returns(1);
-            RecordsController recordsController = new(mockRecords.Object, mockEmployees.Object, mockConfig.Object);
+            var mockRecords1 = new Mock<IRepositoryOfRecords>();
+            mockRecords1.Setup(x => x.AddDayForRecords(It.IsAny<DateOnly>())).Returns(1);
+            mockRecords1.Setup(x => x.DeleteDayForRecords(It.IsAny<DateOnly>())).Returns(1);
+            RecordsController recordsController1 = new(mockRecords1.Object, mockEmployees.Object, mockConfig.Object);
+
+            var mockRecords2 = new Mock<IRepositoryOfRecords>();
+            mockRecords2.Setup(x => x.AddDayForRecords(It.IsAny<DateOnly>())).Returns(-1);
+            mockRecords2.Setup(x => x.DeleteDayForRecords(It.IsAny<DateOnly>())).Returns(-1);
+            RecordsController recordsController2 = new(mockRecords2.Object, mockEmployees.Object, mockConfig.Object);
 
             //Act
-            var result = recordsController.SetDaysForRecords(model);
+            var result1 = recordsController1.SetDaysForRecords(model);
+            var result2 = recordsController2.SetDaysForRecords(model);
 
             //Assert
-            Assert.NotNull(result);
-            Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("Index", result.ActionName);
+            Assert.NotNull(result1);
+            Assert.IsType<RedirectToActionResult>(result1);
+            Assert.Equal("Index", result1.ActionName);
+
+            Assert.NotNull(result2);
+            Assert.IsType<RedirectToActionResult>(result2);
+            Assert.Equal("ErrorPage", result2.ActionName);
+            Assert.Equal("Admin", result2.ControllerName);
         }
 
         [Fact]
@@ -104,24 +115,38 @@ namespace HairSalon.Tests
             //Arrange
             TimeForRecordModel[] model =
             {
-                new TimeForRecordModel(),
+                new TimeForRecordModel(){ isEnable = false},
+                new TimeForRecordModel(){ isEnable = true}
             };
             var mockConfig = new Mock<IRepositoryOfConfiguration>();
             var mockEmployees = new Mock<IRepositoryOfEmployees>();
-            var mockRecords = new Mock<IRepositoryOfRecords>();
-            mockRecords.Setup(x => x.GetAll()).Returns(RecordsRepository_GetAll);
-            mockRecords.Setup(x=>x.Add(It.IsAny<Model.Records.Record>())).Returns(1);
-            mockRecords.Setup(x => x.Delete(It.IsAny<int>())).Returns(1);
-            mockRecords.Setup(x => x.Update(It.IsAny<Model.Records.Record>())).Returns(1);
-            RecordsController recordsController = new(mockRecords.Object, mockEmployees.Object, mockConfig.Object);
+            var mockRecords1 = new Mock<IRepositoryOfRecords>();
+            mockRecords1.Setup(x => x.GetAll()).Returns(RecordsRepository_GetAll);
+            mockRecords1.Setup(x => x.Add(It.IsAny<Model.Records.Record>())).Returns(1);
+            mockRecords1.Setup(x => x.Delete(It.IsAny<int>())).Returns(1);
+            mockRecords1.Setup(x => x.Update(It.IsAny<Model.Records.Record>())).Returns(1);
+            RecordsController recordsController1 = new(mockRecords1.Object, mockEmployees.Object, mockConfig.Object);
+
+            var mockRecords2 = new Mock<IRepositoryOfRecords>();
+            mockRecords2.Setup(x => x.GetAll()).Returns(RecordsRepository_GetAll);
+            mockRecords2.Setup(x => x.Add(It.IsAny<Model.Records.Record>())).Returns(-1);
+            mockRecords2.Setup(x => x.Delete(It.IsAny<int>())).Returns(-1);
+            mockRecords2.Setup(x => x.Update(It.IsAny<Model.Records.Record>())).Returns(-1);
+            RecordsController recordsController2 = new(mockRecords2.Object, mockEmployees.Object, mockConfig.Object);
 
             //Act
-            var result = recordsController.SetTimeOfDayForEmployee(model);
+            var result1 = recordsController1.SetTimeOfDayForEmployee(model);
+            var result2 = recordsController2.SetTimeOfDayForEmployee(model);
 
             //Assert
-            Assert.NotNull(result);
-            Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("Index", result.ActionName);
+            Assert.NotNull(result1);
+            Assert.IsType<RedirectToActionResult>(result1);
+            Assert.Equal("Index", result1.ActionName);
+
+            Assert.NotNull(result2);
+            Assert.IsType<RedirectToActionResult>(result2);
+            Assert.Equal("ErrorPage", result2.ActionName);
+            Assert.Equal("Admin", result2.ControllerName);
         }
 
 

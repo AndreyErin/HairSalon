@@ -45,7 +45,6 @@ namespace HairSalon.Tests
             Assert.NotNull(result1);
             Assert.IsType<RedirectToActionResult>(result1);
             Assert.Equal("Index", result1.ActionName);
-            Assert.Equal("Employees", result1.ControllerName);
 
             Assert.NotNull(result2);
             Assert.IsType<RedirectToActionResult> (result2);
@@ -90,7 +89,6 @@ namespace HairSalon.Tests
             Assert.NotNull(result1);
             Assert.IsType<RedirectToActionResult>(result1);
             Assert.Equal("Index", result1.ActionName);
-            Assert.Equal("Employees", result1.ControllerName);
 
             Assert.NotNull(result2);
             Assert.IsType<RedirectToActionResult>(result2);
@@ -132,18 +130,17 @@ namespace HairSalon.Tests
 
             //Act
             var result1 = employeesController1.Delete(1);
-            var result2 = employeesController1.Delete(1);
+            var result2 = employeesController2.Delete(1);
 
             //Assert
             Assert.NotNull(result1);
             Assert.IsType<RedirectToActionResult>(result1);
             Assert.Equal("Index", result1.ActionName);
-            Assert.Equal("Employees", result1.ControllerName);
 
             Assert.NotNull(result2);
             Assert.IsType<RedirectToActionResult>(result2);
-            Assert.Equal("Index", result2.ActionName);
-            Assert.Equal("Employees", result2.ControllerName);
+            Assert.Equal("ErrorPage", result2.ActionName);
+            Assert.Equal("Admin", result2.ControllerName);
         }
 
         private List<Employee> RepositoryOfEmployees_GetAll()

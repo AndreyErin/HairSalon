@@ -29,9 +29,16 @@ namespace HairSalon.Controllers.Admin
         [HttpPost]
         public RedirectToActionResult SetDaysForRecords([FromForm] WorkDatesModel[] recordsModels)
         {
-            _rvmAdapter.SetWorkDates(recordsModels);
-
-            return RedirectToAction("Index");
+            int result = _rvmAdapter.SetWorkDates(recordsModels);
+            if (result == 1)
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                string errorMessage = Uri.EscapeDataString("Не удалось установить рабочие дни.");
+                return RedirectToAction("ErrorPage", "Admin", new { errorMessage });
+            }
         }
 
         [HttpGet]
@@ -58,9 +65,16 @@ namespace HairSalon.Controllers.Admin
         [HttpPost]
         public RedirectToActionResult SetTimeOfDayForEmployee([FromForm] TimeForRecordModel[] recordModels)
         {
-            _rvmAdapter.SetTimeTable(recordModels);
-
-            return RedirectToAction("Index");
+            int result = _rvmAdapter.SetTimeTable(recordModels);
+            if (result == 1)
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                string errorMessage = Uri.EscapeDataString("Не удалось установить расписание дня.");
+                return RedirectToAction("ErrorPage", "Admin", new { errorMessage });
+            }
         }
     }
 }

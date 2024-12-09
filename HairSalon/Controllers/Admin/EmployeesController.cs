@@ -28,7 +28,7 @@ namespace HairSalon.Controllers.Admin
             int result =  _employees.Add(employee);
             if (result == 1)
             {
-                return RedirectToAction("Index","Employees");
+                return RedirectToAction("Index");
             }
             else
             {
@@ -53,7 +53,7 @@ namespace HairSalon.Controllers.Admin
 
             if (result == 1)
             {
-                return RedirectToAction("Index", "Employees");
+                return RedirectToAction("Index");
             }
             else
             {
@@ -68,7 +68,7 @@ namespace HairSalon.Controllers.Admin
             int result = _employees.Delete(id);
             if (result == 1)
             {
-                return RedirectToAction("Index", "Employees");
+                return RedirectToAction("Index");
             }
             else
             {
