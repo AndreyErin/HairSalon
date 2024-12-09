@@ -6,7 +6,7 @@ namespace HairSalon.Controllers.Admin
     public class ServicesController : Controller
     {
         private IRepositoryOfServices _services;
-        private PicturesManager _pictures;
+        private IPicturesManager _pictures;
         public ServicesController(IRepositoryOfServices repositoryOfServices)
         {
             _services = repositoryOfServices;
@@ -29,9 +29,16 @@ namespace HairSalon.Controllers.Admin
         [HttpPost]
         public RedirectToActionResult Add(Service service)
         {
-            _services.Add(service);
-
-            return RedirectToAction("Index");
+            int result = _services.Add(service);
+            if (result == 1)
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                string errorMessage = Uri.EscapeDataString("Не удалось добавить услугу.");
+                return RedirectToAction("ErrorPage", "Admin", new { errorMessage });
+            }
         }
 
         [HttpGet]
@@ -46,16 +53,31 @@ namespace HairSalon.Controllers.Admin
         [HttpPost]
         public RedirectToActionResult Edit(Service service) 
         {
-            _services.Update(service);
-
-            return RedirectToAction("Index");
+            int result = _services.Update(service);
+            if (result == 1)
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                string errorMessage = Uri.EscapeDataString("Не удалось изменить услугу.");
+                return RedirectToAction("ErrorPage", "Admin", new { errorMessage });
+            }
         }
 
         [HttpPost]
         public RedirectToActionResult Delete(int id) 
         {
-            _services.Delete(id);
-            return RedirectToAction("Index");
+            int result = _services.Delete(id);
+            if (result == 1)
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                string errorMessage = Uri.EscapeDataString("Не удалось удалить услугу.");
+                return RedirectToAction("ErrorPage", "Admin", new { errorMessage });
+            }
         }
 
         [HttpGet]
@@ -67,17 +89,31 @@ namespace HairSalon.Controllers.Admin
         [HttpPost]
         public async Task<RedirectToActionResult> AddPicturesAsync(IEnumerable<IFormFile> files) 
         {
-            await _pictures.UploadPicturesAsync(files);
-
-            return RedirectToAction("Pictures");
+            int result = await _pictures.UploadPicturesAsync(files);
+            if (result == 1)
+            {
+                return RedirectToAction("Pictures");
+            }
+            else
+            {
+                string errorMessage = Uri.EscapeDataString("Не удалось добавить изображения.");
+                return RedirectToAction("ErrorPage", "Admin", new { errorMessage });
+            }
         }
 
         [HttpPost]
         public RedirectToActionResult DeletePicture(string fileShortPath)
         {
-            _pictures.DeletePicture(fileShortPath);
-
-            return RedirectToAction("Pictures");
+            int result = _pictures.DeletePicture(fileShortPath);
+            if (result == 1)
+            {
+                return RedirectToAction("Pictures");
+            }
+            else
+            {
+                string errorMessage = Uri.EscapeDataString("Не удалось удалить изображение.");
+                return RedirectToAction("ErrorPage", "Admin", new { errorMessage });
+            }
         }
     }
 }

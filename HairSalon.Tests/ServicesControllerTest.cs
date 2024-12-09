@@ -48,18 +48,28 @@ namespace HairSalon.Tests
         [Fact]
         public void Add_PostResult()
         {
-            //Arrange
-            var mockServices = new Mock<IRepositoryOfServices>();
-            mockServices.Setup(x=>x.Add(It.IsAny<Service>())).Returns(1);
-            ServicesController servicesController = new(mockServices.Object);
+            ////Arrange
+            var mockServices1 = new Mock<IRepositoryOfServices>();
+            mockServices1.Setup(x => x.Add(It.IsAny<Service>())).Returns(1);
+            ServicesController servicesController1 = new(mockServices1.Object);
+
+            var mockServices2 = new Mock<IRepositoryOfServices>();
+            mockServices2.Setup(x => x.Add(It.IsAny<Service>())).Returns(-1);
+            ServicesController servicesController2 = new(mockServices2.Object);
 
             //Act
-            var result = servicesController.Add(new());
+            var result1 = servicesController1.Add(new());
+            var result2 = servicesController2.Add(new());
 
             //Assert
-            Assert.NotNull(result);
-            Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("Index", result.ActionName);
+            Assert.NotNull(result1);
+            Assert.IsType<RedirectToActionResult>(result1);
+            Assert.Equal("Index", result1.ActionName);
+
+            Assert.NotNull(result2);
+            Assert.IsType<RedirectToActionResult>(result2);
+            Assert.Equal("ErrorPage", result2.ActionName);
+            Assert.Equal("Admin", result2.ControllerName);
         }
 
 
@@ -86,33 +96,54 @@ namespace HairSalon.Tests
         public void Edit_PostResult()
         {
             //Arrange
-            var mockServices = new Mock<IRepositoryOfServices>();
-            ServicesController servicesController = new(mockServices.Object);
+            var mockServices1 = new Mock<IRepositoryOfServices>();
+            mockServices1.Setup(x => x.Update(It.IsAny<Service>())).Returns(1);
+            ServicesController servicesController1 = new(mockServices1.Object);
+
+            var mockServices2 = new Mock<IRepositoryOfServices>();
+            mockServices2.Setup(x => x.Update(It.IsAny<Service>())).Returns(-1);
+            ServicesController servicesController2 = new(mockServices2.Object);
 
             //Act
-            var result = servicesController.Edit(new Service());
+            var result1 = servicesController1.Edit(new Service());
+            var result2 = servicesController2.Edit(new Service());
 
             //Asset
-            Assert.NotNull(result);
-            Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("Index", result.ActionName);
+            Assert.NotNull(result1);
+            Assert.IsType<RedirectToActionResult>(result1);
+            Assert.Equal("Index", result1.ActionName);
+
+            Assert.NotNull(result2);
+            Assert.IsType<RedirectToActionResult>(result2);
+            Assert.Equal("ErrorPage", result2.ActionName);
+            Assert.Equal("Admin", result2.ControllerName);
         }
 
         [Fact]
         public void DeleteResult()
         {
             //Arrange
-            var mockServices = new Mock<IRepositoryOfServices>();
-            mockServices.Setup(x=>x.Delete(It.IsAny<int>())).Returns(1);
-            ServicesController servicesController = new(mockServices.Object);
+            var mockServices1 = new Mock<IRepositoryOfServices>();
+            mockServices1.Setup(x => x.Delete(It.IsAny<int>())).Returns(1);
+            ServicesController servicesController1 = new(mockServices1.Object);
+
+            var mockServices2 = new Mock<IRepositoryOfServices>();
+            mockServices2.Setup(x => x.Delete(It.IsAny<int>())).Returns(-1);
+            ServicesController servicesController2 = new(mockServices2.Object);
 
             //Act
-            var result = servicesController.Delete(1);
+            var result1 = servicesController1.Delete(1);
+            var result2 = servicesController2.Delete(1);
 
             //Asset
-            Assert.NotNull(result);
-            Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("Index", result.ActionName);
+            Assert.NotNull(result1);
+            Assert.IsType<RedirectToActionResult>(result1);
+            Assert.Equal("Index", result1.ActionName);
+
+            Assert.NotNull(result2);
+            Assert.IsType<RedirectToActionResult>(result2);
+            Assert.Equal("ErrorPage", result2.ActionName);
+            Assert.Equal("Admin", result2.ControllerName);
         }
 
         [Fact]
@@ -132,25 +163,30 @@ namespace HairSalon.Tests
         }
 
         [Fact]
-        public void AddPicturesAsyncResult()
+        public async Task AddPicturesAsyncResult()
         {
+            //рассмотривается только негативный сценарий
+
             //Arrange
-            var mockServices = new Mock<IRepositoryOfServices>();
-            ServicesController servicesController = new(mockServices.Object);
+            var mockServices2 = new Mock<IRepositoryOfServices>();
+            ServicesController servicesController2 = new(mockServices2.Object);
 
             //Act
-            var result = servicesController.AddPicturesAsync(new List<IFormFile>());
+            var result2 = await servicesController2.AddPicturesAsync(new List<IFormFile>());
 
             //Assert
-            Assert.NotNull(result);
-            Assert.IsType<Task<RedirectToActionResult>>(result);
-            Assert.Equal("Pictures", result.Result.ActionName);
+            Assert.NotNull(result2);
+            Assert.IsType<RedirectToActionResult>(result2);
+            Assert.Equal("ErrorPage", result2.ActionName);
+            Assert.Equal("Admin", result2.ControllerName);
         }
 
 
         [Fact]
         public void DeletePicturesResult()
         {
+            //рассмотривается только положительный сценарий
+
             //Arrange
             var mockServices = new Mock<IRepositoryOfServices>();
             ServicesController servicesController = new(mockServices.Object);

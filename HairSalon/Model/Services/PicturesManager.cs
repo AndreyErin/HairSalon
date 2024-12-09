@@ -2,7 +2,7 @@
 
 namespace HairSalon.Model.Services
 {
-    public  class PicturesManager
+    public  class PicturesManager: IPicturesManager
     {
         private string _picturesDirectory;
 
@@ -20,8 +20,12 @@ namespace HairSalon.Model.Services
             return new(result.ToList());
         }
 
-        public async Task UploadPicturesAsync(IEnumerable<IFormFile> files)
+        public async Task<int> UploadPicturesAsync(IEnumerable<IFormFile> files)
         {
+            if (files.ToList().Count == 0)
+            {
+                return -1;
+            }
 
             foreach (IFormFile item in files)
             {
@@ -35,15 +39,13 @@ namespace HairSalon.Model.Services
 
                 string fileFullPath = _picturesDirectory + "/" + pref.ToString() + item.FileName;
 
-
-
                 using (var fileStream = new FileStream(fileFullPath, FileMode.Create))
                 {
                     await item.CopyToAsync(fileStream);
                 }
             }
 
-            return;
+            return 1;
         } 
 
         public int DeletePicture(string fileShortPath)
