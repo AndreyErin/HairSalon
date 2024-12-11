@@ -28,6 +28,7 @@ namespace HairSalon.Model.Records.Api
             TimeOnly startWorkTime = _configuration.GetConfig().StartTimeOfDaty;
             TimeOnly endWorkTime = _configuration.GetConfig().EndTimeOfDaty;
 
+
             foreach (var day in daysForRecords)
             {
                 //если эта дата сегодня и часть рабочего времени уже прошла
@@ -38,14 +39,17 @@ namespace HairSalon.Model.Records.Api
                     startWorkTime = new(DateTime.Now.Hour + 1, 0);
                 }
 
-
                 List<TimeOnly> times = new();
-                while (startWorkTime < endWorkTime)
+                //начальное время к которму будут добавляться по 30 минут
+                //для определения времени следующей записи
+                TimeOnly currentWorkTime = startWorkTime;
+
+                while (currentWorkTime < endWorkTime)
                 {
                     //проверяем есть ли записть на это время и дату(у конкретного работника)
                     //, если нет то добавляем это время в список доступных
                     if (_records.GetAll().FirstOrDefault(r =>
-                        r.TimeForVisit == startWorkTime &&
+                        r.TimeForVisit == currentWorkTime &&
                         r.DateForVisit == day &&
                         r.EmployeeId == employeeId) == null)
                     {
@@ -53,18 +57,18 @@ namespace HairSalon.Model.Records.Api
                         {
                             case 0:
                                 //если такой записи нет и она укалдывается в 30 минут, то добаялем время в сисок свободного времени
-                                times.Add(startWorkTime);
+                                times.Add(currentWorkTime);
                                 break;
                             case > 0:
                                 //проверяем свободно ли дополнительное время, необходимое для закписи
-                                if (CheckExtraTime(startWorkTime, endWorkTime, day, extraTimeLags, employeeId))
-                                    times.Add(startWorkTime);
+                                if (CheckExtraTime(currentWorkTime, endWorkTime, day, extraTimeLags, employeeId))
+                                    times.Add(currentWorkTime);
                                 break;
                         }
 
                     }
                     //добавляем 30 минут и проверяем следующее время
-                    startWorkTime = startWorkTime.AddMinutes(30);
+                    currentWorkTime = currentWorkTime.AddMinutes(30);
                 }
 
                 //если в этот день доступна хотябы одна запись, то добавляем этот день
@@ -75,6 +79,7 @@ namespace HairSalon.Model.Records.Api
 
                 //обнуляем начальное время
                 startWorkTime = _configuration.GetConfig().StartTimeOfDaty;
+                currentWorkTime = startWorkTime;
             }
 
             return freeTimeForRecords;
