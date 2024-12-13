@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HairSalon.Controllers.Admin
 {
+    [Authorize]
+    [AutoValidateAntiforgeryToken]
     public class AdminController : Controller
     {
         public IActionResult Index()

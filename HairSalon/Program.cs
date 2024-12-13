@@ -5,7 +5,6 @@ using HairSalon.Model.Records;
 using HairSalon.Model.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 
 namespace HairSalon
@@ -18,9 +17,13 @@ namespace HairSalon
             builder.Services.AddControllersWithViews();
             builder.Services.AddSpaStaticFiles(config=>config.RootPath = "ClientApp/dist");
 
-            builder.Services.AddIdentity<AppUser, IdentityRole>()
+            builder.Services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
+
+            string? connectionString = builder.Configuration.GetConnectionString("Default");
+            builder.Services.AddDbContext<AppDbContext>(options=>options.UseSqlite(connectionString));
+
 
             builder.Services.AddAuthorization();
 
