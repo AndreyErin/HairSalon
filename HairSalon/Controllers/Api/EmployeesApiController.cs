@@ -22,7 +22,7 @@ namespace HairSalon.Controllers.Api
         }
 
         [HttpPost]
-        public JsonResult Add(Employee employee)
+        public ObjectResult Add(Employee employee)
         {
             PackageMessage packageMessage;
             int result = _employees.Add(employee);
@@ -30,11 +30,11 @@ namespace HairSalon.Controllers.Api
             if (result == 1)
             {
                 packageMessage = new(true);
-                return Json(packageMessage);
+                return Ok(packageMessage);
             }
 
             packageMessage = new(false, errorText: "Ошибка. Сотрудник не был добавлен.");
-            return Json(packageMessage);
+            return BadRequest(packageMessage);
 
         }
 

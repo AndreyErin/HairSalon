@@ -152,10 +152,15 @@ namespace HairSalon.Tests
             EmployeesApiController employeesApiController = new(mock.Object);
 
             //Act
-            JsonResult jsonResult1 = employeesApiController.Add(employee1);
-            JsonResult jsonResult2 = employeesApiController.Add(employee2);
-            PackageMessage? packageMessage1 = jsonResult1.Value as PackageMessage;
-            PackageMessage? packageMessage2 = jsonResult2.Value as PackageMessage;
+            ObjectResult jsonResult1 = employeesApiController.Add(employee1);
+            ObjectResult jsonResult2 = employeesApiController.Add(employee2);
+
+
+            var a = jsonResult1?.StatusCode;
+            var d = jsonResult1?.Value;
+
+            PackageMessage? packageMessage1 = jsonResult1?.Value as PackageMessage;
+            PackageMessage? packageMessage2 = jsonResult2?.Value as PackageMessage;
 
             //Assert
             Assert.NotNull(packageMessage1);
