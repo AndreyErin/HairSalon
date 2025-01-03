@@ -15,27 +15,33 @@ namespace HairSalon.Controllers.Api
         }
 
         [HttpGet]
-        public JsonResult GetAll()
+        public IActionResult GetAll()
         {
-            PackageMessage packageMessage = new(true, _employees.GetAll());
-            return Json(packageMessage);
+            if(_employees.GetAll().Count == 0)
+            {
+                return NotFound();
+            }
+
+            return Ok(_employees.GetAll());
         }
 
         [HttpPost]
-        public ObjectResult Add(Employee employee)
+        public IActionResult Add(Employee employee)
         {
-            PackageMessage packageMessage;
-            int result = _employees.Add(employee);
-
-            if (result == 1)
+            if ((employee.Name == null) || (employee.Post == null))
             {
-                packageMessage = new(true);
-                return Ok(packageMessage);
+                return UnprocessableEntity("Ошибка. Не указанно имя или должность сотрудника. Сотрудник не был добавлен.");
             }
 
-            packageMessage = new(false, errorText: "Ошибка. Сотрудник не был добавлен.");
-            return BadRequest(packageMessage);
-
+            int result = _employees.Add(employee);
+            if (result == 1)
+            {
+                return Created(); //201
+            }
+            else
+            {
+                return Conflict("Ошибка. Сотрудник с таким именем уже есть в базе.");
+            }
         }
 
         [HttpPatch]
@@ -91,19 +97,22 @@ namespace HairSalon.Controllers.Api
 
         [HttpDelete]
         [Route("{id}")]
-        public JsonResult Delete(int id)
+        public IActionResult Delete(int id)
         {
-            PackageMessage packageMessage;
-            int result = _employees.Delete(id);
-
-            if (result == 1)
+            if(id <= 0)
             {
-                packageMessage = new(true);
-                return Json(packageMessage);
+                return UnprocessableEntity("Ошибка. Некорректный Id сотрудника.");
             }
 
-            packageMessage = new(false, errorText: "Ошибка. Сотрудник не был удален. (Сотрудник, с таким ID, не найден.)");
-            return Json(packageMessage);
+            int result = _employees.Delete(id);
+            if (result == 1)
+            {
+                return Ok();
+            }
+            else 
+            {
+                return NotFound("Ошибка.Сотрудник, с таким ID, не найден.");
+            }
         }
     }
 }

@@ -19,17 +19,13 @@ namespace HairSalon.Tests
             EmployeesApiController employeesApiController = new(mock.Object);
 
             //Act
-            JsonResult jsonResult = employeesApiController.GetAll();
-            PackageMessage? packageMessage = jsonResult.Value as PackageMessage;
-            List<Employee>? resutlEmployees = packageMessage?.Data as List<Employee>;
+            var result = employeesApiController.GetAll();
 
             //Assert
-            Assert.NotNull(packageMessage);
-            Assert.True(packageMessage?.Succeed);
-            Assert.Null(packageMessage?.ErrorText);           
-            Assert.NotNull(resutlEmployees);
-            Assert.Equal(2, resutlEmployees?.Count);
-            Assert.Equal("Елизавета", resutlEmployees?.FirstOrDefault(e=>e.Id == 2)?.Name);
+            Assert.NotNull(result);
+            Assert.IsType<OkObjectResult>(result);
+            Assert.IsType<List<Employee>>((result as ObjectResult)?.Value);
+            Assert.Equal(2, ((result as ObjectResult)?.Value as List<Employee>)?.Count);
         }
 
         private List<Employee> GetAllEmployees()
@@ -147,33 +143,21 @@ namespace HairSalon.Tests
             Employee employee2 = new() { Id = 1, Name = "Виктория", Post = "Парикмахер" };
             var mock = new Mock<IRepositoryOfEmployees>();
             mock.Setup(e => e.Add(employee1)).Returns(1);
-            //несуществующий работник
+            //такой работник уже есть в базе
             mock.Setup(e => e.Add(employee2)).Returns(0);
             EmployeesApiController employeesApiController = new(mock.Object);
 
             //Act
-            ObjectResult jsonResult1 = employeesApiController.Add(employee1);
-            ObjectResult jsonResult2 = employeesApiController.Add(employee2);
-
-
-            var a = jsonResult1?.StatusCode;
-            var d = jsonResult1?.Value;
-
-            PackageMessage? packageMessage1 = jsonResult1?.Value as PackageMessage;
-            PackageMessage? packageMessage2 = jsonResult2?.Value as PackageMessage;
+            var result1 = employeesApiController.Add(employee1);
+            var result2 = employeesApiController.Add(employee2);
 
             //Assert
-            Assert.NotNull(packageMessage1);
-            Assert.NotNull(packageMessage2);
+            Assert.NotNull(result1);
+            Assert.IsType<CreatedResult>(result1);
 
-            Assert.True(packageMessage1?.Succeed);
-            Assert.False(packageMessage2?.Succeed);
-
-            Assert.Null(packageMessage1?.ErrorText);
-            Assert.NotNull(packageMessage2?.ErrorText);
-
-            Assert.Null(packageMessage1?.Data as Employee);
-            Assert.Null(packageMessage2?.Data as Employee);
+            Assert.NotNull(result2);
+            Assert.IsType<ConflictObjectResult>(result2);
+            Assert.IsType<string>((result2 as ConflictObjectResult)?.Value);
         }
 
         [Fact]
@@ -188,23 +172,16 @@ namespace HairSalon.Tests
             EmployeesApiController employeesApiController = new(mock.Object);
 
             //Act
-            JsonResult jsonResult1 = employeesApiController.Delete(id);
-            JsonResult jsonResult2 = employeesApiController.Delete(id2);
-            PackageMessage? packageMessage1 = jsonResult1.Value as PackageMessage;
-            PackageMessage? packageMessage2 = jsonResult2.Value as PackageMessage;
+            var result1 = employeesApiController.Delete(id);
+            var result2 = employeesApiController.Delete(id2);
 
             //Assert
-            Assert.NotNull(packageMessage1);
-            Assert.NotNull(packageMessage2);
+            Assert.NotNull(result1);
+            Assert.IsType<OkResult>(result1);
 
-            Assert.True(packageMessage1?.Succeed);
-            Assert.False(packageMessage2?.Succeed);
-
-            Assert.Null(packageMessage1?.ErrorText);
-            Assert.NotNull(packageMessage2?.ErrorText);
-
-            Assert.Null(packageMessage1?.Data as Employee);
-            Assert.Null(packageMessage2?.Data as Employee);
+            Assert.NotNull(result2);
+            Assert.IsType<NotFoundObjectResult>(result2);
+            Assert.IsType<string>((result2 as NotFoundObjectResult)?.Value);
         }
     }
 }
