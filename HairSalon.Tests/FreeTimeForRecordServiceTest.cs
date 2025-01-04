@@ -45,8 +45,8 @@ namespace HairSalon.Tests
                 RecordEnable = true,
                 PromotionEnabled = true,
                 NumberOfDaysForRecords = 10,
-                StartTimeOfDaty = new(10, 00),
-                EndTimeOfDaty = new(18, 00)
+                StartTimeOfDay = new(10, 00),
+                EndTimeOfDay = new(18, 00)
             };
         }
 

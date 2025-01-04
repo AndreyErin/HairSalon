@@ -203,8 +203,8 @@ namespace HairSalon.Tests
                 PromotionEnabled = true,
                 RecordEnable = true,
                 NumberOfDaysForRecords = 7,
-                StartTimeOfDaty = new(),
-                EndTimeOfDaty = new()
+                StartTimeOfDay = new(),
+                EndTimeOfDay = new()
             };
         }
     }

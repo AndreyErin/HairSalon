@@ -171,8 +171,8 @@ namespace HairSalon.Tests
                 MobileAppEnabled = false,
                 PromotionEnabled = false,
                 RecordEnable = false,
-                EndTimeOfDaty = new(18, 0),
-                StartTimeOfDaty = new(10, 0),
+                EndTimeOfDay = new(18, 0),
+                StartTimeOfDay = new(10, 0),
                 NumberOfDaysForRecords = 7};
         }
     }

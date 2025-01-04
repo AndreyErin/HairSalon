@@ -10,8 +10,8 @@
 
         //параметры записи
         public bool RecordEnable { get; set; } = false ;
-        public TimeOnly StartTimeOfDaty { get; set; }//начало рабочего дня
-        public TimeOnly EndTimeOfDaty { get;set; }//конец рабочего дня
+        public TimeOnly StartTimeOfDay { get; set; }//начало рабочего дня
+        public TimeOnly EndTimeOfDay { get;set; }//конец рабочего дня
         public int NumberOfDaysForRecords { get; set; }//количество доступных дней для записи
     }
 }

@@ -76,8 +76,8 @@ namespace HairSalon.Model.Records.Admin
             {
                 var sub = _records.GetAll().Where(x => x.EmployeeId == emp.Id && x.DateForVisit == day);
 
-                var starTime = _config.GetConfig().StartTimeOfDaty;
-                var endTime = _config.GetConfig().EndTimeOfDaty;                
+                var starTime = _config.GetConfig().StartTimeOfDay;
+                var endTime = _config.GetConfig().EndTimeOfDay;                
                 List<Record> recordList = new();
 
                 while (starTime != endTime)
@@ -111,8 +111,8 @@ namespace HairSalon.Model.Records.Admin
 
             var subset = _records.GetAll().Where(x=>x.DateForVisit == dateDay && x.EmployeeId == employeeId );
           
-            var starTime = _config.GetConfig().StartTimeOfDaty;
-            var endTime = _config.GetConfig().EndTimeOfDaty;
+            var starTime = _config.GetConfig().StartTimeOfDay;
+            var endTime = _config.GetConfig().EndTimeOfDay;
             List<TimeForRecordModel> result = new();
 
             while (starTime != endTime)

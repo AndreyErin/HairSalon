@@ -18,8 +18,8 @@ namespace HairSalon.Tests
                 PromotionEnabled = true, 
                 RecordEnable = true, 
                 NumberOfDaysForRecords = 7, 
-                StartTimeOfDaty = new TimeOnly(10,0),
-                EndTimeOfDaty=new TimeOnly(18,0),
+                StartTimeOfDay = new TimeOnly(10,0),
+                EndTimeOfDay=new TimeOnly(18,0),
             };
             var mock = new Mock<IRepositoryOfConfiguration>();
             mock.Setup(r=>r.GetConfig()).Returns(config);

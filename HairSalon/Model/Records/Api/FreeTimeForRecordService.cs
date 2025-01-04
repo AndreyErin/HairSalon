@@ -25,8 +25,8 @@ namespace HairSalon.Model.Records.Api
             var daysForRecords = _records.GetDaysForRecords().Where(d => d >= toDay && d <= lastDay);
 
             //начало и конец рабочего дня
-            TimeOnly startWorkTime = _configuration.GetConfig().StartTimeOfDaty;
-            TimeOnly endWorkTime = _configuration.GetConfig().EndTimeOfDaty;
+            TimeOnly startWorkTime = _configuration.GetConfig().StartTimeOfDay;
+            TimeOnly endWorkTime = _configuration.GetConfig().EndTimeOfDay;
 
 
             foreach (var day in daysForRecords)
@@ -78,7 +78,7 @@ namespace HairSalon.Model.Records.Api
                 }
 
                 //обнуляем начальное время
-                startWorkTime = _configuration.GetConfig().StartTimeOfDaty;
+                startWorkTime = _configuration.GetConfig().StartTimeOfDay;
                 currentWorkTime = startWorkTime;
             }
 

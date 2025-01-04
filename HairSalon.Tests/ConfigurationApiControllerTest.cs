@@ -18,11 +18,12 @@ namespace HairSalon.Tests
             ConfigurationApiController controller = new(mock.Object);
 
             //Act
-            JsonResult jsonResult = controller.Get();
-            PackageMessage? packageMessage = jsonResult?.Value as PackageMessage;
+            var result = controller.Get();
 
             //Assert
-            Assert.True((packageMessage?.Data as Config)?.MobileAppEnabled);
+            Assert.NotNull(result);
+            Assert.IsType<OkObjectResult>(result);
+            Assert.IsType<Config>((result as OkObjectResult)?.Value);
         }
 
         [Fact]
@@ -30,20 +31,42 @@ namespace HairSalon.Tests
         {
             //Arrange
             var mock = new Mock<IRepositoryOfConfiguration>();
+            mock.Setup(repo => repo.GetConfig()).Returns(GetTestConfig());
             ConfigurationApiController controller = new(mock.Object);
-            Config config = new Config() { MobileAppEnabled = false, PromotionEnabled = false };
+            Config config1 = new() { 
+                MobileAppEnabled = false,
+                PromotionEnabled = false,
+                RecordEnable = false,
+                NumberOfDaysForRecords = 2,
+                StartTimeOfDay = new(8, 0),
+                EndTimeOfDay = new(16, 0)};
+            Config config2 = new() { MobileAppEnabled = false, PromotionEnabled = false };
 
             //Act
-            JsonResult jsonResult = controller.Set(config);
-            PackageMessage? packageMessage = jsonResult?.Value as PackageMessage;
+            var result1 = controller.Set(config1);
+            var result2 = controller.Set(config2);
 
             //Assert
-            Assert.True(packageMessage?.Succeed);
+            Assert.NotNull(result1);
+            Assert.IsType<OkObjectResult>(result1);
+            Assert.IsType<Config>((result1 as OkObjectResult)?.Value);
+
+            Assert.NotNull(result2);
+            Assert.IsType<UnprocessableEntityObjectResult>(result2);
+            Assert.IsType<string>((result2 as UnprocessableEntityObjectResult)?.Value);
         }
 
         private Config GetTestConfig() 
         {
-            return new Config() { MobileAppEnabled = true, PromotionEnabled = true };
+            return new()
+            {
+                MobileAppEnabled = false,
+                PromotionEnabled = false,
+                RecordEnable = false,
+                NumberOfDaysForRecords = 2,
+                StartTimeOfDay = new(8, 0),
+                EndTimeOfDay = new(16, 0)
+            };
         }
     }
 }

@@ -1,11 +1,10 @@
-﻿using HairSalon.Model;
-using HairSalon.Model.Configuration;
+﻿using HairSalon.Model.Configuration;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HairSalon.Controllers.Api.v1
 {
     [ApiController]
-    [Route("api/configuration")]
+    [Route("api/v1/configuration")]
     public class ConfigurationApiController : Controller
     {
         IRepositoryOfConfiguration _config;
@@ -15,16 +14,23 @@ namespace HairSalon.Controllers.Api.v1
         }
 
         [HttpGet]
-        public JsonResult Get()
+        public IActionResult Get()
         {
-            return Json(new PackageMessage(true, _config.GetConfig()));
+            return Ok(_config.GetConfig());
         }
 
-        [HttpPost]
-        public JsonResult Set(Config config)
+        [HttpPatch]
+        public IActionResult Set(Config config)
         {
+            if ((config == null)
+                || (config.NumberOfDaysForRecords <= 0)
+                || (config.StartTimeOfDay >= config.EndTimeOfDay))
+            {
+                return UnprocessableEntity("Ошибка. Некорректные данные.");
+            }
+
             _config.SetConfig(config);
-            return Json(new PackageMessage(true));
+            return Ok(_config.GetConfig());
         }
     }
 }
