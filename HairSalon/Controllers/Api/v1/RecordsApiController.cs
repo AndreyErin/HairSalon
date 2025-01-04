@@ -4,7 +4,7 @@ using HairSalon.Model.Records;
 using HairSalon.Model.Records.Api;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HairSalon.Controllers.Api
+namespace HairSalon.Controllers.Api.v1
 {
     [ApiController]
     [Route("api/records")]

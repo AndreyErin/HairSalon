@@ -2,7 +2,7 @@
 using HairSalon.Model.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HairSalon.Controllers.Api
+namespace HairSalon.Controllers.Api.v1
 {
     [ApiController]
     [Route("api/service")]

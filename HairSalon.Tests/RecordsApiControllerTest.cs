@@ -4,8 +4,8 @@ using Moq;
 using Xunit;
 using Microsoft.AspNetCore.Mvc;
 using HairSalon.Model.Configuration;
-using HairSalon.Controllers.Api;
 using HairSalon.Model.Records.Api;
+using HairSalon.Controllers.Api.v1;
 
 namespace HairSalon.Tests
 {
