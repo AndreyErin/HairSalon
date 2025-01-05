@@ -1,5 +1,4 @@
-﻿using HairSalon.Model;
-using HairSalon.Model.Configuration;
+﻿using HairSalon.Model.Configuration;
 using HairSalon.Model.Records;
 using HairSalon.Model.Records.Api;
 using Microsoft.AspNetCore.Mvc;
@@ -33,80 +32,99 @@ namespace HairSalon.Controllers.Api.v1
 
         [HttpGet]
         [Route("{id}")]
-        public JsonResult Get(int id)
+        public IActionResult Get(int id)
         {
-            PackageMessage packageMessage;
+            if (id <= 0) 
+            {
+                return UnprocessableEntity("Ошибка. Некорректный id.");
+            }
 
             Record? result = _records.Get(id);
             if (result != null)
             {
-                packageMessage = new(true, data: result);
-                return Json(packageMessage);
+                return Ok(result);
             }
-
-            packageMessage = new(false, errorText: "Ошибка. Запись, с таким ID, не найдена.");
-            return Json(packageMessage);
+            else
+            {
+                return NotFound("Ошибка. Запись, с таким ID, не найдена.");
+            }
         }
 
         [HttpDelete]
         [Route("{id}")]
-        public JsonResult Delete(int id)
+        public IActionResult Delete(int id)
         {
-            PackageMessage packageMessage;
+            if (id <= 0)
+            {
+                return UnprocessableEntity("Ошибка. Некорректный id.");
+            }
 
             int result = _records.Delete(id);
             if (result == 1)
-            {
-                packageMessage = new(true);
-                return Json(packageMessage);
+            {                
+                return Ok();
             }
-
-            packageMessage = new(false, errorText: "Ошибка. Запись не была удалена.");
-            return Json(packageMessage);
+            else
+            {
+                return NotFound("Ошибка. Запись, с таким ID, не найдена.");
+            }
         }
 
         [HttpPost]
-        public JsonResult Add(Record record)
+        public IActionResult Add(Record record)
         {
-            PackageMessage packageMessage;
+            if (record.IsValid() == false)
+            {
+                return UnprocessableEntity("Ошибка. Некорректные данные.");
+            }
 
             int result = _records.Add(record);
             if (result == 1)
             {
-                packageMessage = new(true);
-                return Json(packageMessage);
-            }
-
-            packageMessage = new(false, errorText: "Ошибка. Выбранное время уже занято.");
-            return Json(packageMessage);
-        }
-
-        [HttpGet]
-        [Route("days")]
-        public JsonResult GetDaysForRecords()
-        {
-            return Json(new PackageMessage(true, _records.GetDaysForRecords()));
-        }
-
-        [HttpGet]
-        [Route("times")]
-        public JsonResult GetFreeTimeForRecords(int timeOfService, int employeeId)
-        {
-            //создаем сервис, который будет расчитывать свободное время для записи
-            FreeTimeForRecordService freeTimeService = new(_records, _configuration);
-
-            List<FreeTimeForRecords> freeTime = freeTimeService.GetFreeTimes(timeOfService, employeeId);
-
-            //формируем ответ
-            if (freeTime.Count > 0)//время для записи есть
-            {
-                PackageMessage packageMessage = new(true, freeTime);
-                return Json(packageMessage);
+                return Ok(record);
             }
             else
             {
-                PackageMessage packageMessage = new(false, null, "Нет свободного времени для записи");
-                return Json(packageMessage);
+                return Conflict("Ошибка. Выбранное время уже занято.");
+            }
+        }
+
+        [HttpGet]
+        [Route("workdays")]
+        public IActionResult GetDaysForRecords()
+        {
+            if (_records.GetDaysForRecords().Count > 0)
+            {
+                return Ok(_records.GetDaysForRecords());
+            }
+            else
+            {
+                return NotFound("Ошибка. Нет свободных дней для записи");
+            }
+        }
+
+        [HttpGet]
+        [Route("worktimes")]
+        public IActionResult GetFreeTimeForRecords(int timeOfService, int employeeId)
+        {
+            if (timeOfService <= 0 || employeeId <= 0)
+            {
+                return UnprocessableEntity("Ошибка. Некорректные данные.");
+            }
+
+            //создаем сервис, который будет расчитывать свободное время для записи
+            FreeTimeForRecordService freeTimeService = new(_records, _configuration);
+
+            List<FreeTimeForRecords> freeTimes = freeTimeService.GetFreeTimes(timeOfService, employeeId);
+
+            //формируем ответ
+            if (freeTimes.Count > 0)//время для записи есть
+            {
+                return Ok(freeTimes);
+            }
+            else
+            {
+                return NotFound("Нет свободного времени для записи");
             }
         }
     }

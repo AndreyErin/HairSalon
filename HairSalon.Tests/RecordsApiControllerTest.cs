@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using HairSalon.Model.Configuration;
 using HairSalon.Model.Records.Api;
 using HairSalon.Controllers.Api.v1;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace HairSalon.Tests
 {
@@ -24,26 +25,26 @@ namespace HairSalon.Tests
             RecordsApiController recordsApiController2 = new(mockRecords2.Object, mockConfig.Object);
 
             //Act
-            var result1 = recordsApiController1.GetAll();
-            var result2 = recordsApiController2.GetAll();
+            var resultOk = recordsApiController1.GetAll();
+            var resultNotFound = recordsApiController2.GetAll();
 
             //Assert
-            Assert.NotNull(result1);
-            Assert.IsType<OkObjectResult>(result1);
-            Assert.IsType<List<Model.Records.Record>>((result1 as OkObjectResult)?.Value);
+            Assert.NotNull(resultOk);
+            Assert.IsType<OkObjectResult>(resultOk);
+            Assert.IsType<List<Model.Records.Record>>((resultOk as OkObjectResult)?.Value);
 
-            Assert.NotNull(result2);
-            Assert.IsType<NotFoundObjectResult>(result2);
-            Assert.IsType<string>((result2 as ObjectResult)?.Value);
+            Assert.NotNull(resultNotFound);
+            Assert.IsType<NotFoundObjectResult>(resultNotFound);
+            Assert.IsType<string>((resultNotFound as ObjectResult)?.Value);
         }
 
         [Fact]
-        public void GetResultDataInt()
+        public void GetResult()
         {
             //Arrange
-            int id = 1, id2 = 20;
+            int id1 = 1, id2 = 20 , id3 = -5;
             var mockRecords = new Mock<IRepositoryOfRecords>();
-            mockRecords.Setup(repo => repo.Get(id)).Returns(GetAllRecords().FirstOrDefault(r=>r.Id == id));
+            mockRecords.Setup(repo => repo.Get(id1)).Returns(GetAllRecords().FirstOrDefault(r=>r.Id == id1));
             //недостижимый id2
             mockRecords.Setup(repo => repo.Get(id2)).Returns(GetAllRecords().FirstOrDefault(r => r.Id == id2));
 
@@ -51,30 +52,31 @@ namespace HairSalon.Tests
             RecordsApiController recordsApiController = new(mockRecords.Object, mockConfig.Object);
 
             //Act
-            PackageMessage? packageMessage1 = recordsApiController.Get(id).Value as PackageMessage;
-            PackageMessage? packageMessage2 = recordsApiController.Get(id2).Value as PackageMessage;
-            Model.Records.Record? result1 = packageMessage1?.Data as Model.Records.Record;
-            Model.Records.Record? result2 = packageMessage2?.Data as Model.Records.Record;
+            var resultOk = recordsApiController.Get(id1);
+            var resultNotFound = recordsApiController.Get(id2);
+            var resultUnprocessableEntity = recordsApiController.Get(id3);
 
             //Assert
-            Assert.NotNull(result1);
-            Assert.Null(result2);
+            Assert.NotNull(resultOk);
+            Assert.IsType<OkObjectResult>(resultOk);
+            Assert.IsType<Model.Records.Record>((resultOk as OkObjectResult)?.Value);
 
-            Assert.True(packageMessage1?.Succeed);
-            Assert.False(packageMessage2?.Succeed);
-
-            Assert.DoesNotContain("Ошибка", packageMessage1?.ErrorText);
-            Assert.Contains("Ошибка", packageMessage2?.ErrorText);
+            Assert.NotNull(resultNotFound);
+            Assert.IsType<NotFoundObjectResult>(resultNotFound);
+            Assert.IsType<string>((resultNotFound as ObjectResult)?.Value);   
             
+            Assert.NotNull(resultUnprocessableEntity);
+            Assert.IsType<UnprocessableEntityObjectResult>(resultUnprocessableEntity);
+            Assert.IsType<string>((resultUnprocessableEntity as ObjectResult)?.Value);
         }
 
         [Fact]
         public void DeleteResult()
         {
             //Arrange
-            int id = 1, id2 = 20;
+            int id1 = 1, id2 = 20, id3 = -8;
             var mockRecords = new Mock<IRepositoryOfRecords>();
-            mockRecords.Setup(repo => repo.Delete(id)).Returns(1);
+            mockRecords.Setup(repo => repo.Delete(id1)).Returns(1);
             //недостижимый id2
             mockRecords.Setup(repo => repo.Delete(id2)).Returns(0);
 
@@ -82,28 +84,36 @@ namespace HairSalon.Tests
             RecordsApiController recordsApiController = new(mockRecords.Object, mockConfig.Object);
 
             //Act
-            PackageMessage? packageMessage1 = recordsApiController.Delete(id).Value as PackageMessage;
-            PackageMessage? packageMessage2 = recordsApiController.Delete(id2).Value as PackageMessage;
-            Model.Records.Record? result1 = packageMessage1?.Data as Model.Records.Record;
-            Model.Records.Record? result2 = packageMessage2?.Data as Model.Records.Record;
+            var resultOk = recordsApiController.Delete(id1);
+            var resultNotFound = recordsApiController.Delete(id2);
+            var resultUnprocessableEntity = recordsApiController.Delete(id3);
 
             //Assert
-            Assert.True(packageMessage1?.Succeed);
-            Assert.False(packageMessage2?.Succeed);
+            Assert.NotNull(resultOk);
+            Assert.IsType<OkResult>(resultOk);
+            Assert.Null(resultOk as ObjectResult);
 
-            Assert.True(packageMessage1?.Succeed);
-            Assert.False(packageMessage2?.Succeed);
+            Assert.NotNull(resultNotFound);
+            Assert.IsType<NotFoundObjectResult>(resultNotFound);
+            Assert.IsType<string>((resultNotFound as ObjectResult)?.Value);
 
-            Assert.DoesNotContain("Ошибка", packageMessage1?.ErrorText);
-            Assert.Contains("Ошибка", packageMessage2?.ErrorText);
+            Assert.NotNull(resultUnprocessableEntity);
+            Assert.IsType<UnprocessableEntityObjectResult>(resultUnprocessableEntity);
+            Assert.IsType<string>((resultUnprocessableEntity as ObjectResult)?.Value);
         }
 
         [Fact]
         public void AddResult()
         {
             //Arrange
-            Model.Records.Record record1 = new() { Id = 11, ClientName = "Лейла", ServiceName = "Каре", DateForVisit = new(2025, 02, 15), TimeForVisit = new(10, 0, 0) };
-            Model.Records.Record record2 = new() { Id = 12, ClientName = "Мария", ServiceName = "Модельная", DateForVisit = new(2025, 01, 15), TimeForVisit = new(10, 0, 0) };
+            var dt1 = DateTime.Now;
+            var dt2 = DateTime.Now.AddDays(1);
+            var dt3 = DateTime.Now.AddDays(3);
+            var dt4 = DateTime.Now.AddDays(4);
+
+            Model.Records.Record record1 = new() { Id = 0, ClientName = "Лейла", ServiceName = "Каре", DateForVisit = new(dt1.Year, dt1.Month, dt1.Day), TimeForVisit = new(10, 0, 0), ClientPhone = "fdfd", DurationOfService = 10, EmployeeId = 1 };
+            Model.Records.Record record2 = new() { Id = 0, ClientName = "Мария", ServiceName = "Модельная", DateForVisit = new(dt2.Year, dt2.Month, dt2.Day), TimeForVisit = new(10, 0, 0), ClientPhone = "fdfd", DurationOfService = 10, EmployeeId = 1 };
+            Model.Records.Record record3 = new(); 
 
             var mockRecords = new Mock<IRepositoryOfRecords>();
             mockRecords.Setup(repo => repo.Add(record1)).Returns(1);
@@ -114,20 +124,22 @@ namespace HairSalon.Tests
             RecordsApiController recordsApiController = new(mockRecords.Object, mockConfig.Object);
 
             //Act
-            PackageMessage? packageMessage1 = recordsApiController.Add(record1).Value as PackageMessage;
-            PackageMessage? packageMessage2 = recordsApiController.Add(record2).Value as PackageMessage;
-            Model.Records.Record? result1 = packageMessage1?.Data as Model.Records.Record;
-            Model.Records.Record? result2 = packageMessage2?.Data as Model.Records.Record;
+            var resultOk = recordsApiController.Add(record1);
+            var resultConflict = recordsApiController.Add(record2);
+            var resultUnprocessableEntity = recordsApiController.Add(record3);
 
             //Assert
-            Assert.True(packageMessage1?.Succeed);
-            Assert.False(packageMessage2?.Succeed);
+            Assert.NotNull(resultOk);
+            Assert.IsType<OkObjectResult>(resultOk);
+            Assert.IsType<Model.Records.Record>((resultOk as ObjectResult)?.Value);
 
-            Assert.True(packageMessage1?.Succeed);
-            Assert.False(packageMessage2?.Succeed);
+            Assert.NotNull(resultConflict);
+            Assert.IsType<ConflictObjectResult>(resultConflict);
+            Assert.IsType<string>((resultConflict as ObjectResult)?.Value);
 
-            Assert.DoesNotContain("Ошибка", packageMessage1?.ErrorText);
-            Assert.Contains("Ошибка", packageMessage2?.ErrorText);
+            Assert.NotNull(resultUnprocessableEntity);
+            Assert.IsType<UnprocessableEntityObjectResult>(resultUnprocessableEntity);
+            Assert.IsType<string>((resultUnprocessableEntity as ObjectResult)?.Value);
         }
 
         [Fact]
@@ -140,63 +152,88 @@ namespace HairSalon.Tests
                 new(2025, 1 , 16),
                 new(2025, 1 , 17)
             };
-            var mockRecords = new Mock<IRepositoryOfRecords>();
-            mockRecords.Setup(d=>d.GetDaysForRecords()).Returns(days);
+            var mockRecords1 = new Mock<IRepositoryOfRecords>();
+            mockRecords1.Setup(d=>d.GetDaysForRecords()).Returns(days);
+            var mockRecords2 = new Mock<IRepositoryOfRecords>();
+            mockRecords2.Setup(d => d.GetDaysForRecords()).Returns(new List<DateOnly>());
 
             var mockConfig = new Mock<IRepositoryOfConfiguration>();
-            RecordsApiController recordsApiController = new(mockRecords.Object, mockConfig.Object);
+            RecordsApiController recordsApiController1 = new(mockRecords1.Object, mockConfig.Object);
+            RecordsApiController recordsApiController2 = new(mockRecords2.Object, mockConfig.Object);
 
             //Act
-            JsonResult jsonResult = recordsApiController.GetDaysForRecords();
-            PackageMessage? packageMessage = jsonResult.Value as PackageMessage;
+            var resultOk = recordsApiController1.GetDaysForRecords();
+            var resultNotFound = recordsApiController2.GetDaysForRecords();
 
             //Assert
-            Assert.NotNull(packageMessage);
-            Assert.NotNull(packageMessage.Data);
-            Assert.True(packageMessage.Succeed);
-            Assert.Equal(3, (packageMessage?.Data as List<DateOnly>)?.Count);
-            Assert.Equal(new DateOnly(2025, 1, 17), (packageMessage?.Data as List<DateOnly>)?[2]);
+            Assert.NotNull(resultOk);
+            Assert.IsType<OkObjectResult>(resultOk);
+            Assert.IsType<List<DateOnly>>((resultOk as ObjectResult)?.Value);
+
+            Assert.NotNull(resultNotFound);
+            Assert.IsType<NotFoundObjectResult>(resultNotFound);
+            Assert.IsType<string>((resultNotFound as ObjectResult)?.Value);
         }
 
         [Fact]
         public void GetFreeTimeForRecordsResult()
         {
             //Arrange
-            var mockRecords = new Mock<IRepositoryOfRecords>();
-            mockRecords.Setup(r => r.GetAll()).Returns(GetAllRecords);
-            mockRecords.Setup(r => r.GetDaysForRecords()).Returns(GetDaysForRecords());
+            var mockRecords1 = new Mock<IRepositoryOfRecords>();
+            mockRecords1.Setup(r => r.GetAll()).Returns(GetAllRecords);
+            mockRecords1.Setup(r => r.GetDaysForRecords()).Returns(GetDaysForRecords());
+
+            var mockRecords2 = new Mock<IRepositoryOfRecords>();
+            mockRecords2.Setup(r => r.GetAll()).Returns(GetAllRecords);
+            mockRecords2.Setup(r => r.GetDaysForRecords()).Returns(new List<DateOnly>());
+
             var mockConfig = new Mock<IRepositoryOfConfiguration>();
             mockConfig.Setup(c=>c.GetConfig()).Returns(GetConfig());
-            RecordsApiController recordsApiController = new(mockRecords.Object, mockConfig.Object);
+            RecordsApiController recordsApiController1 = new(mockRecords1.Object, mockConfig.Object);
+            RecordsApiController recordsApiController2 = new(mockRecords2.Object, mockConfig.Object);
 
             //Act
-            JsonResult jsonResult1 = recordsApiController.GetFreeTimeForRecords(65, 1);
-            PackageMessage? packageMessage1 = jsonResult1.Value as PackageMessage;
-            List<FreeTimeForRecords>? freeTimeForRecords1 = packageMessage1?.Data as List<FreeTimeForRecords>;
+            var resultOkOver30 = recordsApiController1.GetFreeTimeForRecords(65, 1);
+            var resultOkOver30Value = (resultOkOver30 as ObjectResult)?.Value;
+            var resultOkUnder30 = recordsApiController1.GetFreeTimeForRecords(30, 1);
+            var resultOkUnder30Value = (resultOkUnder30 as ObjectResult)?.Value;
 
-            JsonResult jsonResult2 = recordsApiController.GetFreeTimeForRecords(30, 1);
-            PackageMessage? packageMessage2 = jsonResult2.Value as PackageMessage;
-            List<FreeTimeForRecords>? freeTimeForRecords2 = packageMessage2?.Data as List<FreeTimeForRecords>;
+            var resultNotFound = recordsApiController2.GetFreeTimeForRecords(20, 1);
+
+            var resultUnprocessableEntity = recordsApiController1.GetFreeTimeForRecords(0, 0);
 
             //Assert
-            Assert.True(packageMessage1?.Succeed);
-            Assert.Equal(5, freeTimeForRecords1?.Count);
+            Assert.NotNull(resultOkOver30);
+            Assert.IsType<OkObjectResult>(resultOkOver30);
+            Assert.IsType<List<FreeTimeForRecords>>(resultOkOver30Value);
+            //всего дней для записи 5
+            Assert.Equal(5, (resultOkOver30Value as List<FreeTimeForRecords>)?.Count  );
             //для услуги длительностью 65 минут доступны 11 вариантов времени для записи,
             //при условии, что 11:00 уже заняты услугой на 20 минут
-            Assert.Equal(11, freeTimeForRecords1?[0].Times.Count);
+            Assert.Equal(11, (resultOkOver30Value as List<FreeTimeForRecords>)?[0].Times.Count);
             //для услуги длительностью 65 минут доступны 14 вариантов времени для записи,
             //при условии, что весь день свободен для записи
-            Assert.Equal(14, freeTimeForRecords1?[4].Times.Count);
+            Assert.Equal(14, (resultOkOver30Value as List<FreeTimeForRecords>)?[4].Times.Count);
 
-            Assert.True(packageMessage2?.Succeed);
-            Assert.Equal(5, freeTimeForRecords2?.Count);
+            Assert.NotNull(resultOkUnder30);
+            Assert.IsType<OkObjectResult>(resultOkUnder30);
+            Assert.IsType<List<FreeTimeForRecords>>(resultOkUnder30Value);
+            //всего дней для записи 5
+            Assert.Equal(5, (resultOkUnder30Value as List<FreeTimeForRecords>)?.Count);
             //для услуги длительностью 30 минут доступны 15 вариантов времени для записи
             //при условии, что 11:00 уже заняты услугой на 20 минут
-            Assert.Equal(15, freeTimeForRecords2?[0].Times.Count);
+            Assert.Equal(15, (resultOkUnder30Value as List<FreeTimeForRecords>)?[0].Times.Count);
             //для услуги длительностью 30 минут доступны 16 вариантов времени для записи,
             //при условии, что весь день свободен для записи
-            Assert.Equal(16, freeTimeForRecords2?[4].Times.Count);
+            Assert.Equal(16, (resultOkUnder30Value as List<FreeTimeForRecords>)?[4].Times.Count);
 
+            Assert.NotNull(resultNotFound);
+            Assert.IsType<NotFoundObjectResult>(resultNotFound);
+            Assert.IsType<string>((resultNotFound as ObjectResult)?.Value);
+
+            Assert.NotNull(resultUnprocessableEntity);
+            Assert.IsType<UnprocessableEntityObjectResult>(resultUnprocessableEntity);
+            Assert.IsType<string>((resultUnprocessableEntity as ObjectResult)?.Value);
         }
 
         private Config GetConfig()
