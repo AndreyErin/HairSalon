@@ -16,12 +16,14 @@ namespace HairSalon.Controllers.Api.v1
         [HttpGet]
         public IActionResult GetAll()
         {
-            if (_employees.GetAll().Count == 0)
+            if (_employees.GetAll().Count != 0)
+            {
+                return Ok(_employees.GetAll());
+            }
+            else
             {
                 return NotFound();
-            }
-
-            return Ok(_employees.GetAll());
+            }           
         }
 
         [HttpGet]
@@ -47,10 +49,7 @@ namespace HairSalon.Controllers.Api.v1
         [HttpPost]
         public IActionResult Add(Employee employee)
         {
-            if ((employee.Name == null)
-                || (employee.Name.Trim() == "")
-                || (employee.Post == null)
-                || (employee.Post.Trim() == ""))
+            if (employee.IsValidate() == false)
             {
                 return UnprocessableEntity("Ошибка. Некорректное имя или должность сотрудника.");
             }
@@ -69,11 +68,7 @@ namespace HairSalon.Controllers.Api.v1
         [HttpPatch]
         public IActionResult Update(Employee employee)
         {
-            if ((employee.Name == null)
-                || (employee.Name.Trim() == "")
-                || (employee.Post == null)
-                || (employee.Post.Trim() == "")
-                || (employee.Id <= 0))
+            if ((employee.IsValidate() == false) || (employee.Id <= 0))
             {
                 return UnprocessableEntity("Ошибка. Некорректные данные.");
             }

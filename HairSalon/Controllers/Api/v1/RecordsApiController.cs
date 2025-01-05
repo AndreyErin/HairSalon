@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace HairSalon.Controllers.Api.v1
 {
     [ApiController]
-    [Route("api/records")]
+    [Route("api/v1/records")]
     public class RecordsApiController : Controller
     {
         IRepositoryOfRecords _records;
@@ -19,9 +19,16 @@ namespace HairSalon.Controllers.Api.v1
         }
 
         [HttpGet]
-        public JsonResult GetAll()
+        public IActionResult GetAll()
         {
-            return Json(new PackageMessage(true, _records.GetAll()));
+            if(_records.GetAll().Count != 0)
+            {
+                return Ok(_records.GetAll());
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         [HttpGet]
@@ -38,23 +45,6 @@ namespace HairSalon.Controllers.Api.v1
             }
 
             packageMessage = new(false, errorText: "Ошибка. Запись, с таким ID, не найдена.");
-            return Json(packageMessage);
-        }
-
-        [HttpGet]
-        [Route("forname")]
-        public JsonResult Get(string name)
-        {
-            PackageMessage packageMessage;
-
-            Record? result = _records.Get(name);
-            if (result != null)
-            {
-                packageMessage = new(true, data: result);
-                return Json(packageMessage);
-            }
-
-            packageMessage = new(false, errorText: "Ошибка. Запись, с таким именем, не найдена.");
             return Json(packageMessage);
         }
 
@@ -92,14 +82,14 @@ namespace HairSalon.Controllers.Api.v1
         }
 
         [HttpGet]
-        [Route("daysforrecords")]
+        [Route("days")]
         public JsonResult GetDaysForRecords()
         {
             return Json(new PackageMessage(true, _records.GetDaysForRecords()));
         }
 
         [HttpGet]
-        [Route("freetimeforrecords")]
+        [Route("times")]
         public JsonResult GetFreeTimeForRecords(int timeOfService, int employeeId)
         {
             //создаем сервис, который будет расчитывать свободное время для записи

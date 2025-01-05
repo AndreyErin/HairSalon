@@ -68,11 +68,6 @@ namespace HairSalon.Model.Records
             return _records.FirstOrDefault(r => r.Id == id);
         }
 
-        public Record? Get(string name)
-        {
-            return _records.FirstOrDefault(r => r.ClientName == name);
-        }
-
         public List<Record> GetAll()
         {
             return _records;
