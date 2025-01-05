@@ -1,5 +1,4 @@
 ﻿using HairSalon.Controllers.Api.v1;
-using HairSalon.Model;
 using HairSalon.Model.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using Moq;

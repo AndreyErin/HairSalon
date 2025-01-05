@@ -49,7 +49,7 @@ namespace HairSalon.Controllers.Api.v1
         [HttpPost]
         public IActionResult Add(Employee employee)
         {
-            if (employee.IsValidate() == false)
+            if (employee.IsValid() == false)
             {
                 return UnprocessableEntity("Ошибка. Некорректное имя или должность сотрудника.");
             }
@@ -68,7 +68,7 @@ namespace HairSalon.Controllers.Api.v1
         [HttpPatch]
         public IActionResult Update(Employee employee)
         {
-            if ((employee.IsValidate() == false) || (employee.Id <= 0))
+            if ((employee.IsValid() == false) || (employee.Id <= 0))
             {
                 return UnprocessableEntity("Ошибка. Некорректные данные.");
             }

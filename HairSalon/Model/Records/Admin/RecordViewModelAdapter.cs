@@ -29,7 +29,7 @@
                     if (record.ClientName != "ВЫКЛ")
                     {
                         record.ClientName = "ВЫКЛ";
-                        record.SeviceName = "";
+                        record.ServiceName = "";
                         record.ClientPhone = "";
                         record.DurationOfService = 0;
 

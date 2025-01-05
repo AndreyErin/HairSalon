@@ -22,9 +22,7 @@ namespace HairSalon.Controllers.Api.v1
         [HttpPatch]
         public IActionResult Set(Config config)
         {
-            if ((config == null)
-                || (config.NumberOfDaysForRecords <= 0)
-                || (config.StartTimeOfDay >= config.EndTimeOfDay))
+            if (config.IsValid() == false)
             {
                 return UnprocessableEntity("Ошибка. Некорректные данные.");
             }

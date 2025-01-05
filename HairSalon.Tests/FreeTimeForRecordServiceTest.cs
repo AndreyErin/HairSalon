@@ -80,7 +80,7 @@ namespace HairSalon.Tests
                     ClientPhone = "9600000000",
                     DateForVisit = toDay.AddDays(1),
                     TimeForVisit = new(11,00),
-                    SeviceName = "Модельная",
+                    ServiceName = "Модельная",
                     DurationOfService = 20,
                     EmployeeId = 1
                 } ,
@@ -91,7 +91,7 @@ namespace HairSalon.Tests
                     ClientPhone = "9600000000",
                     DateForVisit = toDay.AddDays(2),
                     TimeForVisit = new(12,00),
-                    SeviceName = "Каре",
+                    ServiceName = "Каре",
                     DurationOfService = 70,
                     EmployeeId = 1
                 } ,
@@ -102,7 +102,7 @@ namespace HairSalon.Tests
                     ClientPhone = "9600000000",
                     DateForVisit = toDay.AddDays(3),
                     TimeForVisit = new(15,00),
-                    SeviceName = "Полубокс",
+                    ServiceName = "Полубокс",
                     DurationOfService = 50,
                     EmployeeId = 1
                 }

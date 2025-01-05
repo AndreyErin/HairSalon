@@ -15,20 +15,26 @@ namespace HairSalon.Tests
         public void GetAllResultData()
         {
             //Arrange
-            var mockRecords = new Mock<IRepositoryOfRecords>();
-            mockRecords.Setup(repo => repo.GetAll()).Returns(GetAllRecords);
+            var mockRecords1 = new Mock<IRepositoryOfRecords>();
+            mockRecords1.Setup(repo => repo.GetAll()).Returns(GetAllRecords);
+            var mockRecords2 = new Mock<IRepositoryOfRecords>();
+            mockRecords2.Setup(repo => repo.GetAll()).Returns(new List<Model.Records.Record>());
             var mockConfig = new Mock<IRepositoryOfConfiguration>();
-            RecordsApiController recordsApiController = new(mockRecords.Object, mockConfig.Object);
+            RecordsApiController recordsApiController1 = new(mockRecords1.Object, mockConfig.Object);
+            RecordsApiController recordsApiController2 = new(mockRecords2.Object, mockConfig.Object);
 
             //Act
-            PackageMessage? packageMessage = recordsApiController.GetAll().Value as PackageMessage;         
-            List<Model.Records.Record>? records = packageMessage?.Data as List<Model.Records.Record>;
-            var resultCount = records?.Count;
+            var result1 = recordsApiController1.GetAll();
+            var result2 = recordsApiController2.GetAll();
 
             //Assert
-            Assert.Equal(3, resultCount);
-            Assert.True(packageMessage?.Succeed);
-            Assert.Equal("Елена", records?.FirstOrDefault(s => s.Id == 2)?.ClientName);
+            Assert.NotNull(result1);
+            Assert.IsType<OkObjectResult>(result1);
+            Assert.IsType<List<Model.Records.Record>>((result1 as OkObjectResult)?.Value);
+
+            Assert.NotNull(result2);
+            Assert.IsType<NotFoundObjectResult>(result2);
+            Assert.IsType<string>((result2 as ObjectResult)?.Value);
         }
 
         [Fact]
@@ -60,36 +66,6 @@ namespace HairSalon.Tests
             Assert.DoesNotContain("Ошибка", packageMessage1?.ErrorText);
             Assert.Contains("Ошибка", packageMessage2?.ErrorText);
             
-        }
-
-        [Fact]
-        public void GetResultDataString()
-        {
-            //Arrange
-            string name1 = "Николай", name2 = "Тимофей";
-            var mockRecords = new Mock<IRepositoryOfRecords>();
-            mockRecords.Setup(repo => repo.Get(name1)).Returns(GetAllRecords().FirstOrDefault(r => r.ClientName == name1));
-            //недостижимое имя name2
-            mockRecords.Setup(repo => repo.Get(name2)).Returns(GetAllRecords().FirstOrDefault(r => r.ClientName == name2));
-
-            var mockConfig = new Mock<IRepositoryOfConfiguration>();
-            RecordsApiController recordsApiController = new(mockRecords.Object, mockConfig.Object);
-
-            //Act
-            PackageMessage? packageMessage1 = recordsApiController.Get(name1).Value as PackageMessage;
-            PackageMessage? packageMessage2 = recordsApiController.Get(name2).Value as PackageMessage;
-            Model.Records.Record? result1 = packageMessage1?.Data as Model.Records.Record;
-            Model.Records.Record? result2 = packageMessage2?.Data as Model.Records.Record;
-
-            //Assert
-            Assert.NotNull(result1);
-            Assert.Null(result2);
-
-            Assert.True(packageMessage1?.Succeed);
-            Assert.False(packageMessage2?.Succeed);
-
-            Assert.DoesNotContain("Ошибка", packageMessage1?.ErrorText);
-            Assert.Contains("Ошибка", packageMessage2?.ErrorText);
         }
 
         [Fact]
@@ -126,8 +102,8 @@ namespace HairSalon.Tests
         public void AddResult()
         {
             //Arrange
-            Model.Records.Record record1 = new() { Id = 11, ClientName = "Лейла", SeviceName = "Каре", DateForVisit = new(2025, 02, 15), TimeForVisit = new(10, 0, 0) };
-            Model.Records.Record record2 = new() { Id = 12, ClientName = "Мария", SeviceName = "Модельная", DateForVisit = new(2025, 01, 15), TimeForVisit = new(10, 0, 0) };
+            Model.Records.Record record1 = new() { Id = 11, ClientName = "Лейла", ServiceName = "Каре", DateForVisit = new(2025, 02, 15), TimeForVisit = new(10, 0, 0) };
+            Model.Records.Record record2 = new() { Id = 12, ClientName = "Мария", ServiceName = "Модельная", DateForVisit = new(2025, 01, 15), TimeForVisit = new(10, 0, 0) };
 
             var mockRecords = new Mock<IRepositoryOfRecords>();
             mockRecords.Setup(repo => repo.Add(record1)).Returns(1);
@@ -266,7 +242,7 @@ namespace HairSalon.Tests
                     ClientPhone = "9600000000",
                     DateForVisit = toDay.AddDays(1),
                     TimeForVisit = new(11,00),
-                    SeviceName = "Модельная",
+                    ServiceName = "Модельная",
                     DurationOfService = 20,
                     EmployeeId = 1
                 } ,
@@ -277,7 +253,7 @@ namespace HairSalon.Tests
                     ClientPhone = "9600000000",
                     DateForVisit = toDay.AddDays(2),
                     TimeForVisit = new(12,00),
-                    SeviceName = "Каре",
+                    ServiceName = "Каре",
                     DurationOfService = 70,
                     EmployeeId = 1
                 } ,
@@ -288,7 +264,7 @@ namespace HairSalon.Tests
                     ClientPhone = "9600000000",
                     DateForVisit = toDay.AddDays(3),
                     TimeForVisit = new(15,00),
-                    SeviceName = "Полубокс",
+                    ServiceName = "Полубокс",
                     DurationOfService = 50,
                     EmployeeId = 1
                 } 

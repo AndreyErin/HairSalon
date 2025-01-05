@@ -13,9 +13,9 @@ namespace HairSalon.Model.Employees
         [Display(Name = "Должность")]
         public string Post { get; set; } = "";//должность
 
-        public bool IsValidate()
+        public bool IsValid()
         {
-            if ((Name.Trim() == "") || (Post.Trim() == ""))
+            if ((Name.Trim() != "") || (Post.Trim() != ""))
             {
                 return true;
             }

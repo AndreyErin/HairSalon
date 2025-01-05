@@ -13,5 +13,17 @@
         public TimeOnly StartTimeOfDay { get; set; }//начало рабочего дня
         public TimeOnly EndTimeOfDay { get;set; }//конец рабочего дня
         public int NumberOfDaysForRecords { get; set; }//количество доступных дней для записи
+
+        public bool IsValid()
+        {
+            if ((NumberOfDaysForRecords > 0) && (StartTimeOfDay < EndTimeOfDay))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }
