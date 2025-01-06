@@ -22,7 +22,7 @@ namespace HairSalon.Controllers.Api.v1
             }
             else
             {
-                return NotFound();
+                return NotFound("Ошибка. В базе нет сотрудников.");
             }           
         }
 
