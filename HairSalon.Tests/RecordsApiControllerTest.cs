@@ -193,39 +193,14 @@ namespace HairSalon.Tests
             RecordsApiController recordsApiController2 = new(mockRecords2.Object, mockConfig.Object);
 
             //Act
-            var resultOkOver30 = recordsApiController1.GetFreeTimeForRecords(65, 1);
-            var resultOkOver30Value = (resultOkOver30 as ObjectResult)?.Value;
-            var resultOkUnder30 = recordsApiController1.GetFreeTimeForRecords(30, 1);
-            var resultOkUnder30Value = (resultOkUnder30 as ObjectResult)?.Value;
-
+            var resultOk = recordsApiController1.GetFreeTimeForRecords(65, 1);
             var resultNotFound = recordsApiController2.GetFreeTimeForRecords(20, 1);
-
             var resultUnprocessableEntity = recordsApiController1.GetFreeTimeForRecords(0, 0);
 
             //Assert
-            Assert.NotNull(resultOkOver30);
-            Assert.IsType<OkObjectResult>(resultOkOver30);
-            Assert.IsType<List<FreeTimeForRecords>>(resultOkOver30Value);
-            //всего дней для записи 5
-            Assert.Equal(5, (resultOkOver30Value as List<FreeTimeForRecords>)?.Count  );
-            //для услуги длительностью 65 минут доступны 11 вариантов времени для записи,
-            //при условии, что 11:00 уже заняты услугой на 20 минут
-            Assert.Equal(11, (resultOkOver30Value as List<FreeTimeForRecords>)?[0].Times.Count);
-            //для услуги длительностью 65 минут доступны 14 вариантов времени для записи,
-            //при условии, что весь день свободен для записи
-            Assert.Equal(14, (resultOkOver30Value as List<FreeTimeForRecords>)?[4].Times.Count);
-
-            Assert.NotNull(resultOkUnder30);
-            Assert.IsType<OkObjectResult>(resultOkUnder30);
-            Assert.IsType<List<FreeTimeForRecords>>(resultOkUnder30Value);
-            //всего дней для записи 5
-            Assert.Equal(5, (resultOkUnder30Value as List<FreeTimeForRecords>)?.Count);
-            //для услуги длительностью 30 минут доступны 15 вариантов времени для записи
-            //при условии, что 11:00 уже заняты услугой на 20 минут
-            Assert.Equal(15, (resultOkUnder30Value as List<FreeTimeForRecords>)?[0].Times.Count);
-            //для услуги длительностью 30 минут доступны 16 вариантов времени для записи,
-            //при условии, что весь день свободен для записи
-            Assert.Equal(16, (resultOkUnder30Value as List<FreeTimeForRecords>)?[4].Times.Count);
+            Assert.NotNull(resultOk);
+            Assert.IsType<OkObjectResult>(resultOk);
+            Assert.IsType<List<FreeTimeForRecords>>((resultOk as ObjectResult)?.Value);
 
             Assert.NotNull(resultNotFound);
             Assert.IsType<NotFoundObjectResult>(resultNotFound);

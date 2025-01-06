@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace HairSalon.Controllers.Api.v1
 {
     [ApiController]
-    [Route("api/service")]
+    [Route("api/v1/services")]
     public class ServicesApiController : Controller
     {
         private IRepositoryOfServices _services;
@@ -15,77 +15,94 @@ namespace HairSalon.Controllers.Api.v1
         }
 
         [HttpGet]
-        public JsonResult GetAll()
+        public IActionResult GetAll()
         {
-            PackageMessage packageMessage = new(true, _services.GetAll());
-            return Json(packageMessage);
-        }
-
-        [HttpPost]
-        public JsonResult Add(Service service)
-        {
-            PackageMessage packageMessage;
-            int result = _services.Add(service);
-
-            if (result == 1)
+            if (_services.GetAll().Count > 0)
             {
-                packageMessage = new(true);
-                return Json(packageMessage);
+                return Ok(_services.GetAll());
             }
-
-            packageMessage = new(false, errorText: "Ошибка. Услуга не была добавлена.");
-            return Json(packageMessage);
-
-        }
-
-        [HttpPatch]
-        public JsonResult Update(Service service)
-        {
-            PackageMessage packageMessage;
-            int result = _services.Update(service);
-
-            if (result == 1)
+            else
             {
-                packageMessage = new(true);
-                return Json(packageMessage);
+                return NotFound("Ошибка. В базе нет услуг.");
             }
-
-            packageMessage = new(false, errorText: "Ошибка. Услуга не была изменена.");
-            return Json(packageMessage);
         }
 
         [HttpGet]
         [Route("{id}")]
-        public JsonResult Get(int id)
+        public IActionResult Get(int id)
         {
-            PackageMessage packageMessage;
-            Service? result = _services.Get(id);
-
-            if (result != null)
+            if (id <= 0) 
             {
-                packageMessage = new(true, result);
-                return Json(packageMessage);
+                return UnprocessableEntity("Ошибка. Некорректный id.");
             }
 
-            packageMessage = new(false, errorText: "Ошибка. Услуга, с таким ID, не найдена.");
-            return Json(packageMessage);
+            Service? result = _services.Get(id);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return NotFound("Ошибка. Услуга, с таким id, не найдена.");
+            }
+        }
+
+        [HttpPost]
+        public IActionResult Add(Service service)
+        {
+            if (service.IsValid() == false)
+            {
+                return UnprocessableEntity("Ошибка. Некорректный id.");
+            }
+
+            int result = _services.Add(service);
+            if (result == 1)
+            {
+                return Ok(service);
+            }
+            else
+            {
+                return Conflict("Ошибка. Услуга с таким названием уже существует.");
+            }
+        }
+
+        [HttpPatch]
+        public IActionResult Update(Service service)
+        {
+            if (service.IsValid() == false || service.Id <= 0)
+            {
+                return UnprocessableEntity("Ошибка. Некорректный id.");
+            }
+
+            int result = _services.Update(service);
+            if (result == 1)
+            {
+                return Ok(service);
+            }
+            else
+            {
+                return NotFound("Ошибка. Услуга, с таким id, не найдена.");
+            }
         }
 
         [HttpDelete]
         [Route("{id}")]
-        public JsonResult Delete(int id)
+        public IActionResult Delete(int id)
         {
-            PackageMessage packageMessage;
-            int result = _services.Delete(id);
-
-            if (result == 1)
+            if (id <= 0)
             {
-                packageMessage = new(true);
-                return Json(packageMessage);
+                return UnprocessableEntity("Ошибка. Некорректный id.");
             }
 
-            packageMessage = new(false, errorText: "Ошибка. Услуга не была удалена. (Услуга, с таким ID, не найдена.)");
-            return Json(packageMessage);
+            int result = _services.Delete(id);
+            if (result == 1)
+            {
+                return Ok();
+            }
+            else
+            {
+                return NotFound("Ошибка. Услуга, с таким id, не найдена.");
+            }
         }
     }
 }

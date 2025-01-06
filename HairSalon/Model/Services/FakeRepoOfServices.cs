@@ -15,12 +15,13 @@
         }
         public int Add(Service entity)
         {
-            try
+            Service? service = _services.FirstOrDefault(x => x.Name == entity.Name);
+            if (service == null)
             {
                 _services.Add(entity);
                 return 1;
             }
-            catch (Exception)
+            else
             {
                 return -1;
             }

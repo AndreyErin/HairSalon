@@ -1,5 +1,4 @@
 ﻿using HairSalon.Controllers.Api.v1;
-using HairSalon.Model;
 using HairSalon.Model.Services;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -13,20 +12,25 @@ namespace HairSalon.Tests
         public void GetAllResultData()
         {
             //Arrange
-            var mock = new Mock<IRepositoryOfServices>();
-            mock.Setup(repo => repo.GetAll()).Returns(GetAllService); ;
-            ServicesApiController servicesApiController = new(mock.Object);
-            PackageMessage? packageMessage = servicesApiController.GetAll().Value as PackageMessage;
+            var mockServices1 = new Mock<IRepositoryOfServices>();
+            mockServices1.Setup(repo => repo.GetAll()).Returns(GetAllService); ;
+            ServicesApiController servicesApiController1 = new(mockServices1.Object);
+            var mockServices2 = new Mock<IRepositoryOfServices>();
+            mockServices2.Setup(repo => repo.GetAll()).Returns(new List<Service>()); ;
+            ServicesApiController servicesApiController2 = new(mockServices2.Object);
 
             //Act
-            List<Service>? services = packageMessage?.Data as List<Service>;
-            var resultCount = services?.Count;
+            var resultOk = servicesApiController1.GetAll();
+            var resultNotFound = servicesApiController2.GetAll();
 
             //Assert
-            Assert.True(packageMessage?.Succeed);
-            Assert.Equal(5, resultCount);
-            Assert.Equal("Котовский", services?.FirstOrDefault(s=>s.Id == 4)?.Name);
-            Assert.Null(packageMessage?.ErrorText);
+            Assert.NotNull(resultOk);
+            Assert.IsType<OkObjectResult>(resultOk);
+            Assert.IsType<List<Service>>((resultOk as ObjectResult)?.Value);
+
+            Assert.NotNull(resultNotFound);
+            Assert.IsType<NotFoundObjectResult>(resultNotFound);
+            Assert.IsType<string>((resultNotFound as ObjectResult)?.Value);
         }
 
         private List<Service> GetAllService()
@@ -44,28 +48,30 @@ namespace HairSalon.Tests
         public void GetResult()
         {
             //Arrange
-            int id = 1, id2 = 20;    
+            int id1 = 1, id2 = 20, id3 = 0;    
             var mock = new Mock<IRepositoryOfServices>();
-            mock.Setup(repo => repo.Get(id)).Returns(GetAllService().FirstOrDefault(s=>s.Id == id));
+            mock.Setup(repo => repo.Get(id1)).Returns(GetAllService().FirstOrDefault(s=>s.Id == id1));
             //id2 - недостижимый индекс
             mock.Setup(repo => repo.Get(id2)).Returns(GetAllService().FirstOrDefault(s => s.Id == id2));
             ServicesApiController servicesApiController = new(mock.Object);
 
             //Act
-            JsonResult jsonResult1 = servicesApiController.Get(id);
-            JsonResult jsonResult2 = servicesApiController.Get(id2);
-            PackageMessage? packageMessage1 = jsonResult1.Value as PackageMessage;
-            PackageMessage? packageMessage2 = jsonResult2.Value as PackageMessage;
+            var resultOk = servicesApiController.Get(id1);
+            var resultNotFound = servicesApiController.Get(id2);
+            var resultUnprocessableEntity = servicesApiController.Get(id3);
 
             //Assert
-            Assert.True(packageMessage1?.Succeed);
-            Assert.False(packageMessage2?.Succeed);
+            Assert.NotNull(resultOk);
+            Assert.IsType<OkObjectResult>(resultOk);
+            Assert.IsType<Service>((resultOk as ObjectResult)?.Value);
 
-            Assert.NotNull(packageMessage1?.Data as Service);
-            Assert.Null(packageMessage2?.Data as Service);
+            Assert.NotNull(resultNotFound);
+            Assert.IsType<NotFoundObjectResult>(resultNotFound);
+            Assert.IsType<string>((resultNotFound as ObjectResult)?.Value);
 
-            Assert.DoesNotContain("Ошибка", packageMessage1?.ErrorText);
-            Assert.Contains("Ошибка", packageMessage2?.ErrorText);
+            Assert.NotNull(resultUnprocessableEntity);
+            Assert.IsType<UnprocessableEntityObjectResult>(resultUnprocessableEntity);
+            Assert.IsType<string>((resultUnprocessableEntity as ObjectResult)?.Value);
         }
 
 
@@ -75,8 +81,8 @@ namespace HairSalon.Tests
             //Arrange
             Service service1 = new()
             {
-                Id = 55,
-                Picture = "",
+                Id =55,
+                Picture = "/picture1",
                 Name = "Ёлочка",
                 Description = "Под ёлку",
                 Price = 555,
@@ -85,7 +91,7 @@ namespace HairSalon.Tests
             Service service2 = new()
             {
                 Id = 33,
-                Picture = "",
+                Picture = "/picture2",
                 Name = "Пикси",
                 Description = "Под Пикси)",
                 Price = 333,
@@ -99,48 +105,51 @@ namespace HairSalon.Tests
             ServicesApiController servicesApiController = new(mock.Object);
 
             //Act
-            JsonResult jsonResult1 = servicesApiController.Add(service1);
-            JsonResult jsonResult2 = servicesApiController.Add(service2);
-            PackageMessage? packageMessage1 = jsonResult1.Value as PackageMessage;
-            PackageMessage? packageMessage2 = jsonResult2.Value as PackageMessage;
+            var resultOk = servicesApiController.Add(service1);
+            var resultConflict = servicesApiController.Add(service2);
+            var resultUnprocessableEntity = servicesApiController.Add(new Service());
 
             //Assert
-            Assert.True(packageMessage1?.Succeed);
-            Assert.False(packageMessage2?.Succeed);
+            Assert.NotNull(resultOk);
+            Assert.IsType<OkObjectResult>(resultOk);
+            Assert.IsType<Service>((resultOk as ObjectResult)?.Value);
 
-            Assert.Null(packageMessage1?.Data as Service);
-            Assert.Null(packageMessage2?.Data as Service);
+            Assert.NotNull(resultConflict);
+            Assert.IsType<ConflictObjectResult>(resultConflict);
+            Assert.IsType<string>((resultConflict as ObjectResult)?.Value);
 
-            Assert.DoesNotContain("Ошибка", packageMessage1?.ErrorText);
-            Assert.Contains("Ошибка", packageMessage2?.ErrorText);
+            Assert.NotNull(resultUnprocessableEntity);
+            Assert.IsType<UnprocessableEntityObjectResult>(resultUnprocessableEntity);
+            Assert.IsType<string>((resultUnprocessableEntity as ObjectResult)?.Value);
         }
 
         [Fact]
         public void DeleteResult()
         {
             //Arrange
-            int id = 1, id2 = 20;
+            int id1 = 1, id2 = 20, id3 = 0;
             var mock = new Mock<IRepositoryOfServices>();
-            mock.Setup(repo => repo.Delete(id)).Returns(1);
+            mock.Setup(repo => repo.Delete(id1)).Returns(1);
             //id2 - недостижимый индекс
             mock.Setup(repo => repo.Delete(id2)).Returns(0);
             ServicesApiController servicesApiController = new(mock.Object);
 
             //Act
-            JsonResult jsonResult1 = servicesApiController.Delete(id);
-            JsonResult jsonResult2 = servicesApiController.Delete(id2);
-            PackageMessage? packageMessage1 = jsonResult1.Value as PackageMessage;
-            PackageMessage? packageMessage2 = jsonResult2.Value as PackageMessage;
+            var resultOk = servicesApiController.Delete(id1);
+            var resultNotFound = servicesApiController.Delete(id2);
+            var resultUnprocessableEntity = servicesApiController.Delete(id3);
 
             //Assert
-            Assert.True(packageMessage1?.Succeed);
-            Assert.False(packageMessage2?.Succeed);
+            Assert.NotNull(resultOk);
+            Assert.IsType<OkResult>(resultOk);
 
-            Assert.Null(packageMessage1?.Data as Service);
-            Assert.Null(packageMessage2?.Data as Service);
+            Assert.NotNull(resultNotFound);
+            Assert.IsType<NotFoundObjectResult>(resultNotFound);
+            Assert.IsType<string>((resultNotFound as ObjectResult)?.Value);
 
-            Assert.DoesNotContain("Ошибка", packageMessage1?.ErrorText);
-            Assert.Contains("Ошибка", packageMessage2?.ErrorText);
+            Assert.NotNull(resultUnprocessableEntity);
+            Assert.IsType<UnprocessableEntityObjectResult>(resultUnprocessableEntity);
+            Assert.IsType<string>((resultUnprocessableEntity as ObjectResult)?.Value);
         }
 
         [Fact]
@@ -150,7 +159,7 @@ namespace HairSalon.Tests
             Service service1 = new()
             {
                 Id = 55,
-                Picture = "",
+                Picture = "/picture1",
                 Name = "Ёлочка",
                 Description = "Под ёлку",
                 Price = 555,
@@ -159,7 +168,7 @@ namespace HairSalon.Tests
             Service service2 = new()
             {
                 Id = 33,
-                Picture = "",
+                Picture = "/picture2",
                 Name = "Пикси",
                 Description = "Под Пикси)",
                 Price = 333,
@@ -172,20 +181,22 @@ namespace HairSalon.Tests
             ServicesApiController servicesApiController = new(mock.Object);
 
             //Act
-            JsonResult jsonResult1 = servicesApiController.Update(service1);
-            JsonResult jsonResult2 = servicesApiController.Update(service2);
-            PackageMessage? packageMessage1 = jsonResult1.Value as PackageMessage;
-            PackageMessage? packageMessage2 = jsonResult2.Value as PackageMessage;
+            var resultOk = servicesApiController.Update(service1);
+            var resultNotFound = servicesApiController.Update(service2);
+            var resultUnprocessableEntity = servicesApiController.Update(new Service());
 
             //Assert
-            Assert.True(packageMessage1?.Succeed);
-            Assert.False(packageMessage2?.Succeed);
+            Assert.NotNull(resultOk);
+            Assert.IsType<OkObjectResult>(resultOk);
+            Assert.IsType<Service>((resultOk as ObjectResult)?.Value);
 
-            Assert.Null(packageMessage1?.Data as Service);
-            Assert.Null(packageMessage2?.Data as Service);
+            Assert.NotNull(resultNotFound);
+            Assert.IsType<NotFoundObjectResult>(resultNotFound);
+            Assert.IsType<string>((resultNotFound as ObjectResult)?.Value);
 
-            Assert.DoesNotContain("Ошибка", packageMessage1?.ErrorText);
-            Assert.Contains("Ошибка", packageMessage2?.ErrorText);
+            Assert.NotNull(resultUnprocessableEntity);
+            Assert.IsType<UnprocessableEntityObjectResult>(resultUnprocessableEntity);
+            Assert.IsType<string>((resultUnprocessableEntity as ObjectResult)?.Value);
         }
     }
 }
