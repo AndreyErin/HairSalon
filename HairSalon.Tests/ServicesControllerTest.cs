@@ -171,32 +171,30 @@ namespace HairSalon.Tests
         }
 
         [Fact]
-        public void UploadAsyncResult()
+        public async Task UploadAsyncResult()
         {
             //Arrange
             var mockPictures1 = new Mock<IPicturesManager>();
-            mockPictures1.Setup(x => x.UploadAsync(new List<IFormFile>())).Returns(new Task<int>(() => 1));
+            mockPictures1.Setup(x => x.UploadAsync(new List<IFormFile>())).ReturnsAsync(1);
             var mockPictures2 = new Mock<IPicturesManager>();
-            mockPictures2.Setup(x => x.UploadAsync(new List<IFormFile>())).Returns(new Task<int>(() => -1));
+            mockPictures2.Setup(x => x.UploadAsync(new List<IFormFile>())).ReturnsAsync(-1);
             var mockServices = new Mock<IRepositoryOfServices>();
             ServicesController servicesController1 = new(mockServices.Object, mockPictures1.Object);
             ServicesController servicesController2 = new(mockServices.Object, mockPictures2.Object);
 
-
             //Act
-            var result1 = servicesController1.AddPicturesAsync(new List<IFormFile>());
-            var result2 = servicesController2.AddPicturesAsync(new List<IFormFile>());
+            var result1 = await servicesController1.AddPicturesAsync(new List<IFormFile>());
+            var result2 = await servicesController2.AddPicturesAsync(new List<IFormFile>());
 
             //Assert
             Assert.NotNull(result1);
-            //Assert.IsType<Task<RedirectToActionResult>>(result2);
-            //Assert.Equal("Pictures", result2?.Result.ActionName);
-            //Assert.Equal("Admin", result2?.Result.ControllerName);
+            Assert.IsType<RedirectToActionResult>(result1);
+            Assert.Equal("Pictures", result1.ActionName);
 
             Assert.NotNull(result2);
-            //Assert.IsType<Task<RedirectToActionResult>>(result2);
-            //Assert.Equal("ErrorPage", result2?.Result.ActionName);
-            //Assert.Equal("Admin", result2?.Result.ControllerName);
+            Assert.IsType<RedirectToActionResult>(result2);
+            Assert.Equal("ErrorPage", result2.ActionName);
+            Assert.Equal("Admin", result2.ControllerName);
         }
 
 
