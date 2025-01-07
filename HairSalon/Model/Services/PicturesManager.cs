@@ -11,7 +11,7 @@ namespace HairSalon.Model.Services
             _picturesDirectory = Directory.GetCurrentDirectory() + "/wwwroot/pictures";
         }
 
-        public List<string> GetPictures()
+        public List<string> GetAll()
         {
             var pictures = Directory.GetFiles(_picturesDirectory);
 
@@ -20,7 +20,7 @@ namespace HairSalon.Model.Services
             return new(result.ToList());
         }
 
-        public async Task<int> UploadPicturesAsync(IEnumerable<IFormFile> files)
+        public async Task<int> UploadAsync(IEnumerable<IFormFile> files)
         {
             if (files.ToList().Count == 0)
             {
@@ -32,7 +32,7 @@ namespace HairSalon.Model.Services
                 StringBuilder pref = new();
 
                 //если файл с таким названием уже есть, то добавляем в начало названия букву i
-                while (GetPictures().Select(x=> Path.GetFileName(x).ToLower()).Contains(pref.ToString() + (item.FileName).ToLower()))
+                while (GetAll().Select(x=> Path.GetFileName(x).ToLower()).Contains(pref.ToString() + (item.FileName).ToLower()))
                 {
                     pref.Append("i");
                 }
@@ -48,17 +48,24 @@ namespace HairSalon.Model.Services
             return 1;
         } 
 
-        public int DeletePicture(string fileShortPath)
+        public int Delete(string fileShortPath)
         {
-            try
+            if (GetAll().Contains(fileShortPath)) 
             {
-                string fileName = Path.GetFileName(fileShortPath);
-                string filePaht = _picturesDirectory + "/" + fileName;
+                try
+                {
+                    string fileName = Path.GetFileName(fileShortPath);
+                    string filePaht = _picturesDirectory + "/" + fileName;
 
-                File.Delete(filePaht);
-                return 1;
+                    File.Delete(filePaht);
+                    return 1;
+                }
+                catch (Exception)
+                {
+                    return -1;
+                }
             }
-            catch (Exception)
+            else
             {
                 return -1;
             }

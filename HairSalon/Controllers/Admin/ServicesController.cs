@@ -7,10 +7,10 @@ namespace HairSalon.Controllers.Admin
     {
         private IRepositoryOfServices _services;
         private IPicturesManager _pictures;
-        public ServicesController(IRepositoryOfServices repositoryOfServices)
+        public ServicesController(IRepositoryOfServices repositoryOfServices, IPicturesManager picturesManager)
         {
             _services = repositoryOfServices;
-            _pictures = new PicturesManager();
+            _pictures = picturesManager;
         }
 
         public ViewResult Index()
@@ -21,7 +21,7 @@ namespace HairSalon.Controllers.Admin
         [HttpGet]
         public ViewResult Add()
         {
-            ViewBag.Pictures = _pictures.GetPictures();
+            ViewBag.Pictures = _pictures.GetAll();
             ViewBag.Title = "Добавить";
             return View("AddOrEdit", new Service());
         }
@@ -44,7 +44,7 @@ namespace HairSalon.Controllers.Admin
         [HttpGet]
         public ViewResult Edit(int id) 
         {
-            ViewBag.Pictures = _pictures.GetPictures();
+            ViewBag.Pictures = _pictures.GetAll();
             ViewBag.Title = "Изменить";
             Service service = _services.Get(id) ?? new();
             return View("AddOrEdit" ,service);
@@ -83,13 +83,13 @@ namespace HairSalon.Controllers.Admin
         [HttpGet]
         public ViewResult Pictures() 
         {
-            return View(_pictures.GetPictures());
+            return View(_pictures.GetAll());
         }
 
         [HttpPost]
         public async Task<RedirectToActionResult> AddPicturesAsync(IEnumerable<IFormFile> files) 
         {
-            int result = await _pictures.UploadPicturesAsync(files);
+            int result = await _pictures.UploadAsync(files);
             if (result == 1)
             {
                 return RedirectToAction("Pictures");
@@ -104,7 +104,7 @@ namespace HairSalon.Controllers.Admin
         [HttpPost]
         public RedirectToActionResult DeletePicture(string fileShortPath)
         {
-            int result = _pictures.DeletePicture(fileShortPath);
+            int result = _pictures.Delete(fileShortPath);
             if (result == 1)
             {
                 return RedirectToAction("Pictures");

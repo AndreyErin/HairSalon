@@ -4,11 +4,11 @@ namespace HairSalon.Model.Services
 {
     public interface IPicturesManager
     {
-        public List<string> GetPictures();
+        public List<string> GetAll();
 
-        public Task<int> UploadPicturesAsync(IEnumerable<IFormFile> files);
+        public Task<int> UploadAsync(IEnumerable<IFormFile> files);
 
-        public int DeletePicture(string fileShortPath);
+        public int Delete(string fileShortPath);
 
     }
 }

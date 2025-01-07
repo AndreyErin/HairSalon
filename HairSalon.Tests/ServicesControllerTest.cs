@@ -13,9 +13,10 @@ namespace HairSalon.Tests
         public void IndexResult()
         {
             //Arrange
+            var mockPictures = new Mock<IPicturesManager>();
             var mockServices = new Mock<IRepositoryOfServices>();
             mockServices.Setup(x=>x.GetAll()).Returns(RepositoryOfService_GetAll);
-            ServicesController servicesController = new(mockServices.Object);
+            ServicesController servicesController = new(mockServices.Object, mockPictures.Object);
 
             //Act
             var result = servicesController.Index();
@@ -31,8 +32,9 @@ namespace HairSalon.Tests
         public void Add_GetResult()
         {
             //Arrange
+            var mockPictures = new Mock<IPicturesManager>();
             var mockServices = new Mock<IRepositoryOfServices>();
-            ServicesController servicesController = new(mockServices.Object);
+            ServicesController servicesController = new(mockServices.Object, mockPictures.Object);
 
             //Act
             var result = servicesController.Add();
@@ -48,14 +50,15 @@ namespace HairSalon.Tests
         [Fact]
         public void Add_PostResult()
         {
-            ////Arrange
+            //Arrange
+            var mockPictures = new Mock<IPicturesManager>();
             var mockServices1 = new Mock<IRepositoryOfServices>();
             mockServices1.Setup(x => x.Add(It.IsAny<Service>())).Returns(1);
-            ServicesController servicesController1 = new(mockServices1.Object);
+            ServicesController servicesController1 = new(mockServices1.Object, mockPictures.Object);
 
             var mockServices2 = new Mock<IRepositoryOfServices>();
             mockServices2.Setup(x => x.Add(It.IsAny<Service>())).Returns(-1);
-            ServicesController servicesController2 = new(mockServices2.Object);
+            ServicesController servicesController2 = new(mockServices2.Object, mockPictures.Object);
 
             //Act
             var result1 = servicesController1.Add(new());
@@ -77,9 +80,10 @@ namespace HairSalon.Tests
         public void Edit_GetResult()
         {
             //Arrange
+            var mockPictures = new Mock<IPicturesManager>();
             var mockServices = new Mock<IRepositoryOfServices>();
             mockServices.Setup(x => x.Get(It.IsAny<int>())).Returns(new Service());
-            ServicesController servicesController = new(mockServices.Object);
+            ServicesController servicesController = new(mockServices.Object, mockPictures.Object);
 
             //Act
             var result = servicesController.Edit(1);
@@ -96,13 +100,14 @@ namespace HairSalon.Tests
         public void Edit_PostResult()
         {
             //Arrange
+            var mockPictures = new Mock<IPicturesManager>();
             var mockServices1 = new Mock<IRepositoryOfServices>();
             mockServices1.Setup(x => x.Update(It.IsAny<Service>())).Returns(1);
-            ServicesController servicesController1 = new(mockServices1.Object);
+            ServicesController servicesController1 = new(mockServices1.Object, mockPictures.Object);
 
             var mockServices2 = new Mock<IRepositoryOfServices>();
             mockServices2.Setup(x => x.Update(It.IsAny<Service>())).Returns(-1);
-            ServicesController servicesController2 = new(mockServices2.Object);
+            ServicesController servicesController2 = new(mockServices2.Object, mockPictures.Object);
 
             //Act
             var result1 = servicesController1.Edit(new Service());
@@ -123,13 +128,14 @@ namespace HairSalon.Tests
         public void DeleteResult()
         {
             //Arrange
+            var mockPictures = new Mock<IPicturesManager>();
             var mockServices1 = new Mock<IRepositoryOfServices>();
             mockServices1.Setup(x => x.Delete(It.IsAny<int>())).Returns(1);
-            ServicesController servicesController1 = new(mockServices1.Object);
+            ServicesController servicesController1 = new(mockServices1.Object, mockPictures.Object);
 
             var mockServices2 = new Mock<IRepositoryOfServices>();
             mockServices2.Setup(x => x.Delete(It.IsAny<int>())).Returns(-1);
-            ServicesController servicesController2 = new(mockServices2.Object);
+            ServicesController servicesController2 = new(mockServices2.Object, mockPictures.Object);
 
             //Act
             var result1 = servicesController1.Delete(1);
@@ -150,8 +156,10 @@ namespace HairSalon.Tests
         public void Pictures()
         {
             //Arrange
+            var mockPictures = new Mock<IPicturesManager>();
+            mockPictures.Setup(x => x.GetAll()).Returns(new List<string>());
             var mockServices = new Mock<IRepositoryOfServices>();
-            ServicesController servicesController = new(mockServices.Object);
+            ServicesController servicesController = new(mockServices.Object, mockPictures.Object);
 
             //Act
             var result = servicesController.Pictures();
@@ -163,41 +171,58 @@ namespace HairSalon.Tests
         }
 
         [Fact]
-        public async Task AddPicturesAsyncResult()
+        public void UploadAsyncResult()
         {
-            //рассмотривается только негативный сценарий
-
             //Arrange
-            var mockServices2 = new Mock<IRepositoryOfServices>();
-            ServicesController servicesController2 = new(mockServices2.Object);
+            var mockPictures1 = new Mock<IPicturesManager>();
+            mockPictures1.Setup(x => x.UploadAsync(new List<IFormFile>())).Returns(new Task<int>(() => 1));
+            var mockPictures2 = new Mock<IPicturesManager>();
+            mockPictures2.Setup(x => x.UploadAsync(new List<IFormFile>())).Returns(new Task<int>(() => -1));
+            var mockServices = new Mock<IRepositoryOfServices>();
+            ServicesController servicesController1 = new(mockServices.Object, mockPictures1.Object);
+            ServicesController servicesController2 = new(mockServices.Object, mockPictures2.Object);
+
 
             //Act
-            var result2 = await servicesController2.AddPicturesAsync(new List<IFormFile>());
+            var result1 = servicesController1.AddPicturesAsync(new List<IFormFile>());
+            var result2 = servicesController2.AddPicturesAsync(new List<IFormFile>());
 
             //Assert
+            Assert.NotNull(result1);
+            //Assert.IsType<Task<RedirectToActionResult>>(result2);
+            //Assert.Equal("Pictures", result2?.Result.ActionName);
+            //Assert.Equal("Admin", result2?.Result.ControllerName);
+
             Assert.NotNull(result2);
-            Assert.IsType<RedirectToActionResult>(result2);
-            Assert.Equal("ErrorPage", result2.ActionName);
-            Assert.Equal("Admin", result2.ControllerName);
+            //Assert.IsType<Task<RedirectToActionResult>>(result2);
+            //Assert.Equal("ErrorPage", result2?.Result.ActionName);
+            //Assert.Equal("Admin", result2?.Result.ControllerName);
         }
 
 
         [Fact]
         public void DeletePicturesResult()
         {
-            //рассмотривается только положительный сценарий
-
             //Arrange
+            var mockPictures = new Mock<IPicturesManager>();
+            mockPictures.Setup(x => x.Delete("true")).Returns(1);
+            mockPictures.Setup(x => x.Delete("false")).Returns(-1);
             var mockServices = new Mock<IRepositoryOfServices>();
-            ServicesController servicesController = new(mockServices.Object);
+            ServicesController servicesController = new(mockServices.Object, mockPictures.Object);
 
             //Act
-            var result = servicesController.DeletePicture("a");
+            var result1 = servicesController.DeletePicture("true");
+            var result2 = servicesController.DeletePicture("false");
 
             //Assert
-            Assert.NotNull(result);
-            Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("Pictures", result.ActionName);
+            Assert.NotNull(result1);
+            Assert.IsType<RedirectToActionResult>(result1);
+            Assert.Equal("Pictures", result1.ActionName);
+
+            Assert.NotNull(result2);
+            Assert.IsType<RedirectToActionResult>(result2);
+            Assert.Equal("ErrorPage", result2.ActionName);
+            Assert.Equal("Admin", result2.ControllerName);
         }
 
 

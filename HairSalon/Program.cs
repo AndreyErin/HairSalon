@@ -36,6 +36,7 @@ namespace HairSalon
             builder.Services.AddSingleton<IRepositoryOfRecords, FakeRepoOfRecords>();
             //репозиторий сотрудников
             builder.Services.AddSingleton<IRepositoryOfEmployees, FakeRepoOfEmployees>();
+            builder.Services.AddTransient<IPicturesManager, PicturesManager>();
 
 
             var app = builder.Build();
