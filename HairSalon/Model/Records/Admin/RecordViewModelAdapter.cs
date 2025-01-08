@@ -82,14 +82,14 @@
             foreach (var date in datesOn)
             {
                 int result = _records.AddDayForRecords(date.Day);
-                if (result == -1) { return result; }
+                //if (result == -1) { return result; }
             }
 
             //выключаем дни для записи
             foreach (var date in datesOff)
             {
                 int result = _records.DeleteDayForRecords(date.Day);
-                if (result == -1) { return result; }
+                //if (result == -1) { return result; }
             }
 
             return 1;

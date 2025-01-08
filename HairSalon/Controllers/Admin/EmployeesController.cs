@@ -1,8 +1,11 @@
 ﻿using HairSalon.Model.Employees;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HairSalon.Controllers.Admin
 {
+    [Authorize]
+    [AutoValidateAntiforgeryToken]
     public class EmployeesController : Controller
     {
         private IRepositoryOfEmployees _employees;

@@ -1,8 +1,11 @@
 ﻿using HairSalon.Model.Configuration;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HairSalon.Controllers.Admin
 {
+    [Authorize]
+    [AutoValidateAntiforgeryToken]
     public class ConfigurationController : Controller
     {
         private IRepositoryOfConfiguration _configuration;

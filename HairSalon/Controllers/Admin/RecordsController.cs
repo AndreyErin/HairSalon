@@ -2,10 +2,13 @@
 using HairSalon.Model.Employees;
 using HairSalon.Model.Records;
 using HairSalon.Model.Records.Admin;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HairSalon.Controllers.Admin
 {
+    [Authorize]
+    [AutoValidateAntiforgeryToken]
     public class RecordsController : Controller
     {
         private RecordViewModelFactory _rvmFactory;

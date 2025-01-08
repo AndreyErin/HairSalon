@@ -1,1 +1,1 @@
-{"PromotionEnabled":false,"MobileAppEnabled":false,"RecordEnable":false,"StartTimeOfDay":"10:00:00","EndTimeOfDay":"18:00:00","NumberOfDaysForRecords":17}
+{"PromotionEnabled":false,"MobileAppEnabled":true,"RecordEnable":false,"StartTimeOfDay":"10:00:00","EndTimeOfDay":"18:00:00","NumberOfDaysForRecords":17}

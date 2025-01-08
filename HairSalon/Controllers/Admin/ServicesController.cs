@@ -1,8 +1,11 @@
 ﻿using HairSalon.Model.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HairSalon.Controllers.Admin
 {
+    [Authorize]
+    [AutoValidateAntiforgeryToken]
     public class ServicesController : Controller
     {
         private IRepositoryOfServices _services;

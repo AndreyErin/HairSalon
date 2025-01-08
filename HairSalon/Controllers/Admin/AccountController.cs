@@ -33,11 +33,11 @@ namespace HairSalon.Controllers.Admin
         //Admin - Admin123$
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(string name, string password)
+        public async Task<IActionResult> Login(LoginModel loginModel)
         {
             var ReturnUrl = TempData["ReturnUrl"] as string;
 
-            var resutl = await _signInManager.PasswordSignInAsync(name, password,false,false);
+            var resutl = await _signInManager.PasswordSignInAsync(loginModel.Name, loginModel.Password,false,false);
             if (resutl.Succeeded) 
             {
                 return Redirect(ReturnUrl ?? "/Admin");
@@ -45,7 +45,8 @@ namespace HairSalon.Controllers.Admin
             else
             {
                 TempData.Keep();
-                return RedirectToAction("Login", "Account");
+                ModelState.AddModelError("", "Неверный логин или пароль.");
+                return View("Login");
             }
         }
 
