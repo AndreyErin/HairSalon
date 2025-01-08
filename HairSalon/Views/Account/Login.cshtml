@@ -1,1 +1,22 @@
-﻿вход
+﻿<div class="container">
+    <div class="row text-center">
+        <h1>Вход в систему</h1>
+    </div>
+
+    <form asp-action="Login" method="post">
+        <div class="row">
+            <label>Логин</label>
+            <input type="text" required class="form-control" name="name" />
+        </div>
+
+        <div class="row">
+            <label>Пароль</label>
+            <input type="text" required class="form-control" name="password" />
+        </div>
+        <div class="row mt-3">
+            <div class="col  text-center">
+                <button class="btn btn-sm btn-primary" type="submit">Вход</button>
+            </div>
+        </div>
+    </form>
+</div>
