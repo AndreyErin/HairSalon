@@ -13,6 +13,11 @@
 
         public int SetTimeTable(TimeForRecordModel[] recordModels)
         {
+            if ((recordModels == null) || (recordModels.Length == 0))
+            {
+                return -1;
+            }
+
             //выключаем время
             List<TimeForRecordModel> disabledList = recordModels.ToList().Where(x => x.isEnable == false).ToList();
 
@@ -75,21 +80,24 @@
 
         public int SetWorkDates(WorkDatesModel[] dates)
         {
+            if ((dates == null) || (dates.Length == 0))
+            {
+                return -1;
+            }
+
             var datesOn = dates.ToList().Where(x => x.IsEnable == true);
             var datesOff = dates.ToList().Where(x => x.IsEnable == false);
 
             //включаем дни для записи
             foreach (var date in datesOn)
             {
-                int result = _records.AddDayForRecords(date.Day);
-                //if (result == -1) { return result; }
+                _records.AddDayForRecords(date.Day);
             }
 
             //выключаем дни для записи
             foreach (var date in datesOff)
             {
-                int result = _records.DeleteDayForRecords(date.Day);
-                //if (result == -1) { return result; }
+                _records.DeleteDayForRecords(date.Day);
             }
 
             return 1;

@@ -41,19 +41,13 @@ namespace HairSalon.Tests
             };
             var mockConfig = new Mock<IRepositoryOfConfiguration>();
             var mockEmployees = new Mock<IRepositoryOfEmployees>();
-            var mockRecords1 = new Mock<IRepositoryOfRecords>();
-            mockRecords1.Setup(x => x.AddDayForRecords(It.IsAny<DateOnly>())).Returns(1);
-            mockRecords1.Setup(x => x.DeleteDayForRecords(It.IsAny<DateOnly>())).Returns(1);
-            RecordsController recordsController1 = new(mockRecords1.Object, mockEmployees.Object, mockConfig.Object);
+            var mockRecords = new Mock<IRepositoryOfRecords>();
+            RecordsController recordsController = new(mockRecords.Object, mockEmployees.Object, mockConfig.Object);
 
-            var mockRecords2 = new Mock<IRepositoryOfRecords>();
-            mockRecords2.Setup(x => x.AddDayForRecords(It.IsAny<DateOnly>())).Returns(-1);
-            mockRecords2.Setup(x => x.DeleteDayForRecords(It.IsAny<DateOnly>())).Returns(-1);
-            RecordsController recordsController2 = new(mockRecords2.Object, mockEmployees.Object, mockConfig.Object);
 
             //Act
-            var result1 = recordsController1.SetDaysForRecords(model);
-            var result2 = recordsController2.SetDaysForRecords(model);
+            var result1 = recordsController.SetDaysForRecords(model);
+            var result2 = recordsController.SetDaysForRecords(Array.Empty<WorkDatesModel>());
 
             //Assert
             Assert.NotNull(result1);

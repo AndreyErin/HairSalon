@@ -42,19 +42,12 @@ namespace HairSalon.Tests
         public void SetWorkDatesResult()
         {
             //Arrange
-            var mockRecords1 = new Mock<IRepositoryOfRecords>();
-            mockRecords1.Setup(x => x.AddDayForRecords(It.IsAny<DateOnly>())).Returns(1);
-            mockRecords1.Setup(x => x.DeleteDayForRecords(It.IsAny<DateOnly>())).Returns(1);
-            RecordViewModelAdapter rvmAdapter1 = new(mockRecords1.Object);
-
-            var mockRecords2 = new Mock<IRepositoryOfRecords>();
-            mockRecords2.Setup(x => x.AddDayForRecords(It.IsAny<DateOnly>())).Returns(-1);
-            mockRecords2.Setup(x => x.DeleteDayForRecords(It.IsAny<DateOnly>())).Returns(-1);
-            RecordViewModelAdapter rvmAdapter2 = new(mockRecords2.Object);
+            var mockRecords = new Mock<IRepositoryOfRecords>();
+            RecordViewModelAdapter rvmAdapter1 = new(mockRecords.Object);
 
             //Act
             var result1 = rvmAdapter1.SetWorkDates(CreateWorkDatesModel());
-            var result2 = rvmAdapter2.SetWorkDates(CreateWorkDatesModel());
+            var result2 = rvmAdapter1.SetWorkDates(Array.Empty<WorkDatesModel>());
 
             //Assert
             Assert.IsType<int>(result1);
