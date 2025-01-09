@@ -1,10 +1,13 @@
 ﻿using HairSalon.Model.Employees;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HairSalon.Controllers.Api.v1
 {
     [ApiController]
     [Route("api/v1/employees")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class EmployeesApiController : Controller
     {
         private IRepositoryOfEmployees _employees;

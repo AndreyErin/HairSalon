@@ -1,4 +1,4 @@
-﻿using HairSalon.Model.Authorization;
+﻿using HairSalon.Model.Authorization.Admin;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace HairSalon.Model.Authorization
+namespace HairSalon.Model.Authorization.Admin
 {
     public class LoginModel
     {
@@ -11,5 +11,5 @@ namespace HairSalon.Model.Authorization
         [Display(Name = "Пароль")]
         [Required(ErrorMessage = "Введите пароль")]
         public string Password { get; set; } = string.Empty;
-    } 
+    }
 }

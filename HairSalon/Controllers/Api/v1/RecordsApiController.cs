@@ -1,12 +1,15 @@
 ﻿using HairSalon.Model.Configuration;
 using HairSalon.Model.Records;
 using HairSalon.Model.Records.Api;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HairSalon.Controllers.Api.v1
 {
     [ApiController]
     [Route("api/v1/records")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class RecordsApiController : Controller
     {
         IRepositoryOfRecords _records;
