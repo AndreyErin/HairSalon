@@ -39,7 +39,7 @@ namespace HairSalon.Controllers.Admin
             }
             else
             {
-                string errorMessage = Uri.EscapeDataString("Не удалось добавить услугу.");
+                string errorMessage = Uri.EscapeDataString("Ошибка. Услуга с таким названием уже есть в базе.");
                 return RedirectToAction("ErrorPage", "Admin", new { errorMessage });
             }
         }
@@ -63,7 +63,7 @@ namespace HairSalon.Controllers.Admin
             }
             else
             {
-                string errorMessage = Uri.EscapeDataString("Не удалось изменить услугу.");
+                string errorMessage = Uri.EscapeDataString("Ошибка. Услуга с указанным id не найдена.");
                 return RedirectToAction("ErrorPage", "Admin", new { errorMessage });
             }
         }
@@ -78,7 +78,7 @@ namespace HairSalon.Controllers.Admin
             }
             else
             {
-                string errorMessage = Uri.EscapeDataString("Не удалось удалить услугу.");
+                string errorMessage = Uri.EscapeDataString("Ошибка. Услуги с таким id нет в базе.");
                 return RedirectToAction("ErrorPage", "Admin", new { errorMessage });
             }
         }
@@ -99,7 +99,7 @@ namespace HairSalon.Controllers.Admin
             }
             else
             {
-                string errorMessage = Uri.EscapeDataString("Не удалось добавить изображения.");
+                string errorMessage = Uri.EscapeDataString("Ошибка при попытке добавить изображения.");
                 return RedirectToAction("ErrorPage", "Admin", new { errorMessage });
             }
         }
@@ -114,7 +114,7 @@ namespace HairSalon.Controllers.Admin
             }
             else
             {
-                string errorMessage = Uri.EscapeDataString("Не удалось удалить изображение.");
+                string errorMessage = Uri.EscapeDataString("Ошибка при попытке удалить изображение.");
                 return RedirectToAction("ErrorPage", "Admin", new { errorMessage });
             }
         }

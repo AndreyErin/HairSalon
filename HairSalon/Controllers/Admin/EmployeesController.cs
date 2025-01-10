@@ -35,7 +35,7 @@ namespace HairSalon.Controllers.Admin
             }
             else
             {
-                string errorMessage = Uri.EscapeDataString("Не удалось добавить сотрудника.");
+                string errorMessage = Uri.EscapeDataString("Ошибка. В базе уже есть сотрудник с таким именем.");
                 return RedirectToAction("ErrorPage","Admin", new {errorMessage});
             }          
         }
@@ -60,7 +60,7 @@ namespace HairSalon.Controllers.Admin
             }
             else
             {
-                string errorMessage = Uri.EscapeDataString("Не удалось изменить информацию о сотруднике.");
+                string errorMessage = Uri.EscapeDataString("Ошибка. Сотрудник с указанным id не найден.");
                 return RedirectToAction("ErrorPage", "Admin", new { errorMessage });
             }
         }
@@ -75,7 +75,7 @@ namespace HairSalon.Controllers.Admin
             }
             else
             {
-                string errorMessage = Uri.EscapeDataString("Не удалось удалить сотрудника.");
+                string errorMessage = Uri.EscapeDataString("Ошибка. Сотрудник с указанным id не найден.");
                 return RedirectToAction("ErrorPage", "Admin", new { errorMessage });
             }
         }

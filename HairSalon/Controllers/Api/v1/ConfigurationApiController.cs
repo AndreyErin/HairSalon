@@ -17,6 +17,7 @@ namespace HairSalon.Controllers.Api.v1
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Get()
         {
             return Ok(_config.GetConfig());

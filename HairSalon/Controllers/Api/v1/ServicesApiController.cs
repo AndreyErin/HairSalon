@@ -17,6 +17,7 @@ namespace HairSalon.Controllers.Api.v1
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult GetAll()
         {
             if (_services.GetAll().Count > 0)
@@ -30,6 +31,7 @@ namespace HairSalon.Controllers.Api.v1
         }
 
         [HttpGet]
+        [AllowAnonymous]
         [Route("{id}")]
         public IActionResult Get(int id)
         {
