@@ -9,7 +9,7 @@
         public bool MobileAppEnabled {  get; set; } = false ;
 
         //параметры записи
-        public bool RecordEnable { get; set; } = false ;
+        public bool RecordEnabled { get; set; } = false ;
         public TimeOnly StartTimeOfDay { get; set; }//начало рабочего дня
         public TimeOnly EndTimeOfDay { get;set; }//конец рабочего дня
         public int NumberOfDaysForRecords { get; set; }//количество доступных дней для записи

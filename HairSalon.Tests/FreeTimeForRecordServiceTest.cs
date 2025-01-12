@@ -42,7 +42,7 @@ namespace HairSalon.Tests
             return new()
             {
                 MobileAppEnabled = true,
-                RecordEnable = true,
+                RecordEnabled = true,
                 PromotionEnabled = true,
                 NumberOfDaysForRecords = 10,
                 StartTimeOfDay = new(10, 00),

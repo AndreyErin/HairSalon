@@ -16,7 +16,7 @@ namespace HairSalon.Tests
             { 
                 MobileAppEnabled = true, 
                 PromotionEnabled = true, 
-                RecordEnable = true, 
+                RecordEnabled = true, 
                 NumberOfDaysForRecords = 7, 
                 StartTimeOfDay = new TimeOnly(10,0),
                 EndTimeOfDay=new TimeOnly(18,0),

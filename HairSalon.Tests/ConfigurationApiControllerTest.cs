@@ -35,7 +35,7 @@ namespace HairSalon.Tests
             Config config1 = new() { 
                 MobileAppEnabled = false,
                 PromotionEnabled = false,
-                RecordEnable = false,
+                RecordEnabled = false,
                 NumberOfDaysForRecords = 2,
                 StartTimeOfDay = new(8, 0),
                 EndTimeOfDay = new(16, 0)};
@@ -61,7 +61,7 @@ namespace HairSalon.Tests
             {
                 MobileAppEnabled = false,
                 PromotionEnabled = false,
-                RecordEnable = false,
+                RecordEnabled = false,
                 NumberOfDaysForRecords = 2,
                 StartTimeOfDay = new(8, 0),
                 EndTimeOfDay = new(16, 0)
