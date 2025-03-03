@@ -74,6 +74,7 @@ namespace HairSalon.Controllers.Api.v1
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public IActionResult Add(Record record)
         {
             if (record.IsValid() == false)
@@ -93,6 +94,7 @@ namespace HairSalon.Controllers.Api.v1
         }
 
         [HttpGet]
+        [AllowAnonymous]
         [Route("workdays")]
         public IActionResult GetDaysForRecords()
         {
@@ -108,6 +110,7 @@ namespace HairSalon.Controllers.Api.v1
 
         [HttpGet]
         [Route("worktimes")]
+        [AllowAnonymous]
         public IActionResult GetFreeTimeForRecords(int timeOfService, int employeeId)
         {
             if (timeOfService <= 0 || employeeId <= 0)
