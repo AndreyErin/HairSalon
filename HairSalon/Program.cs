@@ -26,25 +26,24 @@ namespace HairSalon
 
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                    .AddJwtBearer(options =>
+                .AddJwtBearer(options =>
+                {
+                    options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        options.RequireHttpsMetadata = false;
-                        options.TokenValidationParameters = new TokenValidationParameters
-                        {
-                            ValidateIssuer = true,
-                            ValidIssuer = AuthJwtOptions.ISSUER,
-                            ValidateAudience = true,
-                            ValidAudience = AuthJwtOptions.AUDIENCE,
-                            ValidateLifetime = true,
-                            IssuerSigningKey = AuthJwtOptions.GetSymmetricSecurityKey(),
-                            ValidateIssuerSigningKey = true,
-                        };
-                    });
+                        ValidateIssuer = true,
+                        ValidIssuer = AuthJwtOptions.ISSUER,
+                        ValidateAudience = true,
+                        ValidAudience = AuthJwtOptions.AUDIENCE,
+                        ValidateLifetime = true,
+                        IssuerSigningKey = AuthJwtOptions.GetSymmetricSecurityKey(),
+                        ValidateIssuerSigningKey = true,
+                    };
+                });
 
 
             string? connectionString = builder.Configuration.GetConnectionString("Default");
             builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(connectionString));
-
 
             builder.Services.AddAuthorization();
 
@@ -59,8 +58,13 @@ namespace HairSalon
             builder.Services.AddSingleton<IRepositoryOfEmployees, FakeRepoOfEmployees>();
             builder.Services.AddTransient<IPicturesManager, PicturesManager>();
 
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
+
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             //для тестов
             app.UseCors(options => options.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
@@ -71,6 +75,7 @@ namespace HairSalon
             app.UseAuthorization();
             app.MapDefaultControllerRoute();
             app.UseSpa(spa => spa.Options.SourcePath = "ClientApp");
+
             app.Run();
         }
     }
